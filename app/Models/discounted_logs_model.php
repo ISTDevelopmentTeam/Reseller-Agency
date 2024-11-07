@@ -8,6 +8,8 @@ class discounted_logs_model extends Model
 {
     protected $table = 'membership_discount';
 
+    public $timestamps = false;
+
     // Define the columns that can be mass-assigned
     protected $fillable = 
     [
