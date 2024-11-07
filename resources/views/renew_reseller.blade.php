@@ -95,59 +95,6 @@
             backdrop-filter: blur(5px);
             background-color: rgba(0, 0, 0, 0.5);
         }
-
-        .search-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-        .divider {
-            position: relative;
-            text-align: center;
-            margin: 2rem 0;
-        }
-        .divider::before,
-        .divider::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 45%;
-            height: 1px;
-            background-color: #dee2e6;
-        }
-        .divider::before {
-            left: 0;
-        }
-        .divider::after {
-            right: 0;
-        }
-        .divider span {
-            background-color: white;
-            padding: 0 1rem;
-            color: #0d6efd;
-            font-weight: bold;
-        }
-        .search-btn {
-            min-width: 120px;
-        }
-        .table-container {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        .table thead {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .status-new {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .btn-renew {
-            min-width: 100px;
-        }
     </style>
 </head>
 <body>
@@ -164,109 +111,99 @@
                 @include('layout/profile')
 
                 <div class="row justify-content-center mt-5">
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-lg-10">
-                            <div class="search-card">
-                                <h2 class="text-center mb-4">Search Membership Record</h2>
-                                
-                                <!-- PIN Search -->
-                                <div class="mb-4">
-                                    <label class="form-label">Pincode</label>
+                    <div class="col-12 col-md-10">
+                        <!-- Search Section -->
+                        <div class="stat-card p-4 mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Search Applications</h5>
+                                <div class="stat-icon">
+                                    <i class="fas fa-search text-white"></i>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                        <input type="text" class="form-control" placeholder="Enter PIN code">
+                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                        <input type="text" class="form-control" placeholder="Business Name">
                                     </div>
                                 </div>
-            
-                                <div class="divider">
-                                    <span>OR</span>
-                                </div>
-            
-                                <!-- Name Search -->
-                                <div class="row g-3 mb-4">
-                                    <div class="col-md-6">
-                                        <label class="form-label">First Name</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                            <input type="text" class="form-control" placeholder="Enter first name">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Last Name</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                            <input type="text" class="form-control" placeholder="Enter last name">
-                                        </div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input type="text" class="form-control" placeholder="Owner's Name">
                                     </div>
                                 </div>
-            
-                                <!-- Birth Date -->
-                                <div class="row g-3 mb-4">
-                                    <div class="col-md-4">
-                                        <label class="form-label">Birth Month</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-store"></i></span>
                                         <select class="form-select">
-                                            <option value="">Select birth month</option>
-                                            <option value="1">January</option>
-                                            <option value="2">February</option>
-                                            <option value="3">March</option>
-                                            <!-- Add all months -->
+                                            <option value="" selected>All Business Types</option>
+                                            <option value="retail">Retail</option>
+                                            <option value="wholesale">Wholesale</option>
+                                            <option value="distribution">Distribution</option>
+                                            <option value="service">Service</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Birth Day</label>
-                                        <select class="form-select">
-                                            <option value="">Select birth day</option>
-                                            <!-- JavaScript will populate days -->
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label">Birth Year</label>
-                                        <input type="number" class="form-control" placeholder="Enter birth year">
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button class="btn btn-secondary me-md-2" type="button" id="resetBtn">Reset</button>
+                                        <button class="btn btn-primary" type="button" id="searchBtn">Search</button>
                                     </div>
                                 </div>
-            
-                                <div class="text-center">
-                                    <button class="btn btn-primary search-btn" type="button">
-                                        <i class="fas fa-search me-2"></i>Search
-                                    </button>
+                            </div>
+                        </div>
+
+                        <!-- Renewal Form (Initially Hidden) -->
+                        <div class="renewal-form stat-card p-4" id="renewalForm">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0">Renew Reseller Application Form</h5>
+                                <div class="stat-icon">
+                                    <i class="fas fa-user-plus text-white"></i>
                                 </div>
                             </div>
-            
-                            <!-- Results Table -->
-                            <div class="table-container mt-4">
-                                <table class="table table-hover mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Record No.</th>
-                                            <th>Vehicle</th>
-                                            <th>Membership Category</th>
-                                            <th>Last Name</th>
-                                            <th>First Name</th>
-                                            <th>Activation Date</th>
-                                            <th>Expiration Date</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>SDS512 - HONDA CIVIC</td>
-                                            <td>PIDP</td>
-                                            <td>GAVANES</td>
-                                            <td>ANALYN MAE</td>
-                                            <td>2024-09-26</td>
-                                            <td>2025-09-26</td>
-                                            <td><span class="status-new">NEW MEMBER</span></td>
-                                            <td>
-                                                <button class="btn btn-primary btn-sm btn-renew">
-                                                    <i class="fas fa-sync-alt me-1"></i>Renew
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="businessName" class="form-label">Business Name</label>
+                                    <input type="text" class="form-control" id="businessName" placeholder="Enter business name" required>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="ownerName" class="form-label">Owner's Name</label>
+                                        <input type="text" class="form-control" id="ownerName" placeholder="Enter owner's name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="contactNumber" class="form-label">Contact Number</label>
+                                        <input type="tel" class="form-control" id="contactNumber" placeholder="Enter contact number" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="emailAddress" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="emailAddress" placeholder="Enter email address" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="businessAddress" class="form-label">Business Address</label>
+                                    <textarea class="form-control" id="businessAddress" rows="2" placeholder="Enter complete address" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="businessType" class="form-label">Business Type</label>
+                                    <select class="form-select" id="businessType" required>
+                                        <option value="" selected disabled>Select business type</option>
+                                        <option value="retail">Retail</option>
+                                        <option value="wholesale">Wholesale</option>
+                                        <option value="distribution">Distribution</option>
+                                        <option value="service">Service</option>
+                                    </select>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
