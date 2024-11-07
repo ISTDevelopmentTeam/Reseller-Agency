@@ -24,6 +24,50 @@
 
                 <!-- Main content with updated date inputs -->
                 <div class="row justify-content-center mt-5">
+                    <!-- Today's Today's New Reseller -->
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-2">Today's Today's New Reseller</h6>
+                                    <h2 class="mb-0">0</h2>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-users text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly New Reseller -->
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-2">Monthly New Reseller</h6>
+                                    <h2 class="mb-0">0</h2>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-shield-alt text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Reseller Applicants -->
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-2">Weekly Reseller Applicants</h6>
+                                    <h2 class="mb-0">0</h2>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-user-times text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 col-md-10">
                         <div class="container mt-5">
                             <div class="card shadow-sm">
