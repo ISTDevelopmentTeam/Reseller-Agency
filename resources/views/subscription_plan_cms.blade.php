@@ -76,8 +76,17 @@
             'plan_amount'       => $detail->plan_amount,
             'remarks'           => $detail->remarks,
             'plan_status'       => $detail->plan_status
-        ]) }}" class="btn btn-primary">EDIT PLAN TYPE</a>          
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#view_modal" onclick="ViewfillModalData('{{ $detail->plantype_id }}', '{{ $detail->membership_name }}', '{{ $detail->plan_name }}', '{{ $detail->plan_amount }}', '{{ $detail->remarks }}', '{{$detail->plan_status}}')">VIEW PLAN TYPE</button>
+        ]) }}" class="btn btn-primary">EDIT PLAN TYPE</a>  
+
+        <a href="{{ route('view_cms_page', [
+            'membership_id'     => $detail->membership_id,
+            'plan_id'           => $detail->plan_id,
+            'membership_name'   => $detail->membership_name,
+            'plan_name'         => $detail->plan_name,
+            'plan_amount'       => $detail->plan_amount,
+            'remarks'           => $detail->remarks,
+            'plan_status'       => $detail->plan_status
+        ]) }}" class="btn btn-primary">VIEW PLAN TYPE</a>         
         </td>
         </tr>
 
