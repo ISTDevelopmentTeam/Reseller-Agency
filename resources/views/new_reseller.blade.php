@@ -253,7 +253,7 @@
                                     <form id="resellerForm">
                                         <!--Step 1:  Membership Application -->
                                         <div class="form-step active" id="step1">
-                                            <button class="btn btn-primary customer-fillout-btn" onclick="window.open('{{ route('customer_qr') }}', '_blank')">
+                                            <button class="btn btn-primary btn-sm customer-fillout-btn" onclick="window.open('{{ route('customer_qr') }}', '_blank')">
                                                 <i class="fas fa-user-edit me-2"></i>Customer Fill-out
                                             </button>
                                             <h5 class="card-title mb-4">Membership Application</h5>
