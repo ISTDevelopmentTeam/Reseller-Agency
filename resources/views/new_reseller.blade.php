@@ -181,50 +181,6 @@
                 @include('layout/profile')
                                               
                 <div class="row g-4">
-                    <!-- Today's Today's New Reseller -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Today's Today's New Reseller</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-users text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Monthly New Reseller -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Monthly New Reseller</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-shield-alt text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Weekly Reseller Applicants -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Weekly Reseller Applicants</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-user-times text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Form Card -->
                     <div class="row justify-content-center mt-5">
@@ -251,6 +207,7 @@
                                     
 
                                     <form id="resellerForm">
+                                    @csrf
                                         <!--Step 1:  Membership Application -->
                                         <div class="form-step active" id="step1">
                                             <button class="btn btn-primary customer-fillout-btn" onclick="window.open('{{ route('customer_qr') }}', '_blank')">
@@ -260,17 +217,29 @@
                                                 <div class="row">
                                                     <div class="col-md-3 mb-3">
                                                         <label for="applicationType" class="form-label">Type of Application</label>
-                                                        <select class="form-select" id="applicationType" required>
-                                                            <option value="NEW" selected>NEW</option>
+                                                        <input type="text" class="form-control" id="applicationType" value="NEW" disabled>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="membership_type" class="form-label">Type of Membership</label>
+                                                        <select class="form-select" id="membership_type" name="membership_id">
+                                                            <option value="" selected disabled>Select Type of Membership</option>
+                                                            @foreach ($packages['members'] as $members_type)
+                                                                <option value="{{ $members_type->membership_id }}" data-vehicle_num="{{ $members_type->vehicle_num }}">
+                                                                    {{ $members_type->membership_name }}
+                                                                </option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
-                                                        <label for="membershipType" class="form-label">Type of Membership</label>
-                                                        <input type="text" class="form-control" id="membershipType" value="ASSOCIATE INDIVIDUAL" readonly>
-                                                    </div>
-                                                    <div class="col-md-3 mb-3">
-                                                        <label for="planType" class="form-label">Plan Type</label>
-                                                        <input type="text" class="form-control" id="planType" value="ANNUAL FEE (ASSOCIATE)" readonly>
+                                                        <label for="plan_type" class="form-label">Plan Type</label>
+                                                        <select class="form-select" id="plan_type" name="plan_type">
+                                                            <option value="" selected disabled>Select Plan Type</option>
+                                                            @foreach ($packages['plantype'] as $plan)
+                                                                <option value="{{ $plan->plan_name }}" data-membership="{{ $plan->membership_id }}" style="display: none;">
+                                                                    {{ $plan->plan_name }} - ₱ {{ $plan->plan_amount }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
                                                         <label for="pidpPlanType" class="form-label">PIDP Plan Type</label>
@@ -807,6 +776,29 @@ function initializeVehicleHandling() {
 // Make functions globally available
 window.nextStep = nextStep;
 window.previousStep = previousStep;
+
+// FOR PLAN TYPE FILTER 
+document.addEventListener('DOMContentLoaded', function() {
+    const membershipSelect = document.getElementById('membership_type');
+    const planTypeSelect = document.getElementById('plan_type');
+    const planOptions = planTypeSelect.querySelectorAll('option[data-membership]');
+    
+    membershipSelect.addEventListener('change', function() {
+        const selectedMembershipId = this.value;
+        
+        // Reset plan type select
+        planTypeSelect.value = "";
+        
+        // Hide all plan options except the default one
+        planOptions.forEach(option => {
+            if (option.getAttribute('data-membership') === selectedMembershipId) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+    });
+});
 
     </script>
 </body>

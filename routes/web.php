@@ -30,7 +30,6 @@ Route::get('/audit_trail', [AuditTrailController::class, 'index'])->name('audit_
 // Route for the temporary page
 Route::get('/customer_fillout_form/{token}', function ($token) {
 
-
     // Check if the token exists and is not expired
     $temporaryToken = TokenModel::where('token', $token)->first();
 
