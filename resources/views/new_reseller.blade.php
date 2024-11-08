@@ -181,51 +181,6 @@
                 @include('layout/profile')
                                               
                 <div class="row g-4">
-                    <!-- Today's Today's New Reseller -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Today's Today's New Reseller</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-users text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Monthly New Reseller -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Monthly New Reseller</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-shield-alt text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Weekly Reseller Applicants -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Weekly Reseller Applicants</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-user-times text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Form Card -->
                     <div class="row justify-content-center mt-5">
                         <div class="col-12 col-md-10">
@@ -296,6 +251,30 @@
                                                     <div class="col-md-3 mb-3">
                                                         <label for="paInsurance" class="form-label">PA Insurance</label>
                                                         <input type="text" class="form-control" id="paInsurance">
+                                                    </div>
+                                                    
+<!-- Attachment fields -->
+<div class="row">
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="orcrAttachment" class="form-label">ORCR Image</label>
+                                                            <div class="input-group">
+                                                                <input type="file" class="form-control" id="orcrAttachment" name="orcr_image" accept="image/" required>
+                                                                <label class="input-group-text" for="orcrAttachment">
+                                                                    <i class="fas fa-upload"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-text">Upload a clear image of the ORCR</div>
+                                                        </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="idAttachment" class="form-label">ID Image</label>
+                                                            <div class="input-group">
+                                                                <input type="file" class="form-control" id="idAttachment" name="id_image" accept="image/" required>
+                                                                <label class="input-group-text" for="idAttachment">
+                                                                    <i class="fas fa-upload"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-text">Upload a valid government ID</div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="d-flex justify-content-end mt-4">

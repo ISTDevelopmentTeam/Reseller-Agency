@@ -8,94 +8,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        .sidebar {
-            min-height: 100vh;
-            background-color: #002B5B;
-            width: 16rem;
-            color: white;
-        }
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0.5rem 1rem;
-            margin: 0.2rem 0;
-        }
-        .sidebar .nav-link:hover {
-            color: white;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        .sidebar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .stat-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-icon {
-            background-color: #FFB800;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .main-content {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-        .user-profile {
-            cursor: pointer;
-        }
-        .dropdown-menu {
-            min-width: 200px;
-            padding: 8px;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .dropdown-item {
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            color: #333;
-        }
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
-            color: #0d6efd;
-        }
-        .dropdown-item:active {
-            background-color: #e9ecef;
-            color: #0d6efd;
-        }
-        .dropdown-divider {
-            margin: 8px 0;
-        }
-        .dropdown-item i {
-            font-size: 1.1rem;
-            width: 20px;
-            text-align: center;
-        }
-        .renewal-form {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .renewal-form.show {
-            display: block;
-            opacity: 1;
-        }
-        .modal-blur {
-            backdrop-filter: blur(5px);
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-    </style>
+    <link rel="stylesheet" href={{ asset('style/renew_reseller.css') }}>
+
 </head>
 <body>
     <div class="container-fluid">
@@ -111,99 +25,148 @@
                 @include('layout/profile')
 
                 <div class="row justify-content-center mt-5">
-                    <div class="col-12 col-md-10">
-                        <!-- Search Section -->
-                        <div class="stat-card p-4 mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="mb-0">Search Applications</h5>
-                                <div class="stat-icon">
-                                    <i class="fas fa-search text-white"></i>
-                                </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-10">
+                            <div class="search-card">
+                                <h2 class="text-center mb-4">Search Membership Record</h2>
+                                <!-- PIN Search -->
+                                <form action="{{ route('search_member')}}" method="post">
+                                @csrf
+                                    <div class="mb-4" id="search_pin">
+                                        <label class="form-label">Pincode</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                            <input onkeyup="countChar(this); validatePincode(this);" type="text" name="search[pincode]" id="pin_code" class="form-control" placeholder="Enter PIN code">
+                                            <p style="color: red;"></p>
+                                                @error('search.pincode')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror  
+                                        </div>
+                                    </div>
+                                    <h4 class="text-center p-1" id="or">OR</h4>
+                                    <div id="search_name">
+                                        <!-- Name Search -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label">First Name</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                    <input onkeyup="countCharN(this); validateFirstName(this);" type="text" name="search[members_firstname]" class="form-control" id="first_name" placeholder="Enter first name">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Last Name</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                    <input onkeyup="countCharN(this); validateLastName(this);" name="search[members_lastname]" type="text" class="form-control" id="last_name" placeholder="Enter last name">
+                                                </div>
+                                            </div>
+                                        </div>
+                    
+                                        <!-- Birth Date -->
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Birth Month</label>
+                                                <Select onkeyup="countCharN(this); validateBirthMonth(this);" field="birth_month" name="search[birth_month]" class="form-control birthdate-select" id="b_month">
+                                                    <option value = "" selected disabled> Select birth month.</option>
+                                                    <option value = "01">JANUARY</option>
+                                                    <option value = "02">FEBRUARY</option>
+                                                    <option value = "03">MARCH</option>
+                                                    <option value = "04">APRIL</option>
+                                                    <option value = "05">MAY</option>
+                                                    <option value = "06">JUNE</option>
+                                                    <option value = "07">JULY</option>
+                                                    <option value = "08">AUGUST</option>
+                                                    <option value = "09">SEPTEMBER</option>
+                                                    <option value = "10">OCTOBER</option>
+                                                    <option value = "11">NOVEMBER</option>
+                                                    <option value = "12">DECEMBER</option>
+                                                </Select>
+                                                <p style="color: red;"></p> <!-- Error message placeholder -->
+                                                @error('search.birth_month')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Birth Day</label>
+                                                <select onkeyup="countCharN(this); validateBirthDay(this);" class="form-select birthdate-select" id="b_day" name="search[bday_date]">
+                                                <?php for ($i = 1; $i <= 31; $i++): ?>
+                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                                <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label">Birth Year</label>
+                                                <select onkeyup="countCharN(this); validateBirthYear(this);" class="form-control birthdate-select" id="b_year" name="search[bday_year]">
+                                                <option value="" disabled selected>Select a year</option>
+                                                    <?php 
+                                                        $current = date("Y");
+                                                        for ($year = $current; $year >= 1920; $year--): 
+                                                        $selected = ($year == 1985) ? 'selected' : '';?>
+                                                        <option value="<?php echo $year; ?>" <?php echo $selected; ?>><?php echo $year; ?></option>
+                                                    <?php endfor; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary search-btn" type="submit">
+                                            <i class="fas fa-search me-2"></i>Search
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                        <input type="text" class="form-control" placeholder="Business Name">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                        <input type="text" class="form-control" placeholder="Owner's Name">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-store"></i></span>
-                                        <select class="form-select">
-                                            <option value="" selected>All Business Types</option>
-                                            <option value="retail">Retail</option>
-                                            <option value="wholesale">Wholesale</option>
-                                            <option value="distribution">Distribution</option>
-                                            <option value="service">Service</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <button class="btn btn-secondary me-md-2" type="button" id="resetBtn">Reset</button>
-                                        <button class="btn btn-primary" type="button" id="searchBtn">Search</button>
-                                    </div>
-                                </div>
+
+                            @if (request()->has('search') && isset($membership_info) && count($membership_info) > 0)
+                            <!-- Results Table -->
+                            <div class="table-container mt-4">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Record No.</th>
+                                            <th scope="col">Vehicle</th>
+                                            <th scope="col">Membership Category</th>
+                                            <th scope="col">Last Name</th>
+                                            <th scope="col">First Name</th>
+                                            <th scope="col">Activation Date</th>
+                                            <th scope="col">Expiration Date</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($membership_info as $member)
+                                        <tr>
+                                            <td>{{ $member['vehicleinfohead_order'] }}</td>
+                                            {{-- <td>{!! (implode("\n", $member['car_details'])) !!}</td> --}}
+                                            {{-- <td>{{ implode('\n', $member['car_details']) }}</td> --}}
+                                            <td>
+                                                @foreach($member['car_details'] as $index => $detail)
+                                                    {{ $detail }}
+                                                    @if($index < count($member['car_details']) - 1)
+                                                        <hr style="margin: 5px 0;">
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td>{{ $member['sponsor_name'] }}</td>
+                                            <td>{{ $member['members_lastname'] }}</td>
+                                            <td>{{ $member['members_firstname'] }}</td>
+                                            <td>{{ $member['vehicleinfohead_activedate'] }}</td>
+                                            <td>{{ $member['vehicleinfohead_expiredate'] }}</td>
+                                            <td style="color: {{ strtoupper($member['vehicleinfohead_status']) === 'ACTIVE' ? 'green' : 'red' }}">{{ $member['vehicleinfohead_status'] }}</td>
+                                            <td>
+                                                <a href="" class="btn btn-primary">Renew</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-
-                        <!-- Renewal Form (Initially Hidden) -->
-                        <div class="renewal-form stat-card p-4" id="renewalForm">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h5 class="mb-0">Renew Reseller Application Form</h5>
-                                <div class="stat-icon">
-                                    <i class="fas fa-user-plus text-white"></i>
+                            @elseif (request()->has('search') && empty($membership_info))
+                                <div class="text-center mt-5">
+                                    <p class="alert alert-danger"><b>No results found.</b></p>
                                 </div>
-                            </div>
-                            <form>
-                                <div class="mb-3">
-                                    <label for="businessName" class="form-label">Business Name</label>
-                                    <input type="text" class="form-control" id="businessName" placeholder="Enter business name" required>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="ownerName" class="form-label">Owner's Name</label>
-                                        <input type="text" class="form-control" id="ownerName" placeholder="Enter owner's name" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="contactNumber" class="form-label">Contact Number</label>
-                                        <input type="tel" class="form-control" id="contactNumber" placeholder="Enter contact number" required>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="emailAddress" class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="emailAddress" placeholder="Enter email address" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="businessAddress" class="form-label">Business Address</label>
-                                    <textarea class="form-control" id="businessAddress" rows="2" placeholder="Enter complete address" required></textarea>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="businessType" class="form-label">Business Type</label>
-                                    <select class="form-select" id="businessType" required>
-                                        <option value="" selected disabled>Select business type</option>
-                                        <option value="retail">Retail</option>
-                                        <option value="wholesale">Wholesale</option>
-                                        <option value="distribution">Distribution</option>
-                                        <option value="service">Service</option>
-                                    </select>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Submit Application</button>
-                                </div>
-                            </form>
+                            @endif
                         </div>
                     </div>
 
@@ -215,28 +178,32 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/script/renew_reseller.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchBtn = document.getElementById('searchBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const renewalForm = document.getElementById('renewalForm');
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const searchBtn = document.getElementById('searchBtn');
+        //     const resetBtn = document.getElementById('resetBtn');
+        //     const renewalForm = document.getElementById('renewalForm');
 
-            // Show form when search button is clicked
-            searchBtn.addEventListener('click', function() {
-                renewalForm.classList.add('show');
-            });
+        //     // Show form when search button is clicked
+        //     searchBtn.addEventListener('click', function() {
+        //         renewalForm.classList.add('show');
+        //     });
 
-            // Hide form when reset button is clicked
-            resetBtn.addEventListener('click', function() {
-                renewalForm.classList.remove('show');
-                // Clear all input fields
-                document.querySelectorAll('input, select, textarea').forEach(element => {
-                    element.value = '';
-                });
-            });
-        });
+        //     // Hide form when reset button is clicked
+        //     resetBtn.addEventListener('click', function() {
+        //         renewalForm.classList.remove('show');
+        //         // Clear all input fields
+        //         document.querySelectorAll('input, select, textarea').forEach(element => {
+        //             element.value = '';
+        //         });
+        //     });
+        // });
     </script>
 </body>
 </html>
