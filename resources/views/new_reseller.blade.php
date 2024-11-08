@@ -401,28 +401,28 @@
 
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
-                                                    <label for="officeBuildingStreet" class="form-label">Building No. / Street</label>
-                                                    <input type="text" class="form-control" id="officeBuildingStreet" required>
+                                                    <label for="street" class="form-label">Building No. / Street</label>
+                                                    <input type="text" class="form-control" id="street" name="street" required>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label for="officeBarangay" class="form-label">Barangay / Towns</label>
-                                                    <input type="text" class="form-control" id="officeBarangay" required>
+                                                    <label for="town" class="form-label">Barangay / Towns</label>
+                                                    <input type="text" class="form-control" id="town" required>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label for="officeCityMunicipality" class="form-label">City/Municipality</label>
-                                                    <input type="text" class="form-control" id="officeCityMunicipality" required>
+                                                    <label for="city" class="form-label">City/Municipality</label>
+                                                    <input type="text" class="form-control" id="city" required>
                                                 </div>
                                             </div>
 
                                             <div class="row mb-3">
                                                
                                                 <div class="col-md-3">
-                                                    <label for="officeProvince" class="form-label">Province</label>
-                                                    <input type="text" class="form-control" id="officeProvince" required>
+                                                    <label for="province" class="form-label">Province</label>
+                                                    <input type="text" class="form-control" id="province" required>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label for="officeZipCode" class="form-label">Zip</label>
-                                                    <input type="text" class="form-control" id="officeZipCode" required>
+                                                    <label for="zcode" class="form-label">Zip</label>
+                                                    <input type="text" class="form-control" id="zcode" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="mailingPreference" class="form-label">Mailing Preference</label>
@@ -661,144 +661,48 @@
 </div>
 </div>
 
-    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/script/new_reseller.js"></script>
     <script>
-// Form state management
-let currentStep = 1;
-const totalSteps = 5;
-
-// DOM Elements
-const progressBar = document.querySelector('.progress-bar');
-const formSteps = document.querySelectorAll('.form-step');
-const breadcrumbItems = document.querySelectorAll('.breadcrumb-item');
-const vehicleContainer = document.getElementById('vehicleContainer');
-const vehicleTemplate = document.getElementById('vehicleTemplate');
-const addVehicleButton = document.getElementById('addVehicle');
-
-// Initialize form handling
-document.addEventListener('DOMContentLoaded', function() {
-    initializeForm();
-    initializeVehicleHandling();
-    attachBreadcrumbListeners();
-});
-
-// Form initialization and navigation
-function initializeForm() {
-    showStep(currentStep);
-    updateProgressBar();
-}
-
-function updateProgressBar() {
-    const progress = (currentStep / totalSteps) * 100;
-    progressBar.style.width = `${progress}%`;
-}
-
-function showStep(step) {
-    formSteps.forEach(el => el.classList.remove('active'));
-    document.getElementById(`step${step}`).classList.add('active');
-    
-    breadcrumbItems.forEach((el, index) => {
-        if (index + 1 === step) {
-            el.classList.add('active');
-        } else {
-            el.classList.remove('active');
-        }
-    });
-    
-    updateProgressBar();
-}
-
-function nextStep() {
-    if (currentStep < totalSteps) {
-        currentStep++;
-        showStep(currentStep);
-    }
-}
-
-function previousStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        showStep(currentStep);
-    }
-}
-
-// Breadcrumb navigation
-function attachBreadcrumbListeners() {
-    breadcrumbItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const step = parseInt(this.dataset.step);
-            if (step <= currentStep) {
-                currentStep = step;
-                showStep(step);
+        var towns = @json($towns);
+        console.log(towns)
+            $("#town").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                var term = request.term;
+                var filteredTowns = towns.filter(function (town) {
+                return town.az_barangay.toLowerCase().indexOf(term.toLowerCase()) !== -1;
+                });
+                var limitedTowns = filteredTowns.slice(0, 10); // Limiting to first 10 items
+                response(limitedTowns.map(function (town) {
+                return {
+                    label: town.az_barangay + " - " + town.city_name + ", " + town.district_name,
+                    value: town.az_barangay
+                };
+                }));
+            },
+            select: function (event, ui) {
+                var selectedTown = towns.find(function (town) {
+                return town.az_barangay === ui.item.value;
+                });
+                $("#town").val(decodeHtml(selectedTown.az_barangay));
+                $("#city").val(decodeHtml(selectedTown.city_name));
+                $("#province").val(decodeHtml(selectedTown.district_name));
+                $("#zcode").val(decodeHtml(selectedTown.az_zipcode));
+                return false;
             }
-        });
-    });
-}
-
-// Vehicle form handling
-function initializeVehicleHandling() {
-    let vehicleCount = 0;
-
-    function addVehicle() {
-        vehicleCount++;
-        const clone = vehicleTemplate.content.cloneNode(true);
-        
-        // Update vehicle number
-        clone.querySelector('.vehicle-number').textContent = vehicleCount;
-        
-        // Add remove functionality
-        const removeButton = clone.querySelector('.remove-vehicle');
-        removeButton.addEventListener('click', function() {
-            this.closest('.vehicle-item').remove();
-            updateVehicleNumbers();
-        });
-        
-        vehicleContainer.appendChild(clone);
-    }
-
-    function updateVehicleNumbers() {
-        const vehicles = vehicleContainer.querySelectorAll('.vehicle-item');
-        vehicles.forEach((vehicle, index) => {
-            vehicle.querySelector('.vehicle-number').textContent = index + 1;
-        });
-        vehicleCount = vehicles.length;
-    }
-
-    // Add first vehicle form by default
-    addVehicle();
-
-    // Add button click handler
-    addVehicleButton.addEventListener('click', addVehicle);
-}
-
-// Make functions globally available
-window.nextStep = nextStep;
-window.previousStep = previousStep;
-
-// FOR PLAN TYPE FILTER 
-document.addEventListener('DOMContentLoaded', function() {
-    const membershipSelect = document.getElementById('membership_type');
-    const planTypeSelect = document.getElementById('plan_type');
-    const planOptions = planTypeSelect.querySelectorAll('option[data-membership]');
-    
-    membershipSelect.addEventListener('change', function() {
-        const selectedMembershipId = this.value;
-        
-        // Reset plan type select
-        planTypeSelect.value = "";
-        
-        // Hide all plan options except the default one
-        planOptions.forEach(option => {
-            if (option.getAttribute('data-membership') === selectedMembershipId) {
-                option.style.display = '';
-            } else {
-                option.style.display = 'none';
-            }
-        });
-    });
-});
+            })
+            .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .attr("data-value", item.value)
+                .append(item.label)
+                .appendTo(ul);
+            };
 
     </script>
 </body>

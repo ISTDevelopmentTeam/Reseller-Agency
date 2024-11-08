@@ -14,8 +14,12 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// NEW
 Route::get('/new_reseller', [NewResellerController::class, 'index'])->name('new_reseller');
+// RENEW
 Route::get('/renew_reseller', [RenewResellerController::class, 'index'])->name('renew_reseller');
+Route::post('/search_member', [RenewResellerController::class, 'search_member'])->name('search_member');
+
 Route::get('/customer_qr', [QRCustomerController::class, 'index'])->name('customer_qr');
 
 // REPORTS
