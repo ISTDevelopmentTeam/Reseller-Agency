@@ -366,7 +366,6 @@
                                                     <!-- Add other months -->
                                                 </select>
                                             </div>
-
                                             <!-- Birth Day -->
                                             <div class="col-md-3 mb-3">
                                                 <label for="birthDay" class="form-label">Birth Day</label>
@@ -687,88 +686,48 @@
 </div>
 </div>
 
-    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/script/new_reseller.js"></script>
     <script>
-        let currentStep = 1;
-const totalSteps = 4;
-
-function updateProgress() {
-    // Update progress bar
-    const progress = (currentStep / totalSteps) * 100;
-    document.querySelector('.progress-bar').style.width = `${progress}%`;
-    
-    // Update breadcrumb
-    document.querySelectorAll('.breadcrumb-item').forEach((item, index) => {
-        if (index + 1 === currentStep) {
-            item.classList.add('active');
-        } else {
-            item.classList.remove('active');
-        }
-    });
-}
-
-function showStep(step) {
-    // Hide all steps
-    document.querySelectorAll('.form-step').forEach(el => {
-        el.classList.remove('active');
-    });
-    
-    // Show current step
-    const currentStepElement = document.getElementById(`step${step}`);
-    if (currentStepElement) {
-        currentStepElement.classList.add('active');
-    }
-    
-    updateProgress();
-}
-
-function nextStep() {
-    if (currentStep < totalSteps) {
-        currentStep++;
-        showStep(currentStep);
-    }
-}
-
-function previousStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        showStep(currentStep);
-    }
-}
-
-function submitForm() {
-
-    alert('Form submitted successfully!');
-}
-
-// Enable breadcrumb navigation
-document.querySelectorAll('.breadcrumb-item').forEach(item => {
-    item.addEventListener('click', function() {
-        const step = parseInt(this.dataset.step);
-        if (step <= Math.max(currentStep, 1)) { 
-            currentStep = step;
-            showStep(step);
-        }
-    });
-});
-
-// Initialize the form
-document.addEventListener('DOMContentLoaded', function() {
-    showStep(1);
-    updateProgress();
-});
-
-
-document.querySelectorAll('.option-button').forEach(button => {
-    button.addEventListener('click', function() {
-
-        document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
- 
-        this.classList.add('selected');
-    });
-});
+        var towns = @json($towns);
+        console.log(towns)
+            $("#town").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                var term = request.term;
+                var filteredTowns = towns.filter(function (town) {
+                return town.az_barangay.toLowerCase().indexOf(term.toLowerCase()) !== -1;
+                });
+                var limitedTowns = filteredTowns.slice(0, 10); // Limiting to first 10 items
+                response(limitedTowns.map(function (town) {
+                return {
+                    label: town.az_barangay + " - " + town.city_name + ", " + town.district_name,
+                    value: town.az_barangay
+                };
+                }));
+            },
+            select: function (event, ui) {
+                var selectedTown = towns.find(function (town) {
+                return town.az_barangay === ui.item.value;
+                });
+                $("#town").val(decodeHtml(selectedTown.az_barangay));
+                $("#city").val(decodeHtml(selectedTown.city_name));
+                $("#province").val(decodeHtml(selectedTown.district_name));
+                $("#zcode").val(decodeHtml(selectedTown.az_zipcode));
+                return false;
+            }
+            })
+            .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .attr("data-value", item.value)
+                .append(item.label)
+                .appendTo(ul);
+            };
     </script>
 </body>
 </html>
