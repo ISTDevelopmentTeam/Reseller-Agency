@@ -15,7 +15,7 @@ class discounted_logs_model extends Model
     [
         'discount_id',
         'plan_id', 
-        'discount_ammount', 
+        'discount_amount', 
         'discount_start', 
         'discount_end',
         'added_by', 

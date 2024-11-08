@@ -49,6 +49,8 @@
 
 
   <div class="container">
+    <a href="{{ route('add_cms_page') }}" class="btn btn-primary">Add Membership</a>
+
     <h2 class="mt-5">CMS</h2>
     <table class="table table-striped table-bordered table-custom">
       <thead>
@@ -56,16 +58,18 @@
           <th>Type of Membership</th>
           <th>Plan Type</th>
           <th>Ammount</th>
+          <th>Status</th>
           <th>Action</th>
 
         </tr>
       </thead>
       <tbody>
-        @foreach($details as $detail);
+        @foreach($details as $detail)
 
         <tr>
           <td>{{        $detail->membership_name    }}</td>
           <td>{{        $detail->plan_name              }}</td>
+          <td>{{        $detail->plan_amount            }}</td>
           <td>{{        $detail->plan_status      }}</td>
           <td>
           <a href="{{ route('edit_cms_page', [
@@ -78,7 +82,7 @@
             'plan_status'       => $detail->plan_status
         ]) }}" class="btn btn-primary">EDIT PLAN TYPE</a>  
 
-        <a href="{{ route('view_cms_page', [
+        {{-- <a href="{{ route('view_cms_page', [
             'membership_id'     => $detail->membership_id,
             'plan_id'           => $detail->plan_id,
             'membership_name'   => $detail->membership_name,
@@ -86,7 +90,7 @@
             'plan_amount'       => $detail->plan_amount,
             'remarks'           => $detail->remarks,
             'plan_status'       => $detail->plan_status
-        ]) }}" class="btn btn-primary">VIEW PLAN TYPE</a>         
+        ]) }}" class="btn btn-primary">VIEW PLAN TYPE</a>          --}}
         </td>
         </tr>
 
