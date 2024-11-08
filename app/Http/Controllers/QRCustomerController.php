@@ -14,8 +14,8 @@ class QRCustomerController extends Controller
  // Generate a unique token
  $token = Str::random(40);
    
- // Define the expiration time (1 minute for testing)
- $expiresAt = Carbon::now()->addMinute();
+ // Define the expiration time (1 Day for testing)
+ $expiresAt = Carbon::now()->addDay();
 
  // Save the token to the database
  TokenModel::create([

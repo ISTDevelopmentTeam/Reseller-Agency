@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CMS_AddController;
 use App\Http\Controllers\CMS_UpdateController;
 use App\Http\Controllers\CMS_UpdateDiscountLogController;
+use App\Http\Controllers\CMSAddPageController;
 use App\Http\Controllers\CustomerFormSubmitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewResellerController;
@@ -33,6 +35,7 @@ Route::get('/subscription_plan_cms', [SubscriptionPlan_CMS_Controller::class, 'i
 Route::get('/subscription_plan', [SubscriptionPlanController::class, 'index'])->name('subscription_plan');
 Route::get('/edit_cms', [CMSEditPageController::class, 'index'])->name('edit_cms_page');
 Route::get('/view_cms', [CMSViewPageController::class, 'index'])->name('view_cms_page');
+Route::get('/add_cms', [CMSAddPageController::class, 'index'])->name('add_cms_page');
 
 // REPORTS
 Route::get('/report_reseller', [ReportResellerController::class, 'index'])->name('report_reseller');
@@ -76,3 +79,4 @@ Route::post('/submit', [CustomerFormSubmitController::class, 'store'])->name('in
 Route::post('/cms/update/{id}/{member_id}', [CMS_UpdateController::class, 'update'])->name('cms.update');
 Route::post('/cms/view/{id}/{member_id}', action: [CMS_UpdateController::class, 'update'])->name('cms.view');
 Route::post('/cms/view_discountLogs/{id}', action: [CMS_UpdateDiscountLogController::class, 'update'])->name('cms.discountLog');
+Route::post('/cms/insert', [CMS_AddController::class, 'store'])->name('cms.add');

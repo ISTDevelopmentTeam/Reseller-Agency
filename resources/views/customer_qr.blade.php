@@ -105,7 +105,7 @@
                         <div class="mt-4">
                             <div class="d-flex align-items-center mb-2">
                                 <i class="fas fa-clock text-muted me-2"></i>
-                                <small class="text-muted">Valid For: 1 Hour</small>
+                                <small class="text-muted">Valid For: 1 Day</small>
                             </div>
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-shield-alt text-muted me-2"></i>
