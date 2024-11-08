@@ -80,3 +80,4 @@ Route::post('/cms/update/{id}/{member_id}', [CMS_UpdateController::class, 'updat
 Route::post('/cms/view/{id}/{member_id}', action: [CMS_UpdateController::class, 'update'])->name('cms.view');
 Route::post('/cms/view_discountLogs/{id}', action: [CMS_UpdateDiscountLogController::class, 'update'])->name('cms.discountLog');
 Route::post('/cms/insert', [CMS_AddController::class, 'store'])->name('cms.add');
+Route::get('/cms/insert/membership_fetch', [CMSAddPageController::class, 'membership_plan_type'])->name('cms.fetch');
