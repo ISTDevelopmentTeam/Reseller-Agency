@@ -114,22 +114,11 @@
         }
 
         .form-step {
-        display: none;
+            display: none;
         }
-
         .form-step.active {
             display: block;
         }
-
-        .form-step {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .form-step.active {
-            opacity: 1;
-        }
-        
         .breadcrumb-item {
             cursor: pointer;
         }
@@ -153,7 +142,7 @@
         }
 
         .vehicle-item {
-            background-color: #f8f9fa;
+            background-color: #d0e1f1;
             transition: all 0.3s ease;
         }
 
@@ -176,16 +165,6 @@
             top: 10px;
             right: 15px;
         }
-
-        .option-button:hover {
-            background-color: #f8f9fa;
-        }
-
-
-        .option-button.selected {
-            background-color: #007bff;
-            color: #fff;
-        }
     </style>
 </head>
 <body>
@@ -202,60 +181,12 @@
                 @include('layout/profile')
                                               
                 <div class="row g-4">
-                    <!-- Today's Today's New Reseller -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Today's Today's New Reseller</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-users text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Monthly New Reseller -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Monthly New Reseller</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-shield-alt text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Weekly Reseller Applicants -->
-                    <div class="col-12 col-md-4">
-                        <div class="stat-card p-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="text-muted mb-2">Weekly Reseller Applicants</h6>
-                                    <h2 class="mb-0">0</h2>
-                                </div>
-                                <div class="stat-icon">
-                                    <i class="fas fa-user-times text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Form Card -->
                     <div class="row justify-content-center mt-5">
                         <div class="col-12 col-md-10">
                             <div class="scrollable-card card shadow-lg">
+                            
                                 <div class="card-body">
-
-                                    <button class="btn btn-primary customer-fillout-btn" onclick="window.open('{{ route('customer_qr') }}', '_blank')">
-                                        <i class="fas fa-user-edit me-2"></i>Customer Fill-out
-                                    </button>
 
                                     <!-- Progress bar -->
                                     <div class="progress mb-4">
@@ -265,411 +196,465 @@
                                     <!-- Breadcrumb -->
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item active" data-step="1">Personal Information</li>
-                                            <li class="breadcrumb-item" data-step="2">Vehicle Details</li>
-                                            <li class="breadcrumb-item" data-step="3">Attachment</li>
-                                            <li class="breadcrumb-item" data-step="4">Other Details</li>
+                                            <li class="breadcrumb-item active" data-step="1">Membership Application</li>
+                                            <li class="breadcrumb-item" data-step="2">Personal Information</li>
+                                            <li class="breadcrumb-item" data-step="3">Contact Information</li>
+                                            <li class="breadcrumb-item" data-step="4">Vehicle Details</li>
+                                            <li class="breadcrumb-item" data-step="5">Information Summary</li>
                                         </ol>
                                     </nav>
-            
+                                    
+
                                     <form id="resellerForm">
-                                        <!-- Step 1: Personal Information -->
+                                        <!--Step 1:  Membership Application -->
                                         <div class="form-step active" id="step1">
-                                        <div class="row justify-content-center mb-4">
-                                            <div class="col-md-8 d-flex justify-content-center gap-4">
-                                                <div class="card shadow-sm px-4 py-3 text-center option-button" style="min-width: 200px; cursor: pointer;">
-                                                    <i class="bi bi-person fs-4"></i>
-                                                    <div>Personal</div>
+                                            <button class="btn btn-primary customer-fillout-btn" onclick="window.open('{{ route('customer_qr') }}', '_blank')">
+                                                <i class="fas fa-user-edit me-2"></i>Customer Fill-out
+                                            </button>
+                                            <h5 class="card-title mb-4">Membership Application</h5>
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="applicationType" class="form-label">Type of Application</label>
+                                                        <select class="form-select" id="applicationType" required>
+                                                            <option value="NEW" selected>NEW</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="membershipType" class="form-label">Type of Membership</label>
+                                                        <input type="text" class="form-control" id="membershipType" value="ASSOCIATE INDIVIDUAL" readonly>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="planType" class="form-label">Plan Type</label>
+                                                        <input type="text" class="form-control" id="planType" value="ANNUAL FEE (ASSOCIATE)" readonly>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="pidpPlanType" class="form-label">PIDP Plan Type</label>
+                                                        <input type="text" class="form-control" id="pidpPlanType">
+                                                    </div>
                                                 </div>
-                                                <div class="card shadow-sm px-4 py-3 text-center option-button" style="min-width: 200px; cursor: pointer;">
-                                                    <i class="bi bi-people fs-4"></i>
-                                                    <div>Authorized Representative</div>
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="activationDate" class="form-label">Activation Date</label>
+                                                        <input type="date" class="form-control" id="activationDate" required>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="pinCode" class="form-label">PIN Code</label>
+                                                        <input type="text" class="form-control" id="pinCode" required>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="initiator" class="form-label">Initiator</label>
+                                                        <select class="form-select" id="initiator" required>
+                                                            <option value="REGULAR" selected>REGULAR</option>
+                                                            <option value="PREMIUM">PREMIUM</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label for="paInsurance" class="form-label">PA Insurance</label>
+                                                        <input type="text" class="form-control" id="paInsurance">
+                                                    </div>
+                                                    
+<!-- Attachment fields -->
+<div class="row">
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="orcrAttachment" class="form-label">ORCR Image</label>
+                                                            <div class="input-group">
+                                                                <input type="file" class="form-control" id="orcrAttachment" name="orcr_image" accept="image/" required>
+                                                                <label class="input-group-text" for="orcrAttachment">
+                                                                    <i class="fas fa-upload"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-text">Upload a clear image of the ORCR</div>
+                                                        </div>
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="idAttachment" class="form-label">ID Image</label>
+                                                            <div class="input-group">
+                                                                <input type="file" class="form-control" id="idAttachment" name="id_image" accept="image/" required>
+                                                                <label class="input-group-text" for="idAttachment">
+                                                                    <i class="fas fa-upload"></i>
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-text">Upload a valid government ID</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-end mt-4">
+                                                        <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Main Form -->
-                                        <div class="row">
-                                            <!-- Branch Selection -->
-                                            <div class="col-md-4 mb-3">
-                                                <label for="branch" class="form-label">Branch</label>
-                                                <select class="form-select" id="branch">
-                                                    <option value="ALABANG">ALABANG</option>
-                                                    <option value="MAKATI">MAKATI</option>
-                                                    <option value="Baliwag">ORTIGAS</option>
-                                                    <option value="Main">QUEZON CITY</option>
-                                                </select>
-                                            </div>
-                                            
-                                            <!-- Type of Membership -->
-                                            <div class="col-md-4 mb-3">
-                                                <label for="membershipType" class="form-label">Type of Membership</label>
-                                                <select class="form-select" id="membershipType">
-                                                    <option selected>Select Type of Membership.</option>
-                                                    <option>Type 1</option>
-                                                    <option>Type 2</option>
-                                                    <option>Type 3</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Plan Type -->
-                                            <div class="col-md-4 mb-3">
-                                                <label for="planType" class="form-label">Plan Type</label>
-                                                <select class="form-select" id="planType">
-                                                    <option selected>Select Plan Type.</option>
-                                                    <option>Plan 1</option>
-                                                    <option>Plan 2</option>
-                                                    <option>Plan 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <!-- Title -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="title" class="form-label">Title</label>
-                                                <select class="form-select" id="title">
-                                                    <option selected>Select Title.</option>
-                                                    <option>Mr.</option>
-                                                    <option>Ms.</option>
-                                                    <option>Mrs.</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- First Name -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="firstName" class="form-label">First Name</label>
-                                                <input type="text" class="form-control" id="firstName" placeholder="Enter First Name">
-                                            </div>
-
-                                            <!-- Middle Name -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="middleName" class="form-label">Middle Name</label>
-                                                <input type="text" class="form-control" id="middleName" placeholder="Enter Middle Name">
-                                            </div>
-
-                                            <!-- Last Name -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="lastName" class="form-label">Last Name</label>
-                                                <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <!-- Birth Month -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="birthMonth" class="form-label">Birth Month</label>
-                                                <select class="form-select" id="birthMonth">
-                                                    <option selected>Select Birth Month.</option>
-                                                    <option>January</option>
-                                                    <option>February</option>
-                                                    <!-- Add other months -->
-                                                </select>
-                                            </div>
-                                            <!-- Birth Day -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="birthDay" class="form-label">Birth Day</label>
-                                                <select class="form-select" id="birthDay">
-                                                    <option selected>Select a Day</option>
-                                                    <!-- Add days 1-31 -->
-                                                </select>
-                                            </div>
-
-                                            <!-- Birth Year -->
-                                            <div class="col-md-2 mb-3">
-                                                <label for="birthYear" class="form-label">Birth Year</label>
-                                                <select class="form-select" id="birthYear">
-                                                    <option selected>Select a Year</option>
-                                                    <!-- Add years -->
-                                                </select>
-                                            </div>
-
-                                            <!-- Birth Place -->
-                                            <div class="col-md-4 mb-3">
-                                                <label for="birthPlace" class="form-label">Birth Place</label>
-                                                <input type="text" class="form-control" id="birthPlace" placeholder="Enter Birth Place">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <!-- Gender -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="gender" class="form-label">Gender</label>
-                                                <select class="form-select" id="gender">
-                                                    <option selected>Select a Gender.</option>
-                                                    <option>Male</option>
-                                                    <option>Female</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Occupation -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="occupation" class="form-label">Occupation</label>
-                                                <input type="text" class="form-control" id="occupation" placeholder="Enter Occupation">
-                                            </div>
-
-                                            <!-- Status -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="status" class="form-label">Status</label>
-                                                <select class="form-select" id="status">
-                                                    <option selected>Please Select Civil Status.</option>
-                                                    <option>Single</option>
-                                                    <option>Married</option>
-                                                    <option>Divorced</option>
-                                                    <option>Widowed</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Citizenship -->
-                                            <div class="col-md-3 mb-3">
-                                                <label for="citizenship" class="form-label">Citizenship</label>
-                                                <select class="form-select" id="citizenship">
-                                                    <option selected>Select Citizenship.</option>
-                                                    <!-- Add citizenship options -->
-                                                </select>
-                                            </div>
-                                            <div class="d-flex justify-content-end mt-4">
-                                                <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
-                                            </div>
-                                        </div>
-            
-                                           
-                                        </div>
-            
-                                        <!-- Step 2: Contact Information -->
+                                        </div>         
+                                        <!-- Step 2: Personal Information -->
                                         <div class="form-step" id="step2">
-                                            <h5 class="mb-4">Contact Information</h5>
+                                            <h5 class="mb-4">Personal Information</h5>
                                             
-                                            <div class="mb-3">
-                                                <label class="form-label">Mailing Address</label>
-                                                <select class="form-select">
-                                                    <option selected>Select Mailing Address</option>
-                                                    <option value="home">Home Address</option>
-                                                    <option value="office">Office Address</option>
-                                                </select>
+                                            <div class="row mb-3">
+                                                <div class="col-md-2">
+                                                    <label for="title" class="form-label">Title</label>
+                                                    <select class="form-select" id="title" required>
+                                                        <option value="MR">MR.</option>
+                                                        <option value="MS">MS.</option>
+                                                        <option value="MRS">MRS.</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="firstName" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" id="firstName" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="middleName" class="form-label">Middle Name</label>
+                                                    <input type="text" class="form-control" id="middleName">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="lastName" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" id="lastName" required>
+                                                </div>
                                             </div>
-
-                                            <div class="card p-4 mb-4">
-                                                <h6 class="mb-3">Home Address</h6>
-                                                <div class="row g-3">
-                                                    <!-- Building and Barangay -->
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Building No./Street</label>
-                                                        <input type="text" class="form-control" placeholder="Enter Building No./Street">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Barangay/Town</label>
-                                                        <input type="text" class="form-control" placeholder="Enter Barangay/Town">
-                                                    </div>
-
-                                                    <!-- City, Province, ZIP -->
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">City/Municipality</label>
-                                                        <input type="text" class="form-control" placeholder="Enter City/Municipality">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">Province</label>
-                                                        <input type="text" class="form-control" placeholder="Enter Province">
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="form-label">ZIP Code</label>
-                                                        <input type="text" class="form-control" placeholder="Enter ZIP Code">
-                                                    </div>
-
-                                                    <!-- Contact Information -->
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Mobile No.</label>
-                                                        <input type="tel" class="form-control" placeholder="(0999) 999-9999">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Alternate Mobile No. (Optional)</label>
-                                                        <input type="tel" class="form-control" placeholder="Enter Alternate Mobile No.">
-                                                    </div>
-
-                                                    <!-- Email Addresses -->
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Email Address</label>
-                                                        <input type="email" class="form-control" placeholder="Enter Email Address">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Alternate Email Address (Optional)</label>
-                                                        <input type="email" class="form-control" placeholder="Enter Alternate Email Address">
-                                                    </div>
+            
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <label for="gender" class="form-label">Gender</label>
+                                                    <select class="form-select" id="gender" required>
+                                                        <option value="MALE">MALE</option>
+                                                        <option value="FEMALE">FEMALE</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="birthdate" class="form-label">Birthdate</label>
+                                                    <input type="date" class="form-control" id="birthdate" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="birthplace" class="form-label">Birthplace</label>
+                                                    <input type="text" class="form-control" id="birthplace" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="citizenship" class="form-label">Citizenship</label>
+                                                    <input type="text" class="form-control" id="citizenship" required>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <label for="nationality" class="form-label">Nationality</label>
+                                                    <input type="text" class="form-control" id="nationality" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="acrNo" class="form-label">ACR No.</label>
+                                                    <input type="text" class="form-control" id="acrNo">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="civilStatus" class="form-label">Civil Status</label>
+                                                    <select class="form-select" id="civilStatus" required>
+                                                        <option value="SINGLE">SINGLE</option>
+                                                        <option value="MARRIED">MARRIED</option>
+                                                        <option value="DIVORCED">DIVORCED</option>
+                                                        <option value="WIDOWED">WIDOWED</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="occupation" class="form-label">Occupation</label>
+                                                    <input type="text" class="form-control" id="occupation" required>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row mb-3">
+                                                <div class="col-md-3">
+                                                    <label for="mobileNumber" class="form-label">Mobile Number</label>
+                                                    <input type="tel" class="form-control" id="mobileNumber" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="emailAddress" class="form-label">Email Address</label>
+                                                    <input type="email" class="form-control" id="emailAddress" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="telephoneNumber" class="form-label">Telephone Number</label>
+                                                    <input type="tel" class="form-control" id="telephoneNumber">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="alternateMobile" class="form-label">Alternate Mobile Number</label>
+                                                    <input type="tel" class="form-control" id="alternateMobile">
+                                                </div>
+                                            </div>
+            
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="alternateEmail" class="form-label">Alternate Email Address</label>
+                                                    <input type="email" class="form-control" id="alternateEmail">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="officePhone" class="form-label">Office Phone Number</label>
+                                                    <input type="tel" class="form-control" id="officePhone">
                                                 </div>
                                             </div>
 
                                             <div class="d-flex justify-content-between mt-4">
-                                                <button type="button" class="btn btn-warning" onclick="previousStep()">Previous</button>
+                                                <button type="button" class="btn btn-secondary" onclick="previousStep()">Previous</button>
                                                 <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
                                             </div>
                                         </div>
-                                        
-                                        <!-- Step 3: Vehicle Information -->
+
+                                        <!-- Step 3: Contact Information Section -->
                                         <div class="form-step" id="step3">
-                                        <div class="container mt-4">
-                                            <div class="card shadow-sm">
-                                                <div class="card-body">
-                                                    <form>
-                                                        <div class="row mb-3">
-                                                            <!-- Conduction Sticker -->
-                                                            <div class="col-md-4">
-                                                                <label class="form-label">Is Conduction Sticker Available?</label>
-                                                                <div class="d-flex gap-3">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="conductionSticker" id="conductionYes">
-                                                                        <label class="form-check-label" for="conductionYes">YES</label>
-                                                                    </div>
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="conductionSticker" id="conductionNo" checked>
-                                                                        <label class="form-check-label" for="conductionNo">NO</label>
-                                                                    </div>
-                                                                </div>
+                                            <h5 class="mt-4 mb-3">Office Address</h5>
+                                            
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="searchOfficeTown" class="form-label">Search Town</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="searchOfficeTown" placeholder="Search town...">
+                                                        <button class="btn btn-secondary" type="button">Search</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="companyName" class="form-label">Company Name</label>
+                                                    <input type="text" class="form-control" id="companyName" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="officeBuildingStreet" class="form-label">Building No. / Street</label>
+                                                    <input type="text" class="form-control" id="officeBuildingStreet" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="officeBarangay" class="form-label">Barangay / Towns</label>
+                                                    <input type="text" class="form-control" id="officeBarangay" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="officeCityMunicipality" class="form-label">City/Municipality</label>
+                                                    <input type="text" class="form-control" id="officeCityMunicipality" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                               
+                                                <div class="col-md-3">
+                                                    <label for="officeProvince" class="form-label">Province</label>
+                                                    <input type="text" class="form-control" id="officeProvince" required>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="officeZipCode" class="form-label">Zip</label>
+                                                    <input type="text" class="form-control" id="officeZipCode" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="mailingPreference" class="form-label">Mailing Preference</label>
+                                                    <select class="form-select" id="mailingPreference" required>
+                                                        <option value="HOME">HOME</option>
+                                                        <option value="OFFICE">OFFICE</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="availMagazine" class="form-label">Avail Online AQ Magazine</label>
+                                                    <select class="form-select" id="availMagazine" required>
+                                                        <option value="YES">YES</option>
+                                                        <option value="NO">NO</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+            
+                                            <div class="d-flex justify-content-between mt-4">
+                                                <button type="button" class="btn btn-secondary" onclick="previousStep()">Previous</button>
+                                                <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
+                                            </div>
+                                        </div>
+                                      
+            
+                                        <!-- Step 4: Vehicle Information -->
+                                        <div class="form-step" id="step4">
+                                            <h5 class="mb-4">Vehicle Details</h5>
+                                            
+                                            <div id="vehicleContainer">
+                                                <!-- Vehicle form template will be cloned here -->
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary mt-3" id="addVehicle">
+                                                <i class="bi bi-plus-circle me-2"></i>Add Item
+                                            </button>
+
+                                            <div class="d-flex justify-content-between mt-4">
+                                                <button type="button" class="btn btn-secondary" onclick="previousStep()">Previous</button>
+                                                <button type="button" class="btn btn-primary" onclick="nextStep()">Next</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Vehicle Template (hidden) -->
+                                        <template id="vehicleTemplate">
+                                            <div class="vehicle-item border rounded p-3 mb-3">
+                                                <h6 class="mb-3">Vehicle <span class="vehicle-number">1</span></h6>
+                                                <div class="row g-3">
+                                                    <!-- First Row -->
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Conduction Sticker</label>
+                                                        <select class="form-select">
+                                                            <option value="NO">NO</option>
+                                                            <option value="YES">YES</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Plate Number</label>
+                                                        <input type="text" class="form-control" placeholder="Enter plate number">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Car Make</label>
+                                                        <input type="text" class="form-control" placeholder="Enter car make">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Car Model</label>
+                                                        <input type="text" class="form-control" placeholder="Enter car model">
+                                                    </div>
+
+                                                    <!-- Second Row -->
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Vehicle Type</label>
+                                                        <input type="text" class="form-control" placeholder="Enter vehicle type">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Year</label>
+                                                        <input type="number" class="form-control" placeholder="Enter year">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Sub model</label>
+                                                        <input type="text" class="form-control" placeholder="Enter sub model">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Color</label>
+                                                        <input type="text" class="form-control" placeholder="Enter color">
+                                                    </div>
+
+                                                    <!-- Third Row -->
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Fuel Type</label>
+                                                        <select class="form-select">
+                                                            <option value="GAS">GAS</option>
+                                                            <option value="DIESEL">DIESEL</option>
+                                                            <option value="ELECTRIC">ELECTRIC</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Transmission Type</label>
+                                                        <select class="form-select">
+                                                            <option value="AUTOMATIC">AUTOMATIC</option>
+                                                            <option value="MANUAL">MANUAL</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-danger mt-3 remove-vehicle">
+                                                    <i class="bi bi-trash me-2"></i>Remove
+                                                </button>
+                                            </div>
+                                        </template>
+
+                                             
+                                        <!-- Step 5: Information Summary -->
+                                        <div class="form-step" id="step5">
+                                            <h5 class="mb-4">Information Summary</h5>
+                                                      
+                                                <!-- Membership Application Summary -->
+                                                <div class="card mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h6 class="mb-0">Membership Application Details</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-3">
+                                                                <p class="text-muted mb-1">Application Type</p>
+                                                                <p class="fw-bold" id="summaryApplicationType">-</p>
                                                             </div>
-                                                            
-                                                            <!-- Plate Number -->
-                                                            <div class="col-md-4">
-                                                                <label class="form-label">Plate No.</label>
-                                                                <input type="text" class="form-control" placeholder="ENTER PLATE NO.">
+                                                            <div class="col-md-3">
+                                                                <p class="text-muted mb-1">Membership Type</p>
+                                                                <p class="fw-bold" id="summaryMembershipType">-</p>
                                                             </div>
-                                                            
-                                                            <!-- Diplomat -->
-                                                            <div class="col-md-4">
-                                                                <label class="form-label">Is Diplomat?</label>
-                                                                <div class="d-flex gap-3">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="diplomat" id="diplomatYes">
-                                                                        <label class="form-check-label" for="diplomatYes">YES</label>
-                                                                    </div>
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="diplomat" id="diplomatNo" checked>
-                                                                        <label class="form-check-label" for="diplomatNo">NO</label>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="col-md-3">
+                                                                <p class="text-muted mb-1">Plan Type</p>
+                                                                <p class="fw-bold" id="summaryPlanType">-</p>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <p class="text-muted mb-1">Activation Date</p>
+                                                                <p class="fw-bold" id="summaryActivationDate">-</p>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </div>
 
-                                                        <div class="row mb-3">
-                                                            <!-- Make -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Make</label>
-                                                                <select class="form-select">
-                                                                    <option selected>Car Make</option>
-                                                                </select>
-                                                            </div>
-                                                            
-                                                            <!-- Car Model -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Car Model</label>
-                                                                <select class="form-select">
-                                                                    <option selected>Car Model</option>
-                                                                </select>
-                                                            </div>
-                                                            
-                                                            <!-- Vehicle Type -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Vehicle Type</label>
-                                                                <select class="form-select">
-                                                                    <option selected>Vehicle Type</option>
-                                                                </select>
-                                                            </div>
-                                                            
-                                                            <!-- Year Model -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Year Model</label>
-                                                                <input type="text" class="form-control" placeholder="Year Model">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row mb-3">
-                                                            <!-- Sub-Model -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Sub-Model</label>
-                                                                <input type="text" class="form-control" placeholder="Variant">
-                                                            </div>
-                                                            
-                                                            <!-- No. of Person -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">No. of Person</label>
-                                                                <input type="number" class="form-control" placeholder="No. of Person">
-                                                            </div>
-                                                            
-                                                            <!-- Color -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Color</label>
-                                                                <input type="text" class="form-control" placeholder="Enter Car Color">
-                                                            </div>
-                                                            
-                                                            <!-- Fuel Type -->
-                                                            <div class="col-md-3">
-                                                                <label class="form-label">Fuel Type</label>
-                                                                <select class="form-select">
-                                                                    <option selected>Fuel Type</option>
-                                                                    <option>Gasoline</option>
-                                                                    <option>Diesel</option>
-                                                                    <option>Electric</option>
-                                                                    <option>Hybrid</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row mb-4">
-                                                            <!-- Transmission Type -->
+                                                <!-- Personal Information Summary -->
+                                                <div class="card mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h6 class="mb-0">Personal Information</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row g-3">
                                                             <div class="col-md-4">
-                                                                <label class="form-label">Transmission Type</label>
-                                                                <select class="form-select">
-                                                                    <option selected>Select transmission type</option>
-                                                                    <option>Manual</option>
-                                                                    <option>Automatic</option>
-                                                                    <option>CVT</option>
-                                                                </select>
+                                                                <p class="text-muted mb-1">Full Name</p>
+                                                                <p class="fw-bold" id="summaryFullName">-</p>
                                                             </div>
-                                                            
-                                                            <!-- Acts of Nature -->
-                                                            <div class="col-md-4">
-                                                                <label class="form-label">Acts of Nature?</label>
-                                                                <div class="d-flex gap-3">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="actsOfNature" id="actsYes">
-                                                                        <label class="form-check-label" for="actsYes">YES</label>
-                                                                    </div>
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="actsOfNature" id="actsNo" checked>
-                                                                        <label class="form-check-label" for="actsNo">NO</label>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="col-md-2">
+                                                                <p class="text-muted mb-1">Gender</p>
+                                                                <p class="fw-bold" id="summaryGender">-</p>
                                                             </div>
-                                                            
-                                                            <!-- Mortgaged -->
-                                                            <div class="col-md-4">
-                                                                <label class="form-label">Mortgaged?</label>
-                                                                <div class="d-flex gap-3">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="mortgaged" id="mortgagedYes">
-                                                                        <label class="form-check-label" for="mortgagedYes">YES</label>
-                                                                    </div>
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio" name="mortgaged" id="mortgagedNo" checked>
-                                                                        <label class="form-check-label" for="mortgagedNo">NO</label>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="col-md-3">
+                                                                <p class="text-muted mb-1">Birthdate</p>
+                                                                <p class="fw-bold" id="summaryBirthdate">-</p>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <p class="text-muted mb-1">Civil Status</p>
+                                                                <p class="fw-bold" id="summaryCivilStatus">-</p>
                                                             </div>
                                                         </div>
-
-                                                        <!-- Add Another Vehicle Button -->
-                                                        <div class="mb-3">
-                                                            <button type="button" class="btn btn-primary">
-                                                                <i class="bi bi-plus"></i> Add another vehicle
-                                                            </button>
+                                                        <div class="row g-3 mt-2">
+                                                            <div class="col-md-6">
+                                                                <p class="text-muted mb-1">Email Address</p>
+                                                                <p class="fw-bold" id="summaryEmail">-</p>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <p class="text-muted mb-1">Mobile Number</p>
+                                                                <p class="fw-bold" id="summaryMobile">-</p>
+                                                            </div>
                                                         </div>
+                                                    </div>
+                                                </div>
 
-                                                <!--Step 4 -->
-
-                                                        <!-- Navigation Buttons -->
-                                                        <div class="d-flex justify-content-between mt-4">
-                                                            <button type="button" class="btn btn-warning" onclick="previousStep()">Previous</button>
-                                                            <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+                                                <!-- Contact Information Summary -->
+                                                <div class="card mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h6 class="mb-0">Contact Information</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row g-3">
+                                                            <div class="col-md-6">
+                                                                <p class="text-muted mb-1">Company Name</p>
+                                                                <p class="fw-bold" id="summaryCompanyName">-</p>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <p class="text-muted mb-1">Complete Address</p>
+                                                                <p class="fw-bold" id="summaryAddress">-</p>
+                                                            </div>
                                                         </div>
-                                                    </form>
+                                                        <div class="row g-3 mt-2">
+                                                            <div class="col-md-6">
+                                                                <p class="text-muted mb-1">Mailing Preference</p>
+                                                                <p class="fw-bold" id="summaryMailingPreference">-</p>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <p class="text-muted mb-1">Online AQ Magazine</p>
+                                                                <p class="fw-bold" id="summaryMagazine">-</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Vehicle Information Summary -->
+                                                <div class="card mb-3">
+                                                    <div class="card-header bg-light">
+                                                        <h6 class="mb-0">Vehicle Information</h6>
+                                                    </div>
+                                                    <div class="card-body" id="vehicleSummaryContainer">
+                                                        <!-- Vehicle summaries will be inserted here dynamically -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between mt-4">
+                                                    <button type="button" class="btn btn-secondary" onclick="previousStep()">Previous</button>
+                                                    <button type="submit" class="btn btn-primary">Submit Application</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -686,48 +671,122 @@
 </div>
 </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="/script/new_reseller.js"></script>
     <script>
-        var towns = @json($towns);
-        console.log(towns)
-            $("#town").autocomplete({
-            minLength: 1,
-            source: function (request, response) {
-                var term = request.term;
-                var filteredTowns = towns.filter(function (town) {
-                return town.az_barangay.toLowerCase().indexOf(term.toLowerCase()) !== -1;
-                });
-                var limitedTowns = filteredTowns.slice(0, 10); // Limiting to first 10 items
-                response(limitedTowns.map(function (town) {
-                return {
-                    label: town.az_barangay + " - " + town.city_name + ", " + town.district_name,
-                    value: town.az_barangay
-                };
-                }));
-            },
-            select: function (event, ui) {
-                var selectedTown = towns.find(function (town) {
-                return town.az_barangay === ui.item.value;
-                });
-                $("#town").val(decodeHtml(selectedTown.az_barangay));
-                $("#city").val(decodeHtml(selectedTown.city_name));
-                $("#province").val(decodeHtml(selectedTown.district_name));
-                $("#zcode").val(decodeHtml(selectedTown.az_zipcode));
-                return false;
+// Form state management
+let currentStep = 1;
+const totalSteps = 5;
+
+// DOM Elements
+const progressBar = document.querySelector('.progress-bar');
+const formSteps = document.querySelectorAll('.form-step');
+const breadcrumbItems = document.querySelectorAll('.breadcrumb-item');
+const vehicleContainer = document.getElementById('vehicleContainer');
+const vehicleTemplate = document.getElementById('vehicleTemplate');
+const addVehicleButton = document.getElementById('addVehicle');
+
+// Initialize form handling
+document.addEventListener('DOMContentLoaded', function() {
+    initializeForm();
+    initializeVehicleHandling();
+    attachBreadcrumbListeners();
+});
+
+// Form initialization and navigation
+function initializeForm() {
+    showStep(currentStep);
+    updateProgressBar();
+}
+
+function updateProgressBar() {
+    const progress = (currentStep / totalSteps) * 100;
+    progressBar.style.width = `${progress}%`;
+}
+
+function showStep(step) {
+    formSteps.forEach(el => el.classList.remove('active'));
+    document.getElementById(`step${step}`).classList.add('active');
+    
+    breadcrumbItems.forEach((el, index) => {
+        if (index + 1 === step) {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    });
+    
+    updateProgressBar();
+}
+
+function nextStep() {
+    if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+    }
+}
+
+function previousStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
+
+// Breadcrumb navigation
+function attachBreadcrumbListeners() {
+    breadcrumbItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const step = parseInt(this.dataset.step);
+            if (step <= currentStep) {
+                currentStep = step;
+                showStep(step);
             }
-            })
-            .autocomplete("instance")._renderItem = function (ul, item) {
-            return $("<li>")
-                .attr("data-value", item.value)
-                .append(item.label)
-                .appendTo(ul);
-            };
+        });
+    });
+}
+
+// Vehicle form handling
+function initializeVehicleHandling() {
+    let vehicleCount = 0;
+
+    function addVehicle() {
+        vehicleCount++;
+        const clone = vehicleTemplate.content.cloneNode(true);
+        
+        // Update vehicle number
+        clone.querySelector('.vehicle-number').textContent = vehicleCount;
+        
+        // Add remove functionality
+        const removeButton = clone.querySelector('.remove-vehicle');
+        removeButton.addEventListener('click', function() {
+            this.closest('.vehicle-item').remove();
+            updateVehicleNumbers();
+        });
+        
+        vehicleContainer.appendChild(clone);
+    }
+
+    function updateVehicleNumbers() {
+        const vehicles = vehicleContainer.querySelectorAll('.vehicle-item');
+        vehicles.forEach((vehicle, index) => {
+            vehicle.querySelector('.vehicle-number').textContent = index + 1;
+        });
+        vehicleCount = vehicles.length;
+    }
+
+    // Add first vehicle form by default
+    addVehicle();
+
+    // Add button click handler
+    addVehicleButton.addEventListener('click', addVehicle);
+}
+
+// Make functions globally available
+window.nextStep = nextStep;
+window.previousStep = previousStep;
+
     </script>
 </body>
 </html>
