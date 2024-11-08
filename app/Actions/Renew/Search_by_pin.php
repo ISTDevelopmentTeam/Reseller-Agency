@@ -19,7 +19,6 @@ class Search_by_pin
     public function handle($request){
         $searchParams = $request->input('search');
         $searchPin = strtoupper($searchParams['pincode'] ?? null);
-        dd($searchPin);
         $link = $this->Weis_api() . '/weis/fetchmemberinfo/' . $searchPin;
 
         $response1 = Http::withHeaders(['Authorization' => $this->token])->get($link);

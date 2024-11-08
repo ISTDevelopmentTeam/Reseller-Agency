@@ -5,7 +5,7 @@ namespace App\Actions\Renew;
 use Illuminate\Support\Facades\Http;
 use App\Traits\Generate_token;
 
-Class Regular_Search
+Class Regular_search
 {
     use Generate_token;
     protected $token;
