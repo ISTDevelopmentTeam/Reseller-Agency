@@ -53,7 +53,7 @@
 
             @foreach($membership_plantype as $type_of_membership)
 
-            <option value="{{$type_of_membership->membership_name}}">{{$type_of_membership->membership_name}}</option>
+            <option value="{{$type_of_membership->membership_id}}">{{$type_of_membership->membership_name}}</option>
 
             @endforeach
 
@@ -65,9 +65,8 @@
         <label for="edit_plan_type" class="form-label fw-bold">Plan Type</label>
         <select name="edit_plan_type" id="edit_plan_type" class="form-select shadow-sm">
 
-            @foreach($membership_plans_and_types as $plan_type)
-            <option value="{{$plan_type->plan_name}}">{{$plan_type->plan_name}}</option>
-            @endforeach
+            <option value="">Select a Plan Type</option>
+            
 
         </select>
     </div>
@@ -115,7 +114,7 @@
         // Access the plan_name from the array correctly using array syntax
 
         //Type of Membership
-        const fetched_membership_name   = "{{ $data['membership_name'] }}";
+        const fetched_membership_name   = "{{ $data['membership_id'] }}";
         const fetched_membership_ID     = document.getElementById('edit_type_of_membership');
 
 
@@ -142,8 +141,70 @@
         fetched_amount_ID.value         = fetched_amount;
         fetched_remarks_ID.value        = fetched_remarks;
 
+
+    });
+
+
+
+
+
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Data for all membership plans and types, passed from the Blade view
+        const subOptions = @json($membership_plans_and_types); // Ensure $membership_plans_and_types is structured properly in the controller
+
+        // Pre-fetched values
+        const fetched_membership_id = "{{ $data['membership_id'] }}"; // Assuming you have `membership_id`
+        const fetched_plan_name = "{{ $data['plan_name'] }}"; // Assuming `plan_name` is the second dropdown value
+
+        // Set the first dropdown's value and update the second dropdown
+        const firstDropdown = document.getElementById('edit_type_of_membership');
+        firstDropdown.value = fetched_membership_id;
+
+        // Function to update the second dropdown based on the first dropdown selection
+        function updateSecondDropdown() {
+            const firstOptionValue = firstDropdown.value;
+            const secondDropdown = document.getElementById('edit_plan_type');
+
+            // Clear the second dropdown
+            secondDropdown.innerHTML = '<option value="">Select a Plan Type</option>';
+
+            // If a valid first option is selected
+            if (firstOptionValue) {
+                // Filter the subOptions based on the first dropdown value (membership_id)
+                const filteredOptions = subOptions.filter(option => option.membership_id == firstOptionValue);
+
+                // Populate the second dropdown with the filtered options
+                filteredOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.plan_name;
+                    optionElement.textContent = option.plan_name;
+                    secondDropdown.appendChild(optionElement);
+                });
+
+                // Automatically select the first available option in the second dropdown
+                if (filteredOptions.length > 0) {
+                    secondDropdown.value = filteredOptions[0].plan_name;
+                }
+            }
+        }
+
+        // Call the function initially to set up the second dropdown
+        updateSecondDropdown();
+
+        // Listen for changes on the first dropdown and update the second dropdown
+        firstDropdown.addEventListener('change', updateSecondDropdown);
     });
 </script>
+
+
+
+
+
+
 
 
 
