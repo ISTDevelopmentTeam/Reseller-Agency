@@ -49,10 +49,10 @@
 
 
   <div class="container">
-    <a href="{{ route('add_cms_page') }}" class="btn btn-primary">Add Membership</a>
 
     <h2 class="mt-5">CMS</h2>
     <table class="table table-striped table-bordered table-custom">
+    <a href="{{ route('add_cms_page') }}" class="btn btn-primary">Add Membership</a>
       <thead>
         <tr>
           <th>Type of Membership</th>

@@ -64,11 +64,9 @@
     <div class="mb-3">
         <label for="add_plan_type" class="form-label fw-bold">Plan Type</label>
         <select name="add_plan_type" id="add_plan_type" class="form-select shadow-sm">
-            @foreach($membership_plans_and_types AS $plan_type)
 
-            <option value="{{$plan_type->plan_name}}">{{$plan_type->plan_name}}</option>
+            <option value="">Select a Plan Type</option>
             
-            @endforeach
 
         </select>
     </div>
@@ -111,5 +109,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Data for all membership plans and types, passed from the Blade view
+        const subOptions = @json($membership_plans_and_types); // Ensure $membership_plans_and_types is structured properly in the controller
+
+        // Function to update the second dropdown based on the first dropdown selection
+        function updateSecondDropdown() {
+            const firstOptionValue = document.getElementById('add_type_of_membership').value;
+            const secondDropdown = document.getElementById('add_plan_type');
+
+            // Clear the second dropdown
+            secondDropdown.innerHTML = '<option value="">Select a Plan Type</option>';
+
+            // If a valid first option is selected
+            if (firstOptionValue) {
+                // Filter the subOptions based on the first dropdown value (parent_id)
+                const filteredOptions = subOptions.filter(option => option.membership_id == firstOptionValue);
+
+                // Populate the second dropdown with the filtered options
+                filteredOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.plan_name; // The ID of the plan
+                    optionElement.textContent = option.plan_name; // The name of the plan
+                    secondDropdown.appendChild(optionElement);
+                });
+            }
+        }
+
+        // Listen for changes on the first dropdown and update the second dropdown
+        document.getElementById('add_type_of_membership').addEventListener('change', updateSecondDropdown);
+    });
+</script>
+
+
 </html>
 </body>
