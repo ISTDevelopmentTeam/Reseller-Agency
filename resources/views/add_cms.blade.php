@@ -120,6 +120,8 @@
             const firstOptionValue = document.getElementById('add_type_of_membership').value;
             const secondDropdown = document.getElementById('add_plan_type');
 
+            console.log(firstOptionValue);
+
             // Clear the second dropdown
             secondDropdown.innerHTML = '<option value="">Select a Plan Type</option>';
 
