@@ -4,107 +4,336 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Form</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
+    /* Sidebar styling */
+    #sidebar-wrapper {
+        min-height: 100vh;
+        width: 250px;
+        margin-left: -250px;
+        transition: margin 0.25s ease-out;
+        background-color: #212529;
+    }
+
+    #sidebar-wrapper .sidebar-heading {
+        padding: 0.875rem;
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    .list-group-item {
+        background-color: transparent;
+        color: #fff;
+        border: none;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .list-group-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    #page-content-wrapper {
+        min-width: 100vw;
+    }
+
+    .navbar {
+        padding: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        #sidebar-wrapper {
+            margin-left: 0;
+        }
+
+        #page-content-wrapper {
+            min-width: 0;
+            width: 100%;
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: -250px;
+        }
+    }
     /* Custom table styling */
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
+
     .table-custom {
-      margin-top: 20px;
-    }
-    .table th, .table td {
-      text-align: center;
-    }
-    .table th {
-      background-color: #f8f9fa;
-    }
-    .table-striped tbody tr:nth-of-type(odd) {
-      background-color: #f2f2f2;
-    }
-    .select2-container{
-    z-index:100000;
+        margin-top: 0 !important;
+        vertical-align: middle;
     }
 
-     /* CSS for Landscape Modal */
-     .modal-landscape {
-            max-width: 90%; /* Expands the modal width to 90% */
-            width: 100%;
-        }
+    .table-custom th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
 
-        /* Optional: Adjust form controls and table widths within the modal */
-        .modal-landscape .form-control,
-        .modal-landscape .table-custom {
-            width: 100%;
-        }
+    .table-custom td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 1.2em;
+        display: inline-block;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 1rem;
+    }
+    
+   
+    .badge.rounded-pill {
+        min-width: 80px;
+    }
+
+    .btn-group .btn {
+        border-radius: 0.25rem !important;
+        margin: 0 0.2rem;
+    }
+
+    .pagination {
+        margin-bottom: 0;
+    }
+
+    .page-link {
+        padding: 0.375rem 0.75rem;
+    }
+
+    .input-group-text {
+        border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
 
 
   </style>
 </head>
 <body>
 
+<div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="border-end bg-dark" id="sidebar-wrapper">
+            <div class="sidebar-heading">
+                <img src="images/aap_logo_white.png" alt="AAP LOGO" class="ms-3" style="width: 40px; height: 30px;">
+                Reseller
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+                <a href="#" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-id-badge me-2"></i> Membership
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i> Users
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-cogs me-2"></i> Settings
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-file-alt me-2"></i> Reports
+                </a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-dark d-flex align-items-center" id="sidebarToggle">
+                        <i class="fa-solid fa-arrow-left me-2"></i>
+                        <span class="d-none d-sm-inline">Hide Sidebar</span>
+                    </button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle me-1"></i>Admin
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a>
+                                    <a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
 
 
 
   
 
 
-  <div class="container">
+<div class="container-fluid px-4">
+    <div class="card shadow mt-4 mb-4">
+        <div class="card-header bg-primary bg-gradient d-flex justify-content-between align-items-center py-3">
+            <h5 class="m-0 font-weight-bold text-white">
+                <i class="fas fa-id-badge me-2"></i>Edit Membership
+            </h5>
+        </div>
+        <div class="card-body">
+            <!-- Search and Filter Section -->
+            <div class="row mb-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Search Membership Plan">
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <select class="form-select">
+                        <option value="">Filter by Status</option>
+                        <option value="ACTIVE">Active</option>
+                        <option value="INACTIVE">Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMembershipModal">
+                        <i class="fas fa-plus-circle me-2"></i>Add Type of Membership
+                    </button>
+                </div>
+            </div>
 
-    <h2 class="mt-5">CMS</h2>
-    <table class="table table-striped table-bordered table-custom">
-    <a href="{{ route('add_cms_page') }}" class="btn btn-primary">Add Membership</a>
-      <thead>
-        <tr>
-          <th>Type of Membership</th>
-          <th>Plan Type</th>
-          <th>Ammount</th>
-          <th>Status</th>
-          <th>Action</th>
-
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($details as $detail)
-
-        <tr>
-          <td>{{        $detail->membership_name    }}</td>
-          <td>{{        $detail->plan_name              }}</td>
-          <td>{{        $detail->plan_amount            }}</td>
-          <td>{{        $detail->plan_status      }}</td>
-          <td>
-          <a href="{{ route('edit_cms_page', [
-            'membership_id'     => $detail->membership_id,
-            'plan_id'           => $detail->plan_id,
-            'membership_name'   => $detail->membership_name,
-            'plan_name'         => $detail->plan_name,
-            'plan_amount'       => $detail->plan_amount,
-            'remarks'           => $detail->remarks,
-            'plan_status'       => $detail->plan_status
-        ]) }}" class="btn btn-primary">EDIT PLAN TYPE</a>  
-
-        {{-- <a href="{{ route('view_cms_page', [
-            'membership_id'     => $detail->membership_id,
-            'plan_id'           => $detail->plan_id,
-            'membership_name'   => $detail->membership_name,
-            'plan_name'         => $detail->plan_name,
-            'plan_amount'       => $detail->plan_amount,
-            'remarks'           => $detail->remarks,
-            'plan_status'       => $detail->plan_status
-        ]) }}" class="btn btn-primary">VIEW PLAN TYPE</a>          --}}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-bordered table-custom">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center">Type of Membership</th>
+                            <th class="text-center">Plan Type</th>
+                            <th class="text-center">Amount</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+<!-- Table Body -->
+<tbody>
+    @foreach($details as $detail)
+    <tr>
+        <td>{{ $detail->membership_name }}</td>
+        <td>{{ $detail->plan_name }}</td>
+        <td class="text-center">{{ $detail->plan_amount }}</td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <span class="badge bg-{{ $detail->plan_status == 'ACTIVE' ? 'success' : 'danger' }} rounded-pill px-3">
+                    {{ $detail->plan_status }}
+                </span>
+            </div>
         </td>
-        </tr>
+        <td class="text-center">
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $detail->plan_id }}">
+                    <i class="fas fa-pencil me-2"></i>Edit
+                </button>
+            </div>
+        </td>
+    </tr>
 
-        @endforeach
-      </tbody>
-    </table>
-  </div>
+    <!-- Edit Modal for each row -->
+    <div class="modal fade" id="editModal{{ $detail->plan_id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $detail->plan_id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('update_plan') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="membership_id" value="{{ $detail->membership_id }}">
+                    <input type="hidden" name="plan_id" value="{{ $detail->plan_id }}">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel{{ $detail->plan_id }}">Edit Plan Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="membership_name" class="form-label">Membership Name</label>
+                            <input type="text" class="form-control" id="membership_name" name="membership_name" value="{{ $detail->membership_name }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="plan_name" class="form-label">Plan Name</label>
+                            <input type="text" class="form-control" id="plan_name" name="plan_name" value="{{ $detail->plan_name }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="plan_amount" class="form-label">Plan Amount</label>
+                            <input type="number" class="form-control" id="plan_amount" name="plan_amount" value="{{ $detail->plan_amount }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="remarks" class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" name="remarks">{{ $detail->remarks }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="plan_status" class="form-label">Status</label>
+                            <select class="form-select" id="plan_status" name="plan_status">
+                                <option value="ACTIVE" {{ $detail->plan_status == 'ACTIVE' ? 'selected' : '' }}>ACTIVE</option>
+                                <option value="INACTIVE" {{ $detail->plan_status == 'INACTIVE' ? 'selected' : '' }}>INACTIVE</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
+</tbody>
+                </table>
+            </div>
+
+                        <!-- Pagination Section -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div class="text-muted">
+                                Showing {{ $details->firstItem() }} to {{ $details->lastItem() }} of {{ $details->total() }} entries
+                            </div>
+                            <nav aria-label="Page navigation">
+                                {{ $details->links('pagination::bootstrap-4') }}
+                            </nav>
+                            </div>
+                         </div>
 
 
 <!-- Button trigger modal -->
   
 
 <!-- Modal if Pressing To Edit Plan Type -->
-<div class="modal fade edit_modal" id="edit_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade edit_modal" id="edit_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-landscape">
         <div class="modal-content">
             <div class="modal-header">
@@ -160,102 +389,136 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 
-<!-- Viewing of Plan Type Promo / Adding Discount Promo  -->
 
-<div class="modal fade view_modal" id="view_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> <!-- Extra wide modal for side-by-side layout -->
+<!-- Add this modal code just before your closing </body> tag -->
+<div class="modal fade" id="addMembershipModal" tabindex="-1" aria-labelledby="addMembershipModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal_label">Membership Plan Type</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <!-- Left Column: Form Fields -->
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="subscriptionTitle" class="form-label">Type of Membership</label>
-                            <input type="text" class="form-control" id="view_type_of_membership" disabled>
+            <form action="{{ route('add.membership') }}" method="POST">
+                @csrf
+                <div class="modal-header bg-primary bg-gradient">
+                    <h5 class="modal-title text-white" id="addMembershipModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Add New Membership
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Type of Membership -->
+                    <div class="mb-3">
+                        <label for="membership_name" class="form-label">Type of Membership</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-id-badge"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control @error('membership_name') is-invalid @enderror" 
+                                   id="membership_name" 
+                                   name="membership_name" 
+                                   value="{{ old('membership_name') }}"
+                                   required>
                         </div>
-                        <div class="mb-3">
-                            <label for="price" class="form-label">Plan Type</label>
-                            <input type="text" class="form-control" id="view_plan_Type" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="line1Detail" class="form-label">Amount</label>
-                            <input type="text" class="form-control" id="view_amount" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="remarks" class="form-label">Remarks</label>
-                            <textarea class="form-control" id="view_remarks" rows="4" disabled></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label><br>
-                            <input type="text" class="form-control" id="view_status" disabled>
-                        </div>
+                        @error('membership_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Right Column: Discounted Rate Section -->
-                    <div class="col-md-6">
-                        <div class="text-center mb-3"><strong>DISCOUNTED RATE</strong></div>
-                        <div class="mb-3">
-                            <label for="amount_discount" class="form-label">Amount</label>
-                            <input type="text" class="form-control" id="amount_discount">
+                    <!-- Plan Name -->
+                    <div class="mb-3">
+                        <label for="plan_name" class="form-label">Plan Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control @error('plan_name') is-invalid @enderror" 
+                                   id="plan_name" 
+                                   name="plan_name" 
+                                   value="{{ old('plan_name') }}"
+                                   required>
                         </div>
-                        <div class="mb-3">
-                            <label for="start_discount" class="form-label">Date Start:</label>
-                            <input type="date" class="form-control" id="start_discount">
+                        @error('plan_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Plan Amount -->
+                    <div class="mb-3">
+                        <label for="plan_amount" class="form-label">Plan Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" 
+                                   class="form-control @error('plan_amount') is-invalid @enderror" 
+                                   id="plan_amount" 
+                                   name="plan_amount" 
+                                   value="{{ old('plan_amount') }}"
+                                   step="0.01" 
+                                   min="0"
+                                   required>
                         </div>
-                        <div class="mb-3">
-                            <label for="end_discount" class="form-label">Date End:</label>
-                            <input type="date" class="form-control" id="end_discount">
+                        @error('plan_amount')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Remarks -->
+                    <div class="mb-3">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-comment"></i>
+                            </span>
+                            <textarea class="form-control @error('remarks') is-invalid @enderror" 
+                                      id="remarks" 
+                                      name="remarks" 
+                                      rows="3">{{ old('remarks') }}</textarea>
                         </div>
+                        @error('remarks')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-3">
+                        <label for="plan_status" class="form-label">Status</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-toggle-on"></i>
+                            </span>
+                            <select class="form-select @error('plan_status') is-invalid @enderror" 
+                                    id="plan_status" 
+                                    name="plan_status" 
+                                    required>
+                                <option value="ACTIVE" {{ old('plan_status') == 'ACTIVE' ? 'selected' : '' }}>ACTIVE</option>
+                                <option value="INACTIVE" {{ old('plan_status') == 'INACTIVE' ? 'selected' : '' }}>INACTIVE</option>
+                            </select>
+                        </div>
+                        @error('plan_status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
-
-                <!-- Discount Logs Table (Below Form and Discounted Rate Sections) -->
-                <div class="container mt-4">
-                    <h2>Discount Logs</h2>
-                    <table class="table table-striped table-bordered table-custom">
-                        <thead>
-                            <tr>
-                                <th>Discounted Amount</th>
-                                <th>Date Start</th>
-                                <th>Date End</th>
-                                <th>Date Added</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($updated as $update)
-                                <tr>
-                                    <td>{{ $update->discount_amount }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($update->discount_start)->format('F j, Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($update->discount_end)->format('F j, Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($update->added_when)->format('F j, Y') }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save Membership
+                    </button>
                 </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
 
-
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -266,6 +529,18 @@
 
   <!-- JavaScript to fill modal with data -->
 <script>
+
+    
+    window.addEventListener('DOMContentLoaded', event => {
+        const sidebarToggle = document.getElementById('sidebarToggle');
+          if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', event => {
+            event.preventDefault();
+            document.getElementById('wrapper').classList.toggle('toggled');
+            });
+        }
+    });
+    
 
 
 
@@ -290,10 +565,15 @@
         document.getElementById('view_line1Detail').value = view_line1Detail;
         document.getElementById('view_remarks').value = view_remarks;
         document.getElementById('view_status').value = view_status;
-
-
-        
-
+ 
     }
+
+    $(document).ready(function() {
+    $('#addMembershipModal form').on('submit', function(e) {
+        console.log('Form submitted');
+        console.log($(this).serialize());
+    });
+});
+
 
 </script>

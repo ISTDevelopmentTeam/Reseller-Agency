@@ -81,3 +81,6 @@ Route::post('/cms/view/{id}/{member_id}', action: [CMS_UpdateController::class, 
 Route::post('/cms/view_discountLogs/{id}', action: [CMS_UpdateDiscountLogController::class, 'update'])->name('cms.discountLog');
 Route::post('/cms/insert', [CMS_AddController::class, 'store'])->name('cms.add');
 Route::get('/cms/insert/membership_fetch', [CMSAddPageController::class, 'membership_plan_type'])->name('cms.fetch');
+Route::post('/update-subscription-plan', [SubscriptionPlan_CMS_Controller::class, 'updatePlan'])->name('update_plan');
+Route::post('/add-membership', [SubscriptionPlan_CMS_Controller::class, 'addMembership'])->name('add.membership');
+Route::resource('subscription-plans', SubscriptionPlan_CMS_Controller::class);
