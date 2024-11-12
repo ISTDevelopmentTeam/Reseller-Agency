@@ -219,9 +219,9 @@
                     </select>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMembershipModal">
+                    <a href="{{ route('add_cms_page') }}" class="btn btn-success">
                         <i class="fas fa-plus-circle me-2"></i>Add Type of Membership
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -394,125 +394,57 @@
 
 
 
-<!-- Add this modal code just before your closing </body> tag -->
+<!-- Add Membership Modal -->
 <div class="modal fade" id="addMembershipModal" tabindex="-1" aria-labelledby="addMembershipModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form action="{{ route('add.membership') }}" method="POST">
                 @csrf
-                <div class="modal-header bg-primary bg-gradient">
-                    <h5 class="modal-title text-white" id="addMembershipModalLabel">
-                        <i class="fas fa-plus-circle me-2"></i>Add New Membership
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addMembershipModalLabel">Add New Membership</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Type of Membership -->
                     <div class="mb-3">
                         <label for="membership_name" class="form-label">Type of Membership</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-id-badge"></i>
-                            </span>
-                            <input type="text" 
-                                   class="form-control @error('membership_name') is-invalid @enderror" 
-                                   id="membership_name" 
-                                   name="membership_name" 
-                                   value="{{ old('membership_name') }}"
-                                   required>
-                        </div>
-                        @error('membership_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <input type="text" class="form-control" id="membership_name" name="membership_name" required>
                     </div>
 
-                    <!-- Plan Name -->
                     <div class="mb-3">
                         <label for="plan_name" class="form-label">Plan Name</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-tag"></i>
-                            </span>
-                            <input type="text" 
-                                   class="form-control @error('plan_name') is-invalid @enderror" 
-                                   id="plan_name" 
-                                   name="plan_name" 
-                                   value="{{ old('plan_name') }}"
-                                   required>
-                        </div>
-                        @error('plan_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <input type="text" class="form-control" id="plan_name" name="plan_name" required>
                     </div>
 
-                    <!-- Plan Amount -->
                     <div class="mb-3">
                         <label for="plan_amount" class="form-label">Plan Amount</label>
                         <div class="input-group">
                             <span class="input-group-text">₱</span>
-                            <input type="number" 
-                                   class="form-control @error('plan_amount') is-invalid @enderror" 
-                                   id="plan_amount" 
-                                   name="plan_amount" 
-                                   value="{{ old('plan_amount') }}"
-                                   step="0.01" 
-                                   min="0"
-                                   required>
+                            <input type="number" class="form-control" id="plan_amount" name="plan_amount" step="0.01" required>
                         </div>
-                        @error('plan_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
                     </div>
 
-                    <!-- Remarks -->
                     <div class="mb-3">
                         <label for="remarks" class="form-label">Remarks</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-comment"></i>
-                            </span>
-                            <textarea class="form-control @error('remarks') is-invalid @enderror" 
-                                      id="remarks" 
-                                      name="remarks" 
-                                      rows="3">{{ old('remarks') }}</textarea>
-                        </div>
-                        @error('remarks')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
                     </div>
 
-                    <!-- Status -->
                     <div class="mb-3">
                         <label for="plan_status" class="form-label">Status</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fas fa-toggle-on"></i>
-                            </span>
-                            <select class="form-select @error('plan_status') is-invalid @enderror" 
-                                    id="plan_status" 
-                                    name="plan_status" 
-                                    required>
-                                <option value="ACTIVE" {{ old('plan_status') == 'ACTIVE' ? 'selected' : '' }}>ACTIVE</option>
-                                <option value="INACTIVE" {{ old('plan_status') == 'INACTIVE' ? 'selected' : '' }}>INACTIVE</option>
-                            </select>
-                        </div>
-                        @error('plan_status')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <select class="form-select" id="plan_status" name="plan_status" required>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="INACTIVE">INACTIVE</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-2"></i>Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Save Membership
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Membership</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 
 </body>
@@ -568,12 +500,6 @@
  
     }
 
-    $(document).ready(function() {
-    $('#addMembershipModal form').on('submit', function(e) {
-        console.log('Form submitted');
-        console.log($(this).serialize());
-    });
-});
-
+    
 
 </script>
