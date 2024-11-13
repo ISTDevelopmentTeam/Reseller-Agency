@@ -15,6 +15,8 @@ class SubscriptionPlan_CMS_Controller extends Controller
             ->select('membership_plantype.*', 'membership_type.*')  
             ->paginate(7); 
 
+
+
        
         $updated = discounted_logs_model::leftJoin('membership_plantype', 'membership_discount.plan_id', '=', 'membership_plantype.plan_id')
             ->select('membership_discount.*', 'membership_plantype.*') 

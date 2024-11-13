@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>User Form</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
     /* Sidebar styling */
@@ -219,9 +221,15 @@
                     </select>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <a href="{{ route('add_cms_page') }}" class="btn btn-success">
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMembershipModal">
+                        Add Type of Membership
+                    </button>
+
+                    {{-- <a href="{{ route('add_cms_page') }}" class="btn btn-success">
                         <i class="fas fa-plus-circle me-2"></i>Add Type of Membership
-                    </a>
+                    </a> --}}
                 </div>
             </div>
 
@@ -276,27 +284,46 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="membership_name" class="form-label">Membership Name</label>
-                            <input type="text" class="form-control" id="membership_name" name="membership_name" value="{{ $detail->membership_name }}">
+                            {{-- <input type="text" class="form-control" id="membership_name" name="membership_name" value="{{ $detail->membership_name }}"> --}}
+
+                            <select id="cars" name="edit_membership_name" class="form-control">
+                                @foreach($membership_plantype as $membership_info)
+                                    <option value="{{ $membership_info->membership_name }}" 
+                                            @if($membership_info->membership_id == $detail->membership_id) selected @endif>
+                                        {{ $membership_info->membership_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                    
                         </div>
 
                         <div class="mb-3">
                             <label for="plan_name" class="form-label">Plan Name</label>
-                            <input type="text" class="form-control" id="plan_name" name="plan_name" value="{{ $detail->plan_name }}">
+                            {{-- <input type="text" class="form-control" id="plan_name" name="plan_name" value="{{ $detail->plan_name }}"> --}}
+
+                            <select id="plan" name="edit_membership_plantype" class="form-control">
+                                @foreach($details as $plan)
+                                    <option value="{{ $plan->plan_id }}" 
+                                            @if($plan->plan_id == $detail->plan_id) selected @endif>
+                                        {{ $plan->plan_name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="mb-3">
                             <label for="plan_amount" class="form-label">Plan Amount</label>
-                            <input type="number" class="form-control" id="plan_amount" name="plan_amount" value="{{ $detail->plan_amount }}">
+                            <input type="number" class="form-control" id="edit_plan_amount" name="edit_plan_amount" value="{{ $detail->plan_amount }}">
                         </div>
 
                         <div class="mb-3">
                             <label for="remarks" class="form-label">Remarks</label>
-                            <textarea class="form-control" id="remarks" name="remarks">{{ $detail->remarks }}</textarea>
+                            <textarea class="form-control" id="remarks" name="edit_remarks">{{ $detail->remarks }}</textarea>
                         </div>
 
                         <div class="mb-3">
                             <label for="plan_status" class="form-label">Status</label>
-                            <select class="form-select" id="plan_status" name="plan_status">
+                            <select class="form-select" id="plan_status" name="edit_plan_status">
                                 <option value="ACTIVE" {{ $detail->plan_status == 'ACTIVE' ? 'selected' : '' }}>ACTIVE</option>
                                 <option value="INACTIVE" {{ $detail->plan_status == 'INACTIVE' ? 'selected' : '' }}>INACTIVE</option>
                             </select>
@@ -407,12 +434,19 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="membership_name" class="form-label">Type of Membership</label>
-                        <input type="text" class="form-control" id="membership_name" name="membership_name" required>
+
+                        <select id="cars" name="add_membership_name" class="form-control">
+                            @foreach($membership_plantype as $membership_info)
+                            <option value="{{$membership_info->membership_id}}">{{ $membership_info->membership_name }}</option>
+                            @endforeach
+                          </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="plan_name" class="form-label">Plan Name</label>
-                        <input type="text" class="form-control" id="plan_name" name="plan_name" required>
+                        <select id="cars" name="add_membership_plantype" class="form-control">
+                            <option value="">Please Select Plan</option>
+                          </select>
                     </div>
 
                     <div class="mb-3">
@@ -502,4 +536,84 @@
 
     
 
+</script>
+
+
+
+<script>
+    $(document).ready(function() {
+
+        var csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        $.ajaxSetup({
+    headers: { "X-CSRFToken": csrftoken }
+});
+
+
+        // Listen to changes on the 'add_membership_name' dropdown
+        $('select[name="add_membership_name"]').on('change', function() {
+            var membershipId = $(this).val(); // Get the selected membership_id
+            if (membershipId) {
+                // Send AJAX request
+                $.ajax({
+                    url: '/get-fetch/' + membershipId,  // URL to fetch data based on membership_id
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        // Clear and populate the 'add_membership_plantype' dropdown
+                        var planSelect = $('select[name="add_membership_plantype"]');
+                        planSelect.empty(); // Clear existing options
+                        planSelect.append('<option value="">Please Select Plan</option>'); // Default option
+
+                        // Populate with new options from fetched data
+                        $.each(data, function(key, value) {
+                            planSelect.append('<option value="' + value.plan_name    + '">' + value.plan_name + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching plans:", error);
+                    }
+                });
+            } else {
+                // If no membership is selected, clear the second dropdown
+                $('select[name="add_membership_plantype"]').empty().append('<option value="">Please Select Plan</option>');
+            }
+        });
+
+
+
+
+ // Listen to changes on the 'add_membership_name' dropdown
+ $('select[name="edit_membership_name"]').on('change', function() {
+            var membershipId = $(this).val(); // Get the selected membership_id
+            if (membershipId) {
+                // Send AJAX request
+                $.ajax({
+                    url: '/get-fetch/' + membershipId,  // URL to fetch data based on membership_id
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        // Clear and populate the 'add_membership_plantype' dropdown
+                        var planSelect = $('select[name="edit_membership_plantype"]');
+                        planSelect.empty(); // Clear existing options
+                        planSelect.append('<option value="">Please Select Plan</option>'); // Default option
+
+                        // Populate with new options from fetched data
+                        $.each(data, function(key, value) {
+                            planSelect.append('<option value="' + value.plan_name + '">' + value.plan_name + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching plans:", error);
+                    }
+                });
+            } else {
+                // If no membership is selected, clear the second dropdown
+                $('select[name="edit_membership_plantype"]').empty().append('<option value="">Please Select Plan</option>');
+            }
+        });
+
+
+
+
+    });
 </script>
