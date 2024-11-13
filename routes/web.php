@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\CMS_AddController;
+use App\Http\Controllers\CMS_FetchingController;
 use App\Http\Controllers\CMS_UpdateController;
 use App\Http\Controllers\CMS_UpdateDiscountLogController;
 use App\Http\Controllers\CMSAddPageController;
+use App\Http\Controllers\CMSController;
 use App\Http\Controllers\CustomerFormSubmitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewResellerController;
@@ -31,11 +33,10 @@ Route::get('/renew_reseller', [RenewResellerController::class, 'index'])->name('
 Route::post('/search_member', [RenewResellerController::class, 'search_member'])->name('search_member');
 
 Route::get('/customer_qr', [QRCustomerController::class, 'index'])->name('customer_qr');
-Route::get('/subscription_plan_cms', [SubscriptionPlan_CMS_Controller::class, 'index'])->name('subscription_plan_cms');
-Route::get('/subscription_plan', [SubscriptionPlanController::class, 'index'])->name('subscription_plan');
-Route::get('/edit_cms', [CMSEditPageController::class, 'index'])->name('edit_cms_page');
-Route::get('/view_cms', [CMSViewPageController::class, 'index'])->name('view_cms_page');
-Route::get('/add_cms', [CMSAddPageController::class, 'index'])->name('add_cms_page');
+Route::get('/subscription_plan_cms', [CMS_FetchingController::class, 'cms_fetch'])->name('subscription_plan_cms');
+Route::get('/edit_cms', [CMS_FetchingController::class, 'Edit_Fetch'])->name('edit_cms_page');
+Route::get('/view_cms', [CMS_FetchingController::class, 'View_Fetch'])->name('view_cms_page');
+Route::get('/add_cms', [CMS_FetchingController::class, 'add_fetching'])->name('add_cms_page');
 
 // REPORTS
 Route::get('/report_reseller', [ReportResellerController::class, 'index'])->name('report_reseller');
@@ -83,4 +84,3 @@ Route::post('/cms/insert', [CMS_AddController::class, 'store'])->name('cms.add')
 Route::get('/cms/insert/membership_fetch', [CMSAddPageController::class, 'membership_plan_type'])->name('cms.fetch');
 Route::post('/update-subscription-plan', [SubscriptionPlan_CMS_Controller::class, 'updatePlan'])->name('update_plan');
 Route::post('/add-membership', [SubscriptionPlan_CMS_Controller::class, 'addMembership'])->name('add.membership');
-Route::resource('subscription-plans', SubscriptionPlan_CMS_Controller::class);
