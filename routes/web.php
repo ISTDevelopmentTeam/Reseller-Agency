@@ -77,8 +77,10 @@ return view('webpage_expiration_page');
 Route::post('/submit', [CustomerFormSubmitController::class, 'store'])->name('insert-data');
 
 
-Route::post('/cms/update/{id}/{member_id}', [CMSController::class, 'update'])->name('cms.update');
-Route::post('/cms/view/{id}/{member_id}', action: [CMSController::class, 'update'])->name('cms.view');
-Route::post('/cms/view_discountLogs/{id}', action: [CMSController::class, 'update'])->name('cms.discountLog');
-Route::post('/cms/insert', [CMSController::class, 'add'])->name('cms.add');
-Route::get('/cms/insert/membership_fetch/{brand}', [CMS_FetchingController::class, 'membership_plan_type'])->name('cms.fetch');
+Route::post('/cms/update/{id}/{member_id}', [CMS_UpdateController::class, 'update'])->name('cms.update');
+Route::post('/cms/view/{id}/{member_id}', action: [CMS_UpdateController::class, 'update'])->name('cms.view');
+Route::post('/cms/view_discountLogs/{id}', action: [CMS_UpdateDiscountLogController::class, 'update'])->name('cms.discountLog');
+Route::post('/cms/insert', [CMS_AddController::class, 'store'])->name('cms.add');
+Route::get('/cms/insert/membership_fetch', [CMSAddPageController::class, 'membership_plan_type'])->name('cms.fetch');
+Route::post('/update-subscription-plan', [SubscriptionPlan_CMS_Controller::class, 'updatePlan'])->name('update_plan');
+Route::post('/add-membership', [SubscriptionPlan_CMS_Controller::class, 'addMembership'])->name('add.membership');
