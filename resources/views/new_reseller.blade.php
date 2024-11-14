@@ -65,8 +65,14 @@
                                                         Application</label>
                                                     <select class="form-select" id="applicationType" required>
                                                         <option value="NEW" selected>NEW</option>
+                                                        <option value="RENEWAL" selected>RENEWAL</option>
+
                                                     </select>
                                                 </div>
+
+
+                                                <!--- Step 1 of Input textfield -->
+
                                                 <div class="col-md-3 mb-3">
                                                     <label for="membership_type" class="form-label">Type of
                                                         Membership</label>
@@ -129,8 +135,8 @@
                                                         <label for="orcrAttachment" class="form-label">ORCR
                                                             Image</label>
                                                         <div class="input-group">
-                                                            <input type="file" class="form-control" id="orcrAttachment"
-                                                                name="orcr_image" accept="image/" required>
+                                                            <input type="file" class="form-control" id="orcrAttachment" 
+                                                            name="orcr_image" accept="image/png, image/jpeg, image/jpg" required>
                                                             <label class="input-group-text" for="orcrAttachment">
                                                                 <i class="fas fa-upload"></i>
                                                             </label>
@@ -141,7 +147,7 @@
                                                         <label for="idAttachment" class="form-label">ID Image</label>
                                                         <div class="input-group">
                                                             <input type="file" class="form-control" id="idAttachment"
-                                                                name="id_image" accept="image/" required>
+                                                                name="id_image" accept="image/png, image/jpeg, image/jpg" required>
                                                             <label class="input-group-text" for="idAttachment">
                                                                 <i class="fas fa-upload"></i>
                                                             </label>
@@ -151,11 +157,16 @@
                                                 </div>
 
                                                 <div class="d-flex justify-content-end mt-4">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="nextStep()">Next</button>
+                                                    <button type="button" class="btn btn-primary" id="step_1_button"
+                                                        >Next</button>
                                                 </div>
                                             </div>
                                         </div>
+                                                <!--- End of Step 1 -->
+
+
+
+
                                         <!-- Step 2: Personal Information -->
                                         <div class="form-step" id="step2">
                                             <h5 class="mb-4">Personal Information</h5>
@@ -266,10 +277,16 @@
                                             <div class="d-flex justify-content-between mt-4">
                                                 <button type="button" class="btn btn-secondary"
                                                     onclick="previousStep()">Previous</button>
-                                                <button type="button" class="btn btn-primary"
-                                                    onclick="nextStep()">Next</button>
+                                                <button type="button" class="btn btn-primary" id="step_2_button">Next</button>
                                             </div>
                                         </div>
+
+                                        <!-- End of Step 2 -->
+
+
+
+
+
 
                                         <!-- Step 3: Contact Information Section -->
                                         <div class="form-step" id="step3">
@@ -338,10 +355,13 @@
                                             <div class="d-flex justify-content-between mt-4">
                                                 <button type="button" class="btn btn-secondary"
                                                     onclick="previousStep()">Previous</button>
-                                                <button type="button" class="btn btn-primary"
-                                                    onclick="nextStep()">Next</button>
+                                                <button type="button" id="step_3_button" class="btn btn-primary">Next</button>
                                             </div>
                                         </div>
+                                        <!-- End of Step 3 -->
+
+
+
 
 
                                         <!-- Step 4: Vehicle Information -->
@@ -359,15 +379,14 @@
                                             <div class="d-flex justify-content-between mt-4">
                                                 <button type="button" class="btn btn-secondary"
                                                     onclick="previousStep()">Previous</button>
-                                                <button type="button" class="btn btn-primary"
-                                                    onclick="nextStep()">Next</button>
+                                                <button type="button" class="btn btn-primary" onclick="summary_fetch()">Next</button>
                                             </div>
                                         </div>
 
                                         <!-- Vehicle Template (hidden) -->
                                         <template id="vehicleTemplate">
                                             <div class="vehicle-item border rounded p-3 mb-3">
-                                                <h6 class="mb-3">Vehicle <span class="vehicle-number">1</span></h6>
+                                                <h6 class="mb-3">Vehicle<span class="vehicle-number">1</span></h6>
                                                 <div class="row g-3">
                                                     <!-- First Row -->
                                                     <div class="col-md-3">
@@ -379,39 +398,39 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Plate Number</label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" id="plate_number" class="form-control"
                                                             placeholder="Enter plate number">
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Car Make</label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" id="car_make" class="form-control"
                                                             placeholder="Enter car make">
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <label class="form-label">Car Model</label>
-                                                        <input type="text" class="form-control"
+                                                        <label class="form-label">Car Models</label>
+                                                        <input type="text" id="car_model" class="form-control"
                                                             placeholder="Enter car model">
                                                     </div>
 
                                                     <!-- Second Row -->
                                                     <div class="col-md-3">
                                                         <label class="form-label">Vehicle Type</label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" id="vechile_type" class="form-control"
                                                             placeholder="Enter vehicle type">
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Year</label>
-                                                        <input type="number" class="form-control"
+                                                        <input type="number" id="car_year_model" class="form-control"
                                                             placeholder="Enter year">
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Sub model</label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" id="sub_model" class="form-control"
                                                             placeholder="Enter sub model">
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Color</label>
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" id="color" class="form-control"
                                                             placeholder="Enter color">
                                                     </div>
 
@@ -574,6 +593,240 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="/script/new_reseller.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+// Step 1 Validation
+$('#step_1_button').on('click', function() {
+
+// TextField Validation
+var inputs = [
+    '#activationDate',
+    '#pinCode', 
+    '#paInsurance'
+];
+
+// Loop through each input and check if it is empty
+for (var i = 0; i < inputs.length; i++) {
+    var inputValue = $(inputs[i]).val();
+    if (inputValue === null || inputValue.trim() === '') {
+        Swal.fire({
+            title: "Missing Info",
+            text: "Please Make Sure You Have Inputted all of the textfields",
+            icon: "error"
+        }); 
+        return; // Stop the loop if an empty input is found
+    }
+}
+
+// File Upload Validation
+var fileInputs = ['#orcrAttachment', '#idAttachment'];
+
+for (var j = 0; j < fileInputs.length; j++) {
+    var fileInput = $(fileInputs[j])[0].files[0]; // Get the selected file for each input
+
+    if (!fileInput) {
+        Swal.fire({
+            title: "Missing Images",
+            text: "Please Upload the required image",
+            icon: "error"
+        });
+        return; // Stop if a file is not selected
+    }
+}
+
+nextStep(); // Proceed to next step
+
+}); 
+
+
+
+// End of Step 1
+
+
+
+// Step 2 Validation
+$('#step_2_button').on('click', function() {
+
+// TextField Validation
+var inputs = [
+    '#firstName',
+    '#lastName',
+    '#birthdate',
+    '#birthplace',  
+    '#citizenship', 
+    '#nationality', 
+    '#acrNo', 
+    '#occupation', 
+    '#mobileNumber', 
+    '#emailAddress'
+];
+
+// Loop through each input and check if it is empty
+for (var i = 0; i < inputs.length; i++) {
+    var inputValue = $(inputs[i]).val();
+    if (inputValue === null || inputValue.trim() === '') {
+        Swal.fire({
+            title: "Missing Info",
+            text: "Please Make Sure You Have Inputted all of the textfields",
+            icon: "error"
+        }); 
+        return; // Stop the loop if an empty input is found
+    }
+}
+
+nextStep(); // Proceed to next step
+
+}); 
+
+
+
+// End of Step 2
+
+
+
+
+
+// Step 3 Validation
+$('#step_3_button').on('click', function() {
+
+// TextField Validation
+var inputs = [
+    '#searchOfficeTown',
+    '#companyName',
+    '#street',
+    '#town',  
+    '#city', 
+    '#province', 
+    '#zcode'
+];
+
+// Loop through each input and check if it is empty
+for (var i = 0; i < inputs.length; i++) {
+    var inputValue = $(inputs[i]).val();
+    if (inputValue === null || inputValue.trim() === '') {
+        Swal.fire({
+            title: "Missing Info",
+            text: "Please Make Sure You Have Inputted all of the textfields",
+            icon: "error"
+        }); 
+        return; // Stop the loop if an empty input is found
+    }
+}
+
+nextStep(); // Proceed to next step
+
+}); 
+
+
+
+// End of Step 3
+
+
+
+
+// Step 4 Validation
+$('#step_4_button').on('click', function() {
+
+// TextField Validation
+var inputs = [
+    '#plate_number',
+    '#car_make',
+    '#car_model',
+    '#vechile_type',  
+    '#car_year_model', 
+    '#sub_model', 
+    '#color'
+];
+
+// Loop through each input and check if it is empty
+for (var i = 0; i < inputs.length; i++) {
+    var inputValue = $(inputs[i]).val();
+    if (inputValue === null || inputValue.trim() === '') {
+        Swal.fire({
+            title: "Missing Info",
+            text: "Please Make Sure You Have Inputted all of the textfields",
+            icon: "error"
+        }); 
+        return; // Stop the loop if an empty input is found
+    }
+}
+
+nextStep(); // Proceed to next step
+
+});
+
+//Step 5
+function summary_fetch() {
+nextStep(); // Proceed to next step
+
+// Step 1 Values
+var membershipType     = $('#membership_type').val();
+var plan_type          = $('#plan_type').val();
+var pin_code           = $('#pinCode').val();
+var paInsurance        = $('#paInsurance').val();
+var activationDate     = $('#activationDate').val();
+var applicationType     = $('#applicationType').val();
+
+
+// Step 2 Values
+var first_name   = $('#firstName').val();
+var last_name    = $('#lastName').val();
+var full_name    = first_name+ ' ,'+ last_name;
+var gender       = $('#gender').val();
+var birthdate    = $('#birthdate').val();
+var birthplace   = $('#birthplace').val();
+var citizenship  = $('#citizenship').val();
+var nationality  = $('#nationality').val();
+var acrNo        = $('#acrNo').val();
+var occupation   = $('#occupation').val();
+var mobileNumber = $('#mobileNumber').val();
+var emailAddress = $('#emailAddress').val();
+var occupation   = $('#occupation').val();
+var civilStatus  = $('#civilStatus').val();
+
+
+
+// Step 3 Values
+var searchOfficeTown    = $('#searchOfficeTown').val();
+var companyName         = $('#companyName').val();
+var street              = $('#street').val();
+var town                = $('#town').val();
+var city                = $('#city').val();
+var province            = $('#province').val();
+var zcode               = $('#zcode').val();
+var address             = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
+
+
+// Summary Fields
+document.getElementById('summaryApplicationType').textContent   = applicationType;
+document.getElementById('summaryMembershipType').textContent    = membershipType;
+document.getElementById('summaryPlanType').textContent          = plan_type;
+document.getElementById('summaryActivationDate').textContent    = activationDate;
+document.getElementById('summaryFullName').textContent          = full_name;
+document.getElementById('summaryGender').textContent            = gender;
+document.getElementById('summaryBirthdate').textContent         = birthdate;
+document.getElementById('summaryCivilStatus').textContent       = civilStatus;
+document.getElementById('summaryEmail').textContent             = emailAddress;
+document.getElementById('summaryMobile').textContent            = mobileNumber;
+document.getElementById('summaryCompanyName').textContent       = companyName;
+document.getElementById('summaryAddress').textContent           = address;
+document.getElementById('summaryMailingPreference').textContent = 'TEST';
+document.getElementById('summaryMagazine').textContent          = 'TEST';
+
+
+} 
+// End of Step 5
+
+
+
+
+
+
+        </script>
+
+
+
 
     <script>
         $(document).ready(function () {
