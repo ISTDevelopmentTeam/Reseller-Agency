@@ -8,6 +8,7 @@ use App\Http\Controllers\CMSAddPageController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\CustomerFormSubmitController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NewResellerController;
 use App\Http\Controllers\RenewResellerController;
 use App\Http\Controllers\ReportResellerController;
@@ -24,7 +25,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('login');
 });
-
+Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 // NEW
 Route::get('/new_reseller', [NewResellerController::class, 'index'])->name('new_reseller');
