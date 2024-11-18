@@ -14,17 +14,8 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            @include('layout/sidebar')
+    @include("includes/header")
 
-            <!-- Main Content -->
-            <div class="col main-content p-4">
-                @include('layout/nav')
-
-                <!-- Profile Modal -->
-                @include('layout/profile')
 
                 <div class="row g-4">
                     <!-- Form Card -->

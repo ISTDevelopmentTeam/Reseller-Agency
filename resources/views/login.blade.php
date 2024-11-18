@@ -61,15 +61,16 @@
                         <img src="images/aap_logo.png" alt="Logo" class="mb-2" style="max-width: 150px;">
                         <h3>Sign In</h3>
                     </div>					
-                    <form id="loginForm">
+                    <form id="login" method="POST">
+                        @csrf
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" placeholder="Username" required>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
                         </div>
                         <div class="mb-3 position-relative">
 							<label for="password" class="form-label">Password</label>
 							<div class="input-group">
-							  <input type="password" class="form-control" id="password" placeholder="Password" required>
+							  <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
 							  <span class="input-group-text">
 								<i class="bi bi-eye-slash" id="togglePassword" style="cursor: pointer;"></i>
 							  </span>
@@ -79,7 +80,8 @@
                             <input type="checkbox" class="form-check-input" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Remember Me</label>
                         </div>
-                        <a href="{{ route('dashboard') }}" class="btn btn-primary w-100" role="button">Sign In</a>
+                         <button type="submit" class="btn btn-primary w-100">Logout</button>
+
                     </form>
                     <div class="mt-3 text-center">
 						<a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
@@ -148,6 +150,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 	<script>
@@ -166,5 +169,41 @@
 		});
 
 	</script>
+
+<script>
+    document.getElementById('login').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const form = new FormData(this);
+
+        fetch('{{ route('login') }}', {
+            method: 'POST',
+            body: form
+        })
+
+        .then(response => response.json())
+
+        .then(data => {
+            if (data.status === 'error') {
+                // Trigger SweetAlert on error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: data.message, // Show the error message
+                });
+            }else {
+                // Redirect if login is successful
+                window.location.href = data.redirect || '{{ route('dashboard') }}';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    });
+</script>
+
+
+
 </body>
 </html>

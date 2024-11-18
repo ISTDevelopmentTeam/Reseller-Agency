@@ -11,16 +11,7 @@
     <link rel="stylesheet" href={{ asset('style/dashboard.css') }}>
 </head>
 <body>
-    <!-- Sidebar and header remain the same -->
-    <div class="container-fluid">
-        <div class="row">
-           @include('layout/sidebar')
-            <!-- Main Content -->
-            <div class="col main-content p-4">
-                @include('layout/nav')
-                
-                <!-- Profile Modal -->
-                @include('layout/profile')
+    @include("includes.header");
 
                 <!-- Main content with updated date inputs -->
                 <div class="row justify-content-center mt-5">
