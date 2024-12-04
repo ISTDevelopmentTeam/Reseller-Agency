@@ -12,17 +12,8 @@
 
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            @include('layout/sidebar')
-
-            <!-- Main Content -->
-            <div class="col main-content p-4">
-                @include('layout/nav')
-                
-                <!-- Profile Modal -->
-                @include('layout/profile')
+@include("layout.sidebar");
+@include("layout.nav");
 
                 <div class="row justify-content-center mt-5">
                     <div class="row justify-content-center">
@@ -155,7 +146,7 @@
                                             <td>{{ $member['vehicleinfohead_expiredate'] }}</td>
                                             <td style="color: {{ strtoupper($member['vehicleinfohead_status']) === 'ACTIVE' ? 'green' : 'red' }}">{{ $member['vehicleinfohead_status'] }}</td>
                                             <td>
-                                                <a href="" class="btn btn-primary">Renew</a>
+                                                <a href="{{ route('reseller_form', ['id' => $member['members_id'], 'vehicle' => $member['vehicleinfohead_id']]) }}" class="btn btn-primary">Renew</a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -184,6 +175,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="/script/renew_reseller.js"></script>
+    <script src="/script/sidebar.js"></script>
     <script>
         // document.addEventListener('DOMContentLoaded', function() {
         //     const searchBtn = document.getElementById('searchBtn');

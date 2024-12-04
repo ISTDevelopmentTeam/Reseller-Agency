@@ -121,7 +121,7 @@ public function View_Fetch(Request $request){
 public function fetch_drop_down_data($membership_id) {
     $fetched = SubscriptionDetailsModel::leftJoin('membership_type', 'membership_plantype.membership_id', '=', 'membership_type.membership_id')
     ->select('membership_plantype.*', 'membership_type.*')
-    ->where('membership_type.membership_name', $membership_id) // Apply a condition on membership_type
+    ->where('membership_type.membership_id', $membership_id) // Apply a condition on membership_type
     ->get();
 
     return response()->json($fetched);

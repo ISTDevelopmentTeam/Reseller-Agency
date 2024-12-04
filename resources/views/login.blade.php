@@ -80,7 +80,7 @@
                             <input type="checkbox" class="form-check-input" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Remember Me</label>
                         </div>
-                         <button type="submit" class="btn btn-primary w-100">Logout</button>
+                         <button type="submit" class="btn btn-primary w-100">Login</button>
 
                     </form>
                     <div class="mt-3 text-center">
