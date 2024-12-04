@@ -1,3 +1,225 @@
+// Step 1 Validation
+$('#nextBtn').on('click', function() {
+
+    // TextField Validation
+    var inputs = [
+        '#activationDate',
+        '#pinCode', 
+        '#paInsurance'
+    ];
+    
+    // Loop through each input and check if it is empty
+    for (var i = 0; i < inputs.length; i++) {
+        var inputValue = $(inputs[i]).val();
+        if (inputValue === null || inputValue.trim() === '') {
+            Swal.fire({
+                title: "Missing Info",
+                text: "Please Make Sure You Have Inputted all of the textfields",
+                icon: "error"
+            }); 
+            return; // Stop the loop if an empty input is found
+        }
+    }
+    
+    // File Upload Validation
+    var fileInputs = ['#orcrAttachment', '#idAttachment'];
+    
+    for (var j = 0; j < fileInputs.length; j++) {
+        var fileInput = $(fileInputs[j])[0].files[0]; // Get the selected file for each input
+    
+        if (!fileInput) {
+            Swal.fire({
+                title: "Missing Images",
+                text: "Please Upload the required image",
+                icon: "error"
+            });
+            return; // Stop if a file is not selected
+        }
+    }
+    
+    nextStep(); // Proceed to next step
+    
+    }); 
+    
+    
+    
+    // End of Step 1
+    
+    
+    
+    // Step 2 Validation
+    $('#step_2_button').on('click', function() {
+    
+    // TextField Validation
+    var inputs = [
+        '#firstName',
+        '#lastName',
+        '#birthdate',
+        '#birthplace',  
+        '#citizenship', 
+        '#nationality', 
+        '#acrNo', 
+        '#occupation', 
+        '#mobileNumber', 
+        '#emailAddress'
+    ];
+    
+    // Loop through each input and check if it is empty
+    for (var i = 0; i < inputs.length; i++) {
+        var inputValue = $(inputs[i]).val();
+        if (inputValue === null || inputValue.trim() === '') {
+            Swal.fire({
+                title: "Missing Info",
+                text: "Please Make Sure You Have Inputted all of the textfields",
+                icon: "error"
+            }); 
+            return; // Stop the loop if an empty input is found
+        }
+    }
+    
+    nextStep(); // Proceed to next step
+    
+    }); 
+    
+    
+    
+    // End of Step 2
+    
+    
+    
+    
+    
+    // Step 3 Validation
+    $('#step_3_button').on('click', function() {
+    
+    // TextField Validation
+    var inputs = [
+        '#searchOfficeTown',
+        '#companyName',
+        '#street',
+        '#town',  
+        '#city', 
+        '#province', 
+        '#zcode'
+    ];
+    
+    // Loop through each input and check if it is empty
+    for (var i = 0; i < inputs.length; i++) {
+        var inputValue = $(inputs[i]).val();
+        if (inputValue === null || inputValue.trim() === '') {
+            Swal.fire({
+                title: "Missing Info",
+                text: "Please Make Sure You Have Inputted all of the textfields",
+                icon: "error"
+            }); 
+            return; // Stop the loop if an empty input is found
+        }
+    }
+    
+    nextStep(); // Proceed to next step
+    
+    }); 
+    
+    
+    
+    // End of Step 3
+    
+    
+    
+    
+    // Step 4 Validation
+    $('#step_4_button').on('click', function() {
+    
+    // TextField Validation
+    var inputs = [
+        '#plate_number',
+        '#car_make',
+        '#car_model',
+        '#vechile_type',  
+        '#car_year_model', 
+        '#sub_model', 
+        '#color'
+    ];
+    
+    // Loop through each input and check if it is empty
+    for (var i = 0; i < inputs.length; i++) {
+        var inputValue = $(inputs[i]).val();
+        if (inputValue === null || inputValue.trim() === '') {
+            Swal.fire({
+                title: "Missing Info",
+                text: "Please Make Sure You Have Inputted all of the textfields",
+                icon: "error"
+            }); 
+            return; // Stop the loop if an empty input is found
+        }
+    }
+    
+    nextStep(); // Proceed to next step
+    
+    });
+    
+    //Step 5
+    function summary_fetch() {
+    nextStep(); // Proceed to next step
+    
+    // Step 1 Values
+    var membershipType     = $('#membership_type').val();
+    var plan_type          = $('#plan_type').val();
+    var pin_code           = $('#pinCode').val();
+    var paInsurance        = $('#paInsurance').val();
+    var activationDate     = $('#activationDate').val();
+    var applicationType     = $('#applicationType').val();
+    
+    
+    // Step 2 Values
+    var first_name   = $('#firstName').val();
+    var last_name    = $('#lastName').val();
+    var full_name    = first_name+ ' ,'+ last_name;
+    var gender       = $('#gender').val();
+    var birthdate    = $('#birthdate').val();
+    var birthplace   = $('#birthplace').val();
+    var citizenship  = $('#citizenship').val();
+    var nationality  = $('#nationality').val();
+    var acrNo        = $('#acrNo').val();
+    var occupation   = $('#occupation').val();
+    var mobileNumber = $('#mobileNumber').val();
+    var emailAddress = $('#emailAddress').val();
+    var occupation   = $('#occupation').val();
+    var civilStatus  = $('#civilStatus').val();
+    
+    
+    
+    // Step 3 Values
+    var searchOfficeTown    = $('#searchOfficeTown').val();
+    var companyName         = $('#companyName').val();
+    var street              = $('#street').val();
+    var town                = $('#town').val();
+    var city                = $('#city').val();
+    var province            = $('#province').val();
+    var zcode               = $('#zcode').val();
+    var address             = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
+    
+    
+    // Summary Fields
+    document.getElementById('summaryApplicationType').textContent   = applicationType;
+    document.getElementById('summaryMembershipType').textContent    = membershipType;
+    document.getElementById('summaryPlanType').textContent          = plan_type;
+    document.getElementById('summaryActivationDate').textContent    = activationDate;
+    document.getElementById('summaryFullName').textContent          = full_name;
+    document.getElementById('summaryGender').textContent            = gender;
+    document.getElementById('summaryBirthdate').textContent         = birthdate;
+    document.getElementById('summaryCivilStatus').textContent       = civilStatus;
+    document.getElementById('summaryEmail').textContent             = emailAddress;
+    document.getElementById('summaryMobile').textContent            = mobileNumber;
+    document.getElementById('summaryCompanyName').textContent       = companyName;
+    document.getElementById('summaryAddress').textContent           = address;
+    document.getElementById('summaryMailingPreference').textContent = 'TEST';
+    document.getElementById('summaryMagazine').textContent          = 'TEST';
+    
+    
+    } 
+    // End of Step 5
+
 // Form state management
 let currentStep = 1;
 const totalSteps = 5;
@@ -132,3 +354,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+// For Image File
+function handleFileUpload(input, imageId, feedbackId) {
+    const feedback = document.getElementById(feedbackId);
+    const preview = document.getElementById(imageId);
+    const file = input.files[0];
+    
+    // Reset everything
+    feedback.innerHTML = "";
+    preview.style.display = 'none';
+    
+    if (file) {
+        // Check file extension
+        const fileName = file.name.toLowerCase();
+        if (!fileName.match(/\.(jpg|jpeg|png|pdf)$/)) {
+            feedback.innerHTML = "Please upload jpg, jpeg, png, or pdf file only";
+            input.value = '';
+            return;
+        }
+        
+        // Check file size (8MB = 8 * 1024 * 1024)
+        if (file.size > 8 * 1024 * 1024) {
+            feedback.innerHTML = "File must be less than 8MB";
+            input.value = '';
+            return;
+        }
+        
+        // Show preview for images
+        if (fileName.match(/\.(jpg|jpeg|png)$/)) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+}
+

@@ -8,21 +8,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href={{ asset('style/audit_trail.css') }}>
 </head>
 <body>
-    <!-- Sidebar and header remain the same -->
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            @include('layout/sidebar')
-
-            <!-- Main Content -->
-            <div class="col main-content p-4">
-                @include('layout/nav')
-                
-                <!-- Profile Modal -->
-                @include('layout/profile')
+@include("layout.sidebar");
+@include("layout.nav");
 
                 <!-- Main content with updated date inputs -->
                 <div class="row justify-content-center mt-5">
@@ -208,6 +198,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/script/sidebar.js"></script>
     <script>
         // Add basic date validation
         document.addEventListener('DOMContentLoaded', function() {

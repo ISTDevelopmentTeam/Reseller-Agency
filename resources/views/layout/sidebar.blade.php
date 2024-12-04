@@ -1,92 +1,55 @@
-<style>
-.help-center {
-    padding: 0 0.5rem;
-}
-
-.help-center .btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-}
-
-.help-center .btn-outline-info {
-    border-color: #5bc0de;
-    color: #5bc0de;
-}
-
-.help-center .btn-outline-info:hover {
-    background-color: #5bc0de;
-    color: white;
-}
-
-.help-center .btn-info {
-    background-color: #5bc0de;
-    border-color: #5bc0de;
-    color: white;
-}
-
-.fs-7 {
-    font-size: 0.9rem;
-}
- </style>
- 
- 
- 
- <!-- Sidebar -->
- <div class="col-auto px-0 sidebar">
-                <!-- Sidebar content remains the same -->
-                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                    <a href="#" class="d-flex align-items-center pb-3 mb-md-1 mt-md-3 me-md-auto text-white text-decoration-none">
-                        <span class="fs-5 fw-bolder">Reseller Portal</span>
-                        <img src="images/aap_logo_white.png" alt="AAP LOGO" class="ms-3" style="width: 40px; height: 30px;">
-                    </a>                    
-                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100">
-                        <li class="w-100">
-                            <a href="{{ route('dashboard') }}" class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}">
-                                <i class="fas fa-list me-2"></i>
-                                <span class="ms-1">Application List</span>
-                            </a>
-                            <!-- Sub-menu for New and Renew under Application List -->
-                            <ul class="nav flex-column ms-4">
-                                <li class="w-100">
-                                    <a href="{{ route('new_reseller') }}" class="nav-link {{ Request::routeIs('new_reseller') ? 'active' : '' }}">
-                                        <i class="fas fa-plus me-2"></i>
-                                        <span class="ms-1">New</span>
-                                    </a>
-                                </li>
-                                <li class="w-100">
-                                    <a href="{{ route('renew_reseller') }}" class="nav-link {{ Request::routeIs('renew_reseller') ? 'active' : '' }}">
-                                        <i class="fas fa-sync-alt me-2"></i>
-                                        <span class="ms-1">Renew</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="w-100">
-                            <a href="{{ route('report_reseller') }}" class="nav-link {{ Request::routeIs('report_reseller') ? 'active' : '' }}">
-                                <i class="fas fa-chart-bar me-2"></i>
-                                <span class="ms-1">Report</span>
-                            </a>
-                        </li>
-                        <li class="w-100">
-                            <a href="{{ route('audit_trail') }}" class="nav-link {{ Request::routeIs('audit_trail') ? 'active' : '' }}">
-                                <i class="fas fa-book me-2"></i>
-                                <span class="ms-1">Audit Trail</span>
-                            </a>
-                        </li>
-                    </ul>
-                        <!-- Help Center Section -->
-                    <div class="help-center mt-auto w-100 mb-4">
-                        <h6 class="text-white mb-2 fs-7">Help Center</h6>
-                        <div class="d-grid">
-                            <a href="#" class="btn btn-outline-info text-start">
-                                <i class="fas fa-question-circle me-2"></i>
-                                Need Help?
-                            </a>
-                            <a href="#" class="btn btn-info text-start mt-2">
-                                <i class="fas fa-headset me-2"></i>
-                                Contact Support
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="border-end bg-dark" id="sidebar-wrapper">
+            <div class="sidebar-heading" style="font-weight: bold; font-size: 1.2em;">
+                <img src="images/aap_logo_white.png" alt="AAP LOGO" class="ms-2" style="width: 50px; height: 40px;">
+                <span class="logo-text" style="margin-right: 20px">{{ session('roles') }}</span>
             </div>
+            <div class="list-group list-group-flush">
+                <a href="{{route('dashboard')}}" class="list-group-item list-group-item-action {{ Request::routeIs('dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt me-2"></i><span class="menu-text">Dashboard</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-id-badge me-2"></i><span class="menu-text">Membership</span>
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action" id="formDropdown" data-bs-toggle="collapse"
+                    data-bs-target="#formSubMenu" aria-expanded="false" aria-controls="formSubMenu">
+                    <i class="fas fa-file-invoice me-2"></i><span class="menu-text">Form</span>
+                </a>
+
+                <div class="collapse" id="formSubMenu">
+                    <a href="{{route('new_reseller.index')}}" class="list-group-item list-group-item-action submenu-item {{ Request::routeIs('new_reseller.index') ? 'active' : '' }}">
+                        <i class="fas fa-plus me-2"></i><span class="menu-text">New</span>
+                    </a>
+                    <a href="{{route('renew_reseller')}}" class="list-group-item list-group-item-action submenu-item {{ Request::routeIs('renew_reseller') ? 'active' : '' }}">
+                        <i class="fas fa-redo me-2"></i><span class="menu-text">Renew</span>
+                    </a>
+                </div>
+
+                <!-- Roles Validation if whast icon to show or hide base on the user role --->
+                @if(session('roles') == 'Member')
+                <a href="{{route('subscription_plan_cms')}}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i><span class="menu-text">CMS</span>
+                </a>
+                @endif
+                <!-- End of Code --->
+
+                <a href="{{route('audit_trail')}}" class="list-group-item list-group-item-action" {{ Request::routeIs('audit_trail') ? 'active' : '' }}>
+                    <i class="fas fa-file-alt me-2"></i><span class="menu-text">Reports</span>
+                </a>
+                <!-- <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal"
+                    data-bs-target="#settingsModal">
+                    <i class="fas fa-cogs me-2"></i><span class="menu-text">Settings</span>
+                </a>
+                <a href="/" class="list-group-item list-group-item-action">
+                    <i class="fas fa-sign-out-alt me-2"></i><span class="menu-text">Log-out</span>
+                </a> -->
+            </div>
+            <!-- Copyright -->
+            <div class="copyright">
+                Copyright ©2024 All Rights Reserved Automobile Association of Philippines
+            </div>
+        </div>
+
+        

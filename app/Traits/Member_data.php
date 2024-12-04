@@ -3,6 +3,7 @@ namespace App\Traits;
 use Illuminate\Support\Facades\Http;
 use App\Traits\Generate_token ;
 
+
 trait Member_data
 {
     use Generate_token;

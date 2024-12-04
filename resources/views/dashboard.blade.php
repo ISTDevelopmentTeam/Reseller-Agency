@@ -11,7 +11,8 @@
     <link rel="stylesheet" href={{ asset('style/dashboard.css') }}>
 </head>
 <body>
-    @include("includes.header");
+    @include("layout.sidebar");
+    @include("layout.nav");
 
                 <!-- Main content with updated date inputs -->
                 <div class="row justify-content-center mt-5">
@@ -184,6 +185,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/script/sidebar.js"></script>
     <script>
         // Add basic date validation
         document.addEventListener('DOMContentLoaded', function() {
