@@ -2,7 +2,7 @@
         <!-- Sidebar -->
         <div class="border-end bg-dark" id="sidebar-wrapper">
             <div class="sidebar-heading" style="font-weight: bold; font-size: 1.2em;">
-                <img src="images/aap_logo_white.png" alt="AAP LOGO" class="ms-2" style="width: 50px; height: 40px;">
+                <img src="{{ asset('images/aap_logo_white.png')}}" alt="AAP LOGO" class="ms-2" style="width: 50px; height: 40px;">
                 <span class="logo-text" style="margin-right: 20px">{{ session('roles') }}</span>
             </div>
             <div class="list-group list-group-flush">
@@ -19,7 +19,7 @@
                 </a>
 
                 <div class="collapse" id="formSubMenu">
-                    <a href="{{route('new_reseller.index')}}" class="list-group-item list-group-item-action submenu-item {{ Request::routeIs('new_reseller.index') ? 'active' : '' }}">
+                    <a href="{{route('event_dashboard')}}" class="list-group-item list-group-item-action submenu-item {{ Request::routeIs('event_dashboard') ? 'active' : '' }}">
                         <i class="fas fa-plus me-2"></i><span class="menu-text">New</span>
                     </a>
                     <a href="{{route('renew_reseller')}}" class="list-group-item list-group-item-action submenu-item {{ Request::routeIs('renew_reseller') ? 'active' : '' }}">

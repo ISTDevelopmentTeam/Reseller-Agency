@@ -3,39 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Mews\Purifier\Facades\Purifier;
-// use App\Http\Controllers\Log;
-use App\Models\PlanType;
-use App\Models\MembershipType;
 use App\Models\Town;
-use App\Http\Requests\MembersRequest;
 use App\Models\City;
 use App\Models\Membership;
+use App\Models\PlanType;
 use App\Models\Vehicle;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use App\Traits\Insurance\Get_carmake;
 
-class NewResellerController extends Controller
+class PidpController extends Controller
 {
     use Get_carmake;
-
-    public function index(Request $request){
-        // Membership Type and Plan Type
-        $members  = MembershipType::where('membership_status', 'ACTIVE')->get();
-        $plantype = PlanType::all();
-
+    public function index(Request $request, $planId = null){
         $searchTerm = $request->input('town');
-
+    
         $towns = Town::select('a.*', 'c.*', 'd.*')
             ->from('aap_zipcode as a')
             ->leftJoin('address_city as c', 'a.az_city', '=', 'c.city_id')
             ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
             ->where('az_barangay', 'like', '%' . $searchTerm . '%')
             ->get();
-
+    
         $city = $request->input('city');
-
+    
         $citys = City::select('a.az_zipcode', 'c.city_name', 'c.city_id', 'd.*')
             ->from('address_city as c')
             ->leftJoin('aap_zipcode as a', 'c.city_id', '=', 'a.az_city')
@@ -43,14 +32,21 @@ class NewResellerController extends Controller
             ->where('c.city_name', 'like', '%' . $city . '%')
             ->where('a.az_barangay', '')
             ->get();
-
+    
         $carMake = json_decode($this->get_carmake(), true);
         
-        return view('new_reseller')->with([
-            'packages' => ['members' => $members, 'plantype' => $plantype],
-            'towns'    => $towns,
-            'citys'     => $citys,
-            'carMake'=>$carMake
+        // Get all plan types
+        $planTypes = PlanType::all();
+    
+        // If a specific plan ID is passed, find that plan
+        $selectedPlan = $planId ? PlanType::where('plan_id', $planId)->first() : null;
+    
+        return view('reseller_form/pidp')->with([
+            'towns'   => $towns,
+            'citys'   => $citys,
+            'carMake' => $carMake,
+            'planTypes' => $planTypes,
+            'selectedPlan' => $selectedPlan
         ]);
     }
 

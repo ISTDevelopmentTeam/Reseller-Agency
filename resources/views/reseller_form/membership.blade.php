@@ -44,7 +44,7 @@
                         </nav>
 
 
-                        <form id="resellerForm" action="{{ route('reseller.store') }}" method="POST" enctype="multipart/form-data">
+                        <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" id="hiddenFormData" name="form_data" value="">
                             @foreach ($errors->all() as $key => $error)
@@ -76,12 +76,26 @@
                                             Membership</label>
                                         <select class="form-select" id="membershiptype" name="personal_info[membership_type]" required>
                                             <option value="" selected disabled>Select Type of Membership </option>
+                                            @foreach ($packages['members'] as $members_type)
+                                                <option value="{{ $members_type->membership_name }}" 
+                                                        data-membership="{{ $members_type->membership_id }}"
+                                                        data-vehicle_num="{{ $members_type->vehicle_num }}">
+                                                    {{ $members_type->membership_name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="plantype" class="form-label">Plan Type</label>
                                         <select class="form-select" id="plantype" name="personal_info[plan_type]" required>
                                             <option value="" selected disabled>Select Plan Type</option>
+                                            @if($selectedPlan)
+                                                <option value="{{ $selectedPlan->plan_id }}" selected>
+                                                    {{ $selectedPlan->plan_name }} - {{ $selectedPlan->plan_amount }}
+                                                </option>
+                                            @else
+                                                <option value="" selected disabled>Select Plan Type</option>
+                                            @endif
                                         </select>
                                         <input type="hidden" name="personal_info[plantype_id]" id="selected_plan_id">
                                     </div>

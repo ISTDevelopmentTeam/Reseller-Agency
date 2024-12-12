@@ -356,10 +356,6 @@
  .vehicle-item:hover {
    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
  }
-
- .blueFill {
-    background-color: rgba(21, 24, 72, 0.836);
-  }
  
  .btn-danger {
    background-color: #dc3545;
@@ -500,7 +496,49 @@
   .custom-menu::-webkit-scrollbar-thumb:hover {
     background: #555 !important;
   }
+/* DL AND RESTRICTION DESIGN */
+.restriction-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
   
+  .restriction-checkboxes .custom-control {
+    margin: 0;
+  }
+  
+  .clutchRadioOptionsGroup {
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    margin-top: 10px;
+    padding: 10px;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  }
+  
+  .clutchRadioOptionsGroup h6 {
+    margin-right: 15px;
+    margin-bottom: 0;
+    font-weight: 700;
+  }
+  
+  .custom-card {
+    margin-right: 4%;
+    margin-left: 3%;
+  }
+  
+  .custom-card input[type="checkbox"]:checked ~ .clutchRadioOptionsGroup {
+    padding: 5px 10px;
+  }
+  
+  .clutchRadioOptionsGroup .custom-control-inline {
+    margin-right: 15px;
+  }
+  
+  .clutchRadioOptionsGroup .custom-control-label {
+    margin-left: 5px;
+  }
+  /* END DL AND RESTRICTION */
  .footer {
    position: absolute;
    bottom: 0;

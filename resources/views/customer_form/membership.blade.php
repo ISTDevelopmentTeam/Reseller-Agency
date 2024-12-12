@@ -76,12 +76,26 @@
                                             Membership</label>
                                         <select class="form-select" id="membershiptype" name="personal_info[membership_type]" required>
                                             <option value="" selected disabled>Select Type of Membership </option>
+                                            @foreach ($packages['members'] as $members_type)
+                                                <option value="{{ $members_type->membership_name }}" 
+                                                        data-membership="{{ $members_type->membership_id }}"
+                                                        data-vehicle_num="{{ $members_type->vehicle_num }}">
+                                                    {{ $members_type->membership_name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="plantype" class="form-label">Plan Type</label>
                                         <select class="form-select" id="plantype" name="personal_info[plan_type]" required>
                                             <option value="" selected disabled>Select Plan Type</option>
+                                            @foreach ($packages['plantype'] as $plan)
+                                                <option value="{{ $plan->plan_name }}"
+                                                    data-membership="{{ $plan->membership_id }}"
+                                                    data-plan-id="{{ $plan->plan_id}}" style="display: none;">
+                                                    {{ $plan->plan_name }} - ₱ {{ $plan->plan_amount }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                         <input type="hidden" name="personal_info[plantype_id]" id="selected_plan_id">
                                     </div>

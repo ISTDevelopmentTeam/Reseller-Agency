@@ -12,9 +12,11 @@ use App\Models\City;
 use App\Models\Membership;
 use App\Traits\Insurance\Get_carmake;
 use App\Traits\Member_data;
+use App\Traits\Generate_token;
 
 class RenewResellerController extends Controller
 {
+    use Generate_token;
     use Get_carmake, Member_data;
     
     protected $Search_by_pin;
@@ -25,6 +27,7 @@ class RenewResellerController extends Controller
     {
         $this->Search_by_pin  = $Search_by_pin;
         $this->Regular_search = $Regular_search;
+        $this->token = $this->get_token();
     }
     public function index(){
         return view("renew_reseller");
@@ -70,8 +73,8 @@ class RenewResellerController extends Controller
         $carMake = json_decode($this->get_carmake(), true);
 
         // Fetch records based on pincode and record number
-        $pincode = $request->segment(4);
-        $record_no = $request->segment(5);
+        $pincode   = $request->segment(2);
+        $record_no = $request->segment(3);
         $records = $this->get_member_data($pincode, $record_no);
         
             
@@ -86,8 +89,6 @@ class RenewResellerController extends Controller
             'records'      => $records,
             'carMake'      => $carMake,
         ];
-
-        // dd($records);
 
         return view('renew_reseller/renew_form', $data);
  
