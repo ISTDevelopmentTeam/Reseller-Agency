@@ -6,7 +6,7 @@ function validateStep(stepNumber) {
     // Special handling for vehicle step
     if (stepNumber === 4) {
         const vehicles = currentStep.querySelectorAll('.vehicle-item');
-        
+
         // Ensure at least one vehicle is present
         if (vehicles.length === 0) {
             isValid = false;
@@ -137,23 +137,23 @@ function validateStep(stepNumber) {
 
 //     addVehicleBtn.addEventListener('click', () => {
 //         vehicleCount++;
-        
+
 //         // Clone the template
 //         const newVehicle = vehicleTemplate.cloneNode(true);
-        
+
 //         // Reset form values
 //         resetFormValues(newVehicle);
-        
+
 //         // Update vehicle number
 //         const vehicleNumber = newVehicle.querySelector('.vehicle-number');
 //         if (vehicleNumber) {
 //             vehicleNumber.textContent = vehicleCount;
 //         }
-        
+
 //         // Add remove button to the new vehicle
 //         const removeBtn = createRemoveButton();
 //         newVehicle.querySelector('.row').insertAdjacentElement('afterend', removeBtn);
-        
+
 //         // Insert the new vehicle before the Add Item button
 //         addVehicleBtn.insertAdjacentElement('beforebegin', newVehicle);
 
@@ -226,7 +226,7 @@ function updateNavigationButtons() {
 // function manageFieldDisabling() {
 //     const allSteps = document.querySelectorAll('.form-step');
 //     const currentStep = document.querySelector('.form-step.active');
-    
+
 //     allSteps.forEach(step => {
 //         const fields = step.querySelectorAll('input, select, textarea');
 //         fields.forEach(field => {
@@ -243,14 +243,14 @@ function nextStep(currentStepNumber) {
     if (validateStep(currentStepNumber)) {
         const currentStep = document.querySelector(`#step${currentStepNumber}`);
         const nextStep = document.querySelector(`#step${currentStepNumber + 1}`);
-        
+
         if (currentStep && nextStep) {
             currentStep.classList.remove('active');
             nextStep.classList.add('active');
-            
+
             const progress = document.querySelector('.progress-bar');
             progress.style.width = `${(currentStepNumber) * 25}%`;
-            
+
             updateBreadcrumb(currentStepNumber + 1);
             // manageFieldDisabling();
             updateNavigationButtons();
@@ -265,15 +265,15 @@ function nextStep(currentStepNumber) {
 function previousStep() {
     const currentStep = document.querySelector('.form-step.active');
     const stepNumber = parseInt(currentStep.id.replace('step', ''));
-    
+
     if (stepNumber > 1) {
         currentStep.classList.remove('active');
         const previousStep = document.querySelector(`#step${stepNumber - 1}`);
         previousStep.classList.add('active');
-        
+
         const progress = document.querySelector('.progress-bar');
         progress.style.width = `${(stepNumber - 2) * 25}%`;
-        
+
         updateBreadcrumb(stepNumber - 1);
         // manageFieldDisabling();
         updateNavigationButtons();
@@ -289,7 +289,7 @@ function updateBreadcrumb(stepNumber) {
 }
 
 // Handle input changes
-document.addEventListener('input', function(e) {
+document.addEventListener('input', function (e) {
     if (e.target.hasAttribute('required')) {
         e.target.classList.remove('is-invalid');
         const errorMessage = e.target.parentNode.querySelector('.error-message');
@@ -300,58 +300,326 @@ document.addEventListener('input', function(e) {
 });
 
 // Initialize form
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // manageFieldDisabling();
     updateNavigationButtons();
     // VehicleHandling();
     FileUploads();
 });
+// =================================================================================================================================== //
+document.addEventListener('DOMContentLoaded', function () {
+    const dlcodeRadio = document.getElementById('dlcode');
+    const restrictionRadio = document.getElementById('restriction');
+    const dlcodesDiv = document.getElementById('dlcodes');
+    const restrictionsDiv = document.getElementById('restrictions');
+    const dlcodeArrayInput = document.getElementById('dlcodearray');
+    const restricArrayInput = document.getElementById('restric');
 
-// FOR PLAN TYPE FILTER
-document.addEventListener('DOMContentLoaded', function() {
-    const membershipSelect = document.getElementById('membershiptype');
-    const planTypeSelect = document.getElementById('plantype');
-    const planOptions = planTypeSelect.querySelectorAll('option[data-membership]');
-    const selectedPlanIdInput = document.getElementById('selected_plan_id');
-    
-    // Existing membership filter functionality
-    membershipSelect.addEventListener('change', function() {
-        const selectedMembershipId = this.selectedOptions[0].getAttribute('data-membership');
-        console.log('Selected Membership ID:', selectedMembershipId);
-        
-        planTypeSelect.value = "";
-        selectedPlanIdInput.value = ""; // Clear plan_id when membership changes
-        
-        planOptions.forEach(option => {
-            if (option.getAttribute('data-membership') === selectedMembershipId) {
-                option.style.display = '';
-            } else {
-                option.style.display = 'none';
-            }
-        });
+
+    // For DL CODE
+    dlcodeRadio.addEventListener('change', function () {
+        if (this.checked) {
+
+            const restrictionCheckboxes = restrictionsDiv.querySelectorAll('input[type="checkbox"]');
+            restrictionCheckboxes.forEach(checkbox => checkbox.checked = false);
+
+            restricArrayInput.value = '';
+
+            // Display DL CODE and hide Restriction
+            dlcodesDiv.style.display = 'block';
+            restrictionsDiv.style.display = 'none';
+        }
     });
-    
-    // New plan_id handler
-    planTypeSelect.addEventListener('change', function() {
-        const selectedOption = this.selectedOptions[0];
-        if (selectedOption && selectedOption.value) {
-            const planId = selectedOption.getAttribute('data-plan-id');
-            selectedPlanIdInput.value = planId;
-            console.log('Selected Plan ID:', planId);
-        } else {
-            selectedPlanIdInput.value = "";
+
+    // FOR RESTRICTION 
+    restrictionRadio.addEventListener('change', function () {
+        if (this.checked) {
+            // Clear DL CODE values
+            const dlcodeCheckboxes = dlcodesDiv.querySelectorAll('input[type="checkbox"]');
+            const dlcodeRadios = dlcodesDiv.querySelectorAll('input[type="radio"]');
+            dlcodeCheckboxes.forEach(checkbox => checkbox.checked = false);
+            dlcodeRadios.forEach(radio => {
+                radio.checked = false;
+                radio.required = false;
+            });
+
+            // Clear the DL CODE VALUE
+            dlcodeArrayInput.value = '';
+
+            // Display Restriction and hide DL CODE
+            restrictionsDiv.style.display = 'block';
+            dlcodesDiv.style.display = 'none';
+
+            // Hide clutch radio options
+            const clutchRadioOptionsGroups = document.querySelectorAll('.clutchRadioOptionsGroup');
+            clutchRadioOptionsGroups.forEach(group => {
+                group.style.display = 'none';
+            });
+
         }
     });
 });
+
+function handleCheckboxChange(checkboxId, radioGroupId) {
+    var checkbox = document.getElementById(checkboxId);
+    var radioGroup = document.getElementById(radioGroupId);
+
+    if (checkbox.checked) {
+        radioGroup.style.display = 'block';
+    } else {
+        radioGroup.style.display = 'none';
+    }
+}
+
+
+document.getElementById('restrictionCheckbox1').addEventListener('change', function () {
+    handleCheckboxChange('restrictionCheckbox1', 'clutchRadioOptionsGroup1');
+});
+
+document.getElementById('restrictionCheckbox2').addEventListener('change', function () {
+    handleCheckboxChange('restrictionCheckbox2', 'clutchRadioOptionsGroup2');
+});
+
+document.getElementById('restrictionCheckbox3').addEventListener('change', function () {
+    handleCheckboxChange('restrictionCheckbox3', 'clutchRadioOptionsGroup3');
+});
+
+document.getElementById('restrictionCheckbox4').addEventListener('change', function () {
+    handleCheckboxChange('restrictionCheckbox4', 'clutchRadioOptionsGroup4');
+});
+
+document.getElementById('restrictionCheckbox5').addEventListener('change', function () {
+    handleCheckboxChange('restrictionCheckbox5', 'clutchRadioOptionsGroup5');
+});
+
+$(document).ready(function () {
+    function updateRestrictionNumber() {
+        var restrictionNumbers = [];
+
+        if ($('#restrictionCheckbox1').prop('checked')) {
+            if ($('#clutchRadio1_1').prop('checked')) {
+                restrictionNumbers.push(1);
+            }
+        }
+
+        if ($('#restrictionCheckbox2').prop('checked')) {
+            if ($('#clutchRadio2_1').prop('checked')) {
+                restrictionNumbers.push(2);
+            }
+        }
+
+        if ($('#restrictionCheckbox2').prop('checked')) {
+            if ($('#clutchRadio2_2').prop('checked')) {
+                restrictionNumbers.push(4);
+            }
+        }
+
+        if ($('#restrictionCheckbox3').prop('checked')) {
+            if ($('#clutchRadio3_1').prop('checked')) {
+                restrictionNumbers.push(3);
+            }
+        }
+
+        if ($('#restrictionCheckbox3').prop('checked')) {
+            if ($('#clutchRadio3_2').prop('checked')) {
+                restrictionNumbers.push(5);
+            }
+        }
+
+        if ($('#restrictionCheckbox4').prop('checked')) {
+            if ($('#clutchRadio4_1').prop('checked')) {
+                restrictionNumbers.push(6);
+            }
+        }
+
+        if ($('#restrictionCheckbox5').prop('checked')) {
+            if ($('#clutchRadio5_1').prop('checked')) {
+                restrictionNumbers.push(8);
+            }
+        }
+
+        $('#restrictionNumberValue').text(restrictionNumbers.join(', '));
+    }
+
+    $('.checkbox-btn, .radio-btn').on('change', function () {
+        updateRestrictionNumber();
+    });
+});
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+
+document.getElementById('restrictionCheckbox1').addEventListener('change', function () {
+
+    var radio1 = document.getElementById('clutchRadio1_1');
+    var radio2 = document.getElementById('clutchRadio1_2');
+
+    if (this.checked) {
+        radio1.disabled = false;
+        radio2.disabled = true;
+        // radio1.required = true;
+
+    } else {
+        radio1.checked = false;
+        radio2.checked = false;
+        // radio1.required = false;
+
+    }
+});
+
+document.getElementById('restrictionCheckbox2').addEventListener('change', function () {
+
+    var radio1 = document.getElementById('clutchRadio2_1');
+    var radio2 = document.getElementById('clutchRadio2_2');
+
+
+    if (this.checked) {
+        radio1.disabled = false;
+        radio2.disabled = false;
+        // radio1.required = true;
+        // radio2.required = true;
+    } else {
+        radio1.checked = false;
+        radio2.checked = false;
+        radio1.disabled = true;
+        radio2.disabled = true;
+        // radio1.required = false;
+        // radio2.required = false;
+    }
+});
+
+document.getElementById('restrictionCheckbox3').addEventListener('change', function () {
+
+    var radio1 = document.getElementById('clutchRadio3_1');
+    var radio2 = document.getElementById('clutchRadio3_2');
+
+
+    if (this.checked) {
+        radio1.disabled = false;
+        radio2.disabled = false;
+        // radio1.required = true;
+        // radio2.required = true;
+        // clutchRadio.style.border = '2px solid red';
+    } else {
+        radio1.checked = false;
+        radio2.checked = false;
+        radio1.disabled = true;
+        radio2.disabled = true;
+        // radio1.required = false;
+        // radio2.required = false;
+    }
+});
+
+document.getElementById('restrictionCheckbox4').addEventListener('change', function () {
+
+    var radio1 = document.getElementById('clutchRadio4_1');
+    var radio2 = document.getElementById('clutchRadio4_2');
+
+    if (this.checked) {
+        radio1.disabled = false;
+        radio2.disabled = true;
+        // radio1.required = true;
+    } else {
+        radio1.checked = false;
+        radio2.checked = false;
+        // radio1.required = false;
+    }
+});
+
+document.getElementById('restrictionCheckbox5').addEventListener('change', function () {
+
+    var radio1 = document.getElementById('clutchRadio5_1');
+    var radio2 = document.getElementById('clutchRadio5_2');
+
+    if (this.checked) {
+        radio1.disabled = false;
+        radio2.disabled = true;
+        // radio1.required = true;
+    } else {
+        radio1.checked = false;
+        radio2.checked = false;
+        // radio1.required = false;
+    }
+});
+
+$(document).ready(function () {
+    var dlcode = document.getElementById('dlcode');
+    var restriction = document.getElementById('restriction');
+
+
+    function toggleRequired() {
+        if (dlcode.checked) {
+            var atLeastOneChecked = $("[id^=restrictionCheckbox]:checked").length > 0;
+            $("[id^=restrictionCheckbox]").prop("required", !atLeastOneChecked);
+
+        } else {
+            $("[id^=restrictionCheckbox]").prop("required", false);
+        }
+
+        if (restriction.checked) {
+            var atLeastOneChecked1 = $(".restriction1:checked").length > 0;
+            $(".restriction1").prop("required", !atLeastOneChecked1);
+        } else {
+            $(".restriction1").prop("required", false);
+        }
+    }
+
+    toggleRequired();
+
+    $("[id^=restrictionCheckbox], [class*=restriction]").on("click", toggleRequired);
+
+    $('#dlcode, #restriction').on('change', function () {
+        toggleRequired();
+    });
+
+});
+
+// FOR PLAN TYPE FILTER
+// document.addEventListener('DOMContentLoaded', function() {
+//     const membershipSelect = document.getElementById('membershiptype');
+//     const planTypeSelect = document.getElementById('plantype');
+//     const planOptions = planTypeSelect.querySelectorAll('option[data-membership]');
+//     const selectedPlanIdInput = document.getElementById('selected_plan_id');
+
+//     // Existing membership filter functionality
+//     membershipSelect.addEventListener('change', function() {
+//         const selectedMembershipId = this.selectedOptions[0].getAttribute('data-membership');
+//         console.log('Selected Membership ID:', selectedMembershipId);
+
+//         planTypeSelect.value = "";
+//         selectedPlanIdInput.value = ""; // Clear plan_id when membership changes
+
+//         planOptions.forEach(option => {
+//             if (option.getAttribute('data-membership') === selectedMembershipId) {
+//                 option.style.display = '';
+//             } else {
+//                 option.style.display = 'none';
+//             }
+//         });
+//     });
+
+//     // New plan_id handler
+//     planTypeSelect.addEventListener('change', function() {
+//         const selectedOption = this.selectedOptions[0];
+//         if (selectedOption && selectedOption.value) {
+//             const planId = selectedOption.getAttribute('data-plan-id');
+//             selectedPlanIdInput.value = planId;
+//             console.log('Selected Plan ID:', planId);
+//         } else {
+//             selectedPlanIdInput.value = "";
+//         }
+//     });
+// });
 
 // File upload handling
 function FileUploads() {
     const fileInputs = document.querySelectorAll('input[type="file"]');
     fileInputs.forEach(input => {
-        input.addEventListener('change', function() {
-            handleFileUpload(this, 
+        input.addEventListener('change', function () {
+            handleFileUpload(this,
                 this.id === 'orcrAttachment' ? 'orcr' : 'valid_id',
-                this.id === 'orcrAttachment' ? 'orcrFeedback' : 'idFeedback'
+                this.id === 'orcrAttachment' ? 'orcrFeedback' : 'idFeedback',
             );
         });
     });
@@ -360,46 +628,46 @@ function FileUploads() {
 function handleFileUpload(input, imageId, feedbackId) {
     const file = input.files && input.files[0];
     if (!file) {
-        return; // No file selected, exit the function
+        return;  // No file selected, exit the function
     }
 
-    const feedback = document.getElementById(feedbackId);
+    const feedback     = document.getElementById(feedbackId);
     const imagePreview = document.getElementById(imageId);
-    
+
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-    
+
     // Maximum file size (8MB)
-    const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
-    
-    // Reset previous feedback and preview
-    feedback.textContent = '';
+    const maxSizeInBytes = 8 * 1024 * 1024;  // 8MB
+
+      // Reset previous feedback and preview
+    feedback.textContent       = '';
     imagePreview.style.display = 'none';
-    imagePreview.src = '';
-    
-    // Validate file type
+    imagePreview.src           = '';
+
+      // Validate file type
     if (!allowedTypes.includes(file.type)) {
         feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
-        input.value = ''; // Clear the input
+        input.value          = '';                                                                
         return;
     }
-    
-    // Validate file size
+
+      // Validate file size
     if (file.size > maxSizeInBytes) {
         feedback.textContent = 'File size exceeds 8MB limit.';
-        input.value = ''; // Clear the input
+        input.value          = '';                              
         return;
     }
-    
-    // If file passes validation, create preview
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        imagePreview.src = e.target.result;
+
+      // If file passes validation, create preview
+    const reader        = new FileReader();
+          reader.onload = function (e) {
+        imagePreview.src           = e.target.result;
         imagePreview.style.display = 'block';
     };
     reader.readAsDataURL(file);
 }
 
-  //Contact Information Section---------------------------
+//Contact Information Section---------------------------
 document.addEventListener('DOMContentLoaded', function () {
     var mailingAddressDropdown = document.getElementById('mail');
     var officeAddressSection   = document.getElementById('officeAddress');
@@ -409,66 +677,66 @@ document.addEventListener('DOMContentLoaded', function () {
     var province1              = document.getElementById('province1');
     var zcode1                 = document.getElementById('zcode1');
     var comname                = document.getElementById('comname');
-  
-    // Function to set or remove the required attribute for the specified fields
-    function updateRequiredFields(required) {
-      street1.required      = required;
-      town1.required        = required;
-      city1.required        = required;
-      province1.required    = required;
-      zcode1.required       = required;
-      comname.required      = required;
-    }
-  
-    mailingAddressDropdown.addEventListener('change', function () {
-      if (mailingAddressDropdown.value === 'OFFICE') {
-        officeAddressSection.style.display = 'block';
-        updateRequiredFields(true);
-      } else {
-        officeAddressSection.style.display = 'none';
-        street1.value                      = "";
-        town1.value                        = "";
-        city1.value                        = "";
-        province1.value                    = "";
-        zcode1.value                       = "";
-        comname.value                      = "";
-        updateRequiredFields(false);
-      }
-    });
-  });
 
-  function summary_fetch() {
-    
+      // Function to set or remove the required attribute for the specified fields
+    function updateRequiredFields(required) {
+        street1.required   = required;
+        town1.required     = required;
+        city1.required     = required;
+        province1.required = required;
+        zcode1.required    = required;
+        comname.required   = required;
+    }
+
+    mailingAddressDropdown.addEventListener('change', function () {
+        if (mailingAddressDropdown.value === 'OFFICE') {
+            officeAddressSection.style.display = 'block';
+            updateRequiredFields(true);
+        } else {
+            officeAddressSection.style.display = 'none';
+            street1.value                      = "";
+            town1.value                        = "";
+            city1.value                        = "";
+            province1.value                    = "";
+            zcode1.value                       = "";
+            comname.value                      = "";
+            updateRequiredFields(false);
+        }
+    });
+});
+
+function summary_fetch() {
+
     // Step 1 Values
-    var membershipType     = $('#membership_type').val();
-    var plan_type          = $('#plan_type').val();
-    var pin_code           = $('#pinCode').val();
-    var paInsurance        = $('#paInsurance').val();
-    var activationDate     = $('#activationDate').val();
-    var applicationType     = $('#applicationType').val();
-    
-    
+    var membershipType  = $('#membership_type').val();
+    var plan_type       = $('#plan_type').val();
+    var pin_code        = $('#pinCode').val();
+    var paInsurance     = $('#paInsurance').val();
+    var activationDate  = $('#activationDate').val();
+    var applicationType = $('#applicationType').val();
+
+
     // Step 2 Values
     var title       = $('#title').val();
     var first_name  = $('#firstName').val();
     var last_name   = $('#lastName').val();
     var middle_name = $('#middleName').val();
       // var full_name    = first_name+ ' ,'+ last_name;
-    var gender       = $('#gender').val();
-    var birthdate    = $('#birthdate').val();
-    var birthplace   = $('#birthplace').val();
-    var citizenship  = $('#citizenship').val();
-    var nationality  = $('#nationality').val();
-    // var civilStatus        = $('#civilStatus').val();
-    // var acrNo        = $('#acrNo').val();
+    var gender      = $('#gender').val();
+    var birthdate   = $('#birthdate').val();
+    var birthplace  = $('#birthplace').val();
+    var citizenship = $('#citizenship').val();
+    var nationality = $('#nationality').val();
+      // var civilStatus        = $('#civilStatus').val();
+      // var acrNo        = $('#acrNo').val();
     var occupation   = $('#occupation').val();
     var mobileNumber = $('#mobileNumber').val();
     var emailAddress = $('#emailAddress').val();
     var occupation   = $('#occupation').val();
     var civilStatus  = $('#civilStatus').val();
-    
-    
-    
+
+
+
     // Step 3 Values
 
     // Home Address
@@ -489,13 +757,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var zcode         = $('#zcode1').val();
     var officeaddress = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
     var companyName   = $('#comname').val();
-    
-    
+
+
     // Summary Fields
-    document.getElementById('summaryApplicationType').textContent   = applicationType;
-    document.getElementById('summaryMembershipType').textContent    = membershipType;
-    document.getElementById('summaryPlanType').textContent          = plan_type;
-    document.getElementById('summaryActivationDate').textContent    = activationDate;
+    document.getElementById('summaryApplicationType').textContent = applicationType;
+    document.getElementById('summaryMembershipType').textContent  = membershipType;
+    document.getElementById('summaryPlanType').textContent        = plan_type;
+    document.getElementById('summaryActivationDate').textContent  = activationDate;
 
     document.getElementById('summaryTitle').textContent       = title;
     document.getElementById('summaryLastname').textContent    = last_name;
@@ -513,5 +781,5 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('summaryofficeaddress').textContent     = officeaddress;
     document.getElementById('summaryMailingPreference').textContent = mailing;
     document.getElementById('summaryMagazine').textContent          = availMagazine;
-    
-    } 
+
+} 

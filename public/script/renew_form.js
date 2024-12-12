@@ -400,42 +400,42 @@ function handleFileUpload(input, imageId, feedbackId) {
 }
 
   //Contact Information Section---------------------------
-document.addEventListener('DOMContentLoaded', function () {
-    var mailingAddressDropdown = document.getElementById('mail');
-    var officeAddressSection   = document.getElementById('officeAddress');
-    var street1                = document.getElementById('street1');
-    var town1                  = document.getElementById('town1');
-    var city1                  = document.getElementById('city1');
-    var province1              = document.getElementById('province1');
-    var zcode1                 = document.getElementById('zcode1');
-    var comname                = document.getElementById('comname');
+// document.addEventListener('DOMContentLoaded', function () {
+//     var mailingAddressDropdown = document.getElementById('mail');
+//     var officeAddressSection   = document.getElementById('officeAddress');
+//     var street1                = document.getElementById('street1');
+//     var town1                  = document.getElementById('town1');
+//     var city1                  = document.getElementById('city1');
+//     var province1              = document.getElementById('province1');
+//     var zcode1                 = document.getElementById('zcode1');
+//     var comname                = document.getElementById('comname');
   
-    // Function to set or remove the required attribute for the specified fields
-    function updateRequiredFields(required) {
-      street1.required      = required;
-      town1.required        = required;
-      city1.required        = required;
-      province1.required    = required;
-      zcode1.required       = required;
-      comname.required      = required;
-    }
+//     // Function to set or remove the required attribute for the specified fields
+//     function updateRequiredFields(required) {
+//       street1.required      = required;
+//       town1.required        = required;
+//       city1.required        = required;
+//       province1.required    = required;
+//       zcode1.required       = required;
+//       comname.required      = required;
+//     }
   
-    mailingAddressDropdown.addEventListener('change', function () {
-      if (mailingAddressDropdown.value === 'OFFICE') {
-        officeAddressSection.style.display = 'block';
-        updateRequiredFields(true);
-      } else {
-        officeAddressSection.style.display = 'none';
-        street1.value                      = "";
-        town1.value                        = "";
-        city1.value                        = "";
-        province1.value                    = "";
-        zcode1.value                       = "";
-        comname.value                      = "";
-        updateRequiredFields(false);
-      }
-    });
-  });
+//     mailingAddressDropdown.addEventListener('change', function () {
+//       if (mailingAddressDropdown.value === 'OFFICE') {
+//         officeAddressSection.style.display = 'block';
+//         updateRequiredFields(true);
+//       } else {
+//         officeAddressSection.style.display = 'none';
+//         street1.value                      = "";
+//         town1.value                        = "";
+//         city1.value                        = "";
+//         province1.value                    = "";
+//         zcode1.value                       = "";
+//         comname.value                      = "";
+//         updateRequiredFields(false);
+//       }
+//     });
+//   });
 
   function summary_fetch() {
     

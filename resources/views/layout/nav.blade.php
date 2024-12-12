@@ -15,13 +15,13 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center" id="navbarDropdown"
                                     href="#" role="button" data-bs-toggle="dropdown">
-                                    <img src="images/diablo_user.jpg" class="rounded-circle me-2" alt="Profile Picture"
+                                    <img src="{{ asset('images/diablo_user.jpg') }}" class="rounded-circle me-2" alt="Profile Picture"
                                         style="width: 32px; height: 32px; object-fit: cover;">
                                     <span>Admin</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <div class="px-3 py-2 text-center border-bottom">
-                                        <img src="images/diablo_user.jpg" class="rounded-circle mb-2"
+                                        <img src="{{ asset('images/diablo_user.jpg') }}" class="rounded-circle mb-2"
                                             alt="Profile Picture" style="width: 64px; height: 64px; object-fit: cover;">
                                         <p class="mb-0 fw-bold">Admin</p>
                                         <p class="text-muted small mb-2">admin@example.com</p>

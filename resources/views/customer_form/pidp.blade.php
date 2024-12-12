@@ -70,20 +70,20 @@
 
 
                                     <!--- Step 1 of Input textfield -->
-
-                                    <div class="col-md-3 mb-3">
-                                        <label for="membershiptype" class="form-label">Type of
-                                            Membership</label>
-                                        <select class="form-select" id="membershiptype" name="personal_info[membership_type]" required>
-                                            <option value="" selected disabled>Select Type of Membership </option>
-                                        </select>
-                                    </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="plantype" class="form-label">Plan Type</label>
                                         <select class="form-select" id="plantype" name="personal_info[plan_type]" required>
-                                            <option value="" selected disabled>Select Plan Type</option>
+                                            @if($selectedPlan)
+                                                <option value="{{ $selectedPlan->plan_id }}" selected>
+                                                    {{ $selectedPlan->plan_name }} - {{ $selectedPlan->plan_amount }}
+                                                </option>
+                                            @else
+                                                <option value="" selected disabled>Select Plan Type</option>
+                                            @endif
                                         </select>
-                                        <input type="hidden" name="personal_info[plantype_id]" id="selected_plan_id">
+                                        <input type="hidden" name="personal_info[plantype_id]" 
+                                            id="selected_plan_id" 
+                                            value="{{ $selectedPlan ? $selectedPlan->plan_id : '' }}">
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="pidpPlanType" class="form-label">PIDP Plan Type</label>
@@ -622,6 +622,28 @@
 
     @include('vehicle_autocomp')
     @include('dynamic_vehicle')
+    @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const applyButtons = document.querySelectorAll('.apply-now');
+    const planTypeSelect = document.getElementById('plantype');
+    const selectedPlanIdInput = document.getElementById('selected_plan_id');
+
+    applyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const planId = this.getAttribute('data-plan-id');
+            const planName = this.getAttribute('data-plan-name');
+
+            // Set the select dropdown to the corresponding plan
+            planTypeSelect.value = planId;
+            
+            // Set the hidden input with the plan ID
+            selectedPlanIdInput.value = planId;
+        });
+    });
+});
+</script>
+@endpush
     <script>
 $(document).ready(function() {
     $('.select2_notdynamic').select2({

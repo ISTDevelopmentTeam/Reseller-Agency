@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let maxVehicles = 1; // Default max vehicles
 
     // Membership Type Change Handler
-    const membershipTypeSelect = document.getElementById('membership_type');
+    const membershipTypeSelect = document.getElementById('membershiptype');
     const addButton = document.getElementById('addVehicle');
     const vehicleFieldsContainer = document.getElementById('vehicleFields');
 
@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
         membershipTypeSelect.addEventListener('change', function() {
             // Get the selected option
             const selectedOption = this.options[this.selectedIndex];
-
+            
             // Extract max vehicles from data attribute
             maxVehicles = parseInt(selectedOption.getAttribute('data-vehicle_num') || 1);
-
+            
             // Reset vehicle count when membership type changes
             vehicleCount = 1;
         });
@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             vehicleCount++;
-
+            
             // Create new vehicle fields dynamically
             const newVehicleDiv = document.createElement('div');
             newVehicleDiv.classList.add('vehicle-item', 'border', 'rounded', 'p-3', 'mb-3');
-
+            
             newVehicleDiv.innerHTML = `
                 <h6 class="mb-3">Vehicle <span class="vehicle-number">${vehicleCount}</span></h6>
                 <div class="row g-3">
@@ -57,9 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label class="form-label">Car Make</label>
                         <select class="form-control form-control-sm select2" id="make${vehicleCount}" name="vehicle_make[]" required>
                             <option value="" selected>Car Make</option>
-                            @foreach ($carMake as $row2)
-                                <option value="{{ $row2['brand'] }}">{{ strtoupper($row2['brand']) }}</option>
-                            @endforeach
+                                                    @foreach ($carMake as $row2)
+                                                        <option value="{{ $row2['brand'] }}">{{ strtoupper($row2['brand']) }}</option>
+                                                    @endforeach
+                            <!-- Populate car makes dynamically -->
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -117,8 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
             newVehicleDiv.querySelector('.remove-vehicle').addEventListener('click', function() {
                 const vehicleItems = document.querySelectorAll('.vehicle-item');
                 if (vehicleItems.length > 1) {
-                    // Destroy Select2 instances before removing the element
-                    $(this.closest('.vehicle-item')).find('.select2').select2('destroy');
                     this.closest('.vehicle-item').remove();
                     vehicleCount--; // Decrement vehicle count
                     updateVehicleNumbers();
@@ -132,11 +131,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             vehicleFieldsContainer.appendChild(newVehicleDiv);
 
-            // Initialize Select2 for the newly added elements
-            $(newVehicleDiv).find('.select2').select2({
-                theme: 'bootstrap4',
-                width: '100%',
-            });
+            // Reinitialize Select2 if available
+            if (typeof $ !== 'undefined' && $.fn.select2) {
+                $('.select2').select2({
+                    searchable: true
+                });
+            }
 
             // Add AJAX event listeners for the newly added vehicle
             bindAjaxEvents(vehicleCount);
@@ -162,35 +162,30 @@ document.addEventListener('DOMContentLoaded', function() {
         // Make event
         $(`#make${vehicleNumber}`).on("change", function() {
             var make = $(`#make${vehicleNumber}`).val();
-            $(`#model${vehicleNumber}`).val("");
-            $(`#vehicle_type${vehicleNumber}`).val("");
+            $(`#model${vehicleNumber}`).empty();
+            $(`#vehicle_type${vehicleNumber}`).empty();
             $(`#submodel${vehicleNumber}`).val("");
             $(`#year${vehicleNumber}`).val("");
             $(`#amount`).val("");
 
-            $(`#model${vehicleNumber}`).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "/api/v1/insurance/getCarModel",
-                        type: "post",
-                        data: {
-                            make: make,
-                            term: request.term
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            response($.map(data, function(item) {
-                                return {
-                                    label: item.model,
-                                    value: item.model
-                                };
-                            }));
-                        }
-                    });
+            $.ajax({
+                url: "/api/v1/insurance/getCarModel",
+                type: "post",
+                data: {
+                    make: make
                 },
-                minLength: 1,
-                select: function(event, ui) {
-                    // Handle selection if needed
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    var len = response.length;
+                    $(`#model${vehicleNumber}`).empty();
+                    $(`#model${vehicleNumber}`).append("<option value=''>Please select</option>");
+                    for (var i = 0; i < len; i++) {
+                        var model = response[i]["model"];
+                        $(`#model${vehicleNumber}`).append(
+                            "<option value='" + model + "'>" + model + "</option>"
+                        );
+                    }
                 }
             });
         });
@@ -314,12 +309,5 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
     }
-
-    // Close Select2 dropdowns on scroll
-    window.addEventListener('scroll', function() {
-        $('.select2-container--open').each(function() {
-            $(this).find('.select2-selection').select2('close');
-        });
-    });
 });
 </script>

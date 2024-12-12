@@ -9,7 +9,10 @@ use App\Http\Controllers\CMSController;
 use App\Http\Controllers\CustomerFormSubmitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\NewResellerController;
+use App\Http\Controllers\EventDashboardController;
+use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\MotorcycleController;
+use App\Http\Controllers\PidpController;
 use App\Http\Controllers\RenewResellerController;
 use App\Http\Controllers\ReportResellerController;
 use App\Http\Controllers\AuditTrailController;
@@ -29,15 +32,24 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 // NEW
-Route::get('/new_reseller', [NewResellerController::class, 'index'])->name('new_reseller.index');
-Route::post('/new_reseller', [NewResellerController::class, 'store'])->name('reseller.store');
-Route::get('/GetVehicle', [NewResellerController::class, 'GetVehicle'])->name('GetVehicle');
+Route::get('/event_dashboard', [EventDashboardController::class, 'event_dashboard'])->name('event_dashboard');
+// MEMBERSHIP
+Route::get('/new_membership/{planId?}', [MembershipController::class, 'index'])->name('new_membership.index');
+Route::post('/new_membership', [MembershipController::class, 'store'])->name('new_membership.store');
+// PIDP
+Route::get('/new_pidp/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
+Route::post('/new_pidp', [PidpController::class, 'store'])->name('new_pidp.store');
+// MOTORCYLE
+Route::get('/new_motorcyle/{planId?}', [MotorcycleController::class, 'index'])->name('new_motorcyle.index');
+Route::post('/new_motorcyle', [MotorcycleController::class, 'store'])->name('new_motorcyle.store');
+// Route::get('/GetVehicle', [NewResellerController::class, 'GetVehicle'])->name('GetVehicle');
 // RENEW
 Route::get('/renew_reseller', [RenewResellerController::class, 'index'])->name('renew_reseller');
 Route::post('/search_member', [RenewResellerController::class, 'search_member'])->name('search_member');
 Route::get('/reseller_form/{id}/{vehicle}', [RenewResellerController::class, 'reseller_form'])->name('reseller_form');
 
 Route::get('/customer_qr', [QRCustomerController::class, 'index'])->name('customer_qr');
+Route::get('/customer/{token }', [NewResellerController::class, 'event_dashboard'])->name('customer');
 Route::get('/subscription_plan_cms', [CMS_FetchingController::class, 'cms_fetch'])->name('subscription_plan_cms');
 Route::get('/edit_cms', [CMS_FetchingController::class, 'Edit_Fetch'])->name('edit_cms_page');
 Route::get('/view_cms', [CMS_FetchingController::class, 'View_Fetch'])->name('view_cms_page');
@@ -66,7 +78,7 @@ Route::get('/customer_fillout_form/{token}', function ($token) {
     }
     
     // If token is valid, display the temporary page
-    return view('customer_fillout_form', ['token' => $token]);
+    return view('reseller_form/customer_fillout_form', ['token' => $token]);
     })->name('customer_fillout_form');
 
 
