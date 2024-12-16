@@ -1,6 +1,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let vehicleCount = 1;
+    let vehicleCount = 2; // Start with the second vehicle
     let maxVehicles = 1; // Default max vehicles
 
     // Membership Type Change Handler
@@ -8,22 +8,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const addButton = document.getElementById('addVehicle');
     const vehicleFieldsContainer = document.getElementById('vehicleFields');
 
+    // Function to update maxVehicles based on selected membership type
+    function updateMaxVehicles() {
+        if (membershipTypeSelect) {
+            const selectedOption = membershipTypeSelect.options[membershipTypeSelect.selectedIndex];
+            maxVehicles = parseInt(selectedOption.getAttribute('data-vehicle_num') || 1);
+            console.log('Max vehicles allowed:', maxVehicles);
+        }
+    }
+
+    // Initialize maxVehicles on page load
+    updateMaxVehicles();
+
     if (membershipTypeSelect) {
         membershipTypeSelect.addEventListener('change', function() {
-            // Get the selected option
-            const selectedOption = this.options[this.selectedIndex];
-            
-            // Extract max vehicles from data attribute
-            maxVehicles = parseInt(selectedOption.getAttribute('data-vehicle_num') || 1);
-            
-            // Reset vehicle count when membership type changes
-            vehicleCount = 1;
+            updateMaxVehicles();
+            vehicleCount = 2; // Reset vehicle count to start with the second vehicle
         });
     }
 
     if (addButton && vehicleFieldsContainer) {
         addButton.addEventListener('click', function() {
-            if (vehicleCount >= maxVehicles) {
+            console.log('Add button clicked. Current vehicle count:', vehicleCount);
+            console.log('Max vehicles allowed:', maxVehicles);
+
+            if (vehicleCount > maxVehicles) {
                 // Using SweetAlert for max vehicle limit notification
                 Swal.fire({
                     title: "<i>Sorry</i>",
@@ -32,12 +41,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // Stop further execution
             }
 
-            vehicleCount++;
-            
             // Create new vehicle fields dynamically
             const newVehicleDiv = document.createElement('div');
             newVehicleDiv.classList.add('vehicle-item', 'border', 'rounded', 'p-3', 'mb-3');
-            
+
             newVehicleDiv.innerHTML = `
                 <h6 class="mb-3">Vehicle <span class="vehicle-number">${vehicleCount}</span></h6>
                 <div class="row g-3">
@@ -57,10 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label class="form-label">Car Make</label>
                         <select class="form-control form-control-sm select2" id="make${vehicleCount}" name="vehicle_make[]" required>
                             <option value="" selected>Car Make</option>
-                                                    @foreach ($carMake as $row2)
-                                                        <option value="{{ $row2['brand'] }}">{{ strtoupper($row2['brand']) }}</option>
-                                                    @endforeach
-                            <!-- Populate car makes dynamically -->
+                            @foreach ($carMake as $row2)
+                                <option value="{{ $row2['brand'] }}">{{ strtoupper($row2['brand']) }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -131,20 +137,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             vehicleFieldsContainer.appendChild(newVehicleDiv);
 
-            // Reinitialize Select2 if available
+            // Initialize Select2 for the newly added vehicle only
             if (typeof $ !== 'undefined' && $.fn.select2) {
-                $('.select2').select2({
+                $(`#make${vehicleCount}, #model${vehicleCount}, #vehicle_type${vehicleCount}`).select2({
+                    dropdownCssClass: "select2-dropdown",
                     searchable: true
                 });
             }
 
             // Add AJAX event listeners for the newly added vehicle
             bindAjaxEvents(vehicleCount);
+
+            vehicleCount++; // Increment vehicle count for the next addition
         });
     }
-
-    // Initial binding for the first vehicle
-    bindAjaxEvents(1);
 
     // Update vehicle numbers when a vehicle is removed
     function updateVehicleNumbers() {
@@ -309,5 +315,16 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
     }
+
+    // Initialize Select2 for the initial vehicle form
+    if (typeof $ !== 'undefined' && $.fn.select2) {
+        $('#make1, #model1, #vehicle_type1').select2({
+            dropdownCssClass: "select2-dropdown",
+            searchable: true
+        });
+    }
+
+    // Initial binding for the first vehicle
+    bindAjaxEvents(1);
 });
 </script>

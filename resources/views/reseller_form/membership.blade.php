@@ -5,19 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Dashboard</title>
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/favicon.ico')}}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('link/jquery-ui.css') }}">
-<link rel="stylesheet" href="{{ asset('style/new_reseller.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('link/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('style/new_reseller.css') }}">
 </head>
 
 <body>
-    @include("layout.sidebar");
-    @include("layout.nav");
-
+    @include("layout.sidebar")
+    @include("layout.nav")
 
     <div class="row g-4">
         <!-- Form Card -->
@@ -35,16 +34,16 @@
                         <!-- Breadcrumb -->
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item active" data-step="1">Membership Application</li>
-                                <li class="breadcrumb-item" data-step="2">Personal Information</li>
-                                <li class="breadcrumb-item" data-step="3">Contact Information</li>
-                                <li class="breadcrumb-item" data-step="4">Vehicle Details</li>
-                                <li class="breadcrumb-item" data-step="5">Information Summary</li>
+                                <li class="breadcrumb-item active" data-step="1">Personal Information</li>
+                                <li class="breadcrumb-item" data-step="2">Contact Information</li>
+                                <li class="breadcrumb-item" data-step="3">Vehicle Details</li>
+                                <li class="breadcrumb-item" data-step="4">Information Summary</li>
                             </ol>
                         </nav>
 
 
-                        <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST" enctype="multipart/form-data">
+                        <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" id="hiddenFormData" name="form_data" value="">
                             @foreach ($errors->all() as $key => $error)
@@ -57,7 +56,7 @@
                                     onclick="window.open('{{ route('customer_qr') }}', '_blank')">
                                     <i class="fas fa-user-edit me-2"></i>Customer Fill-out
                                 </button>
-                                <h5 class="card-title mb-4">Membership Application</h5>
+                                <h5 class="card-title mb-4">Personal Information</h5>
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <label for="applicationType" class="form-label">Type of Application</label>
@@ -72,23 +71,23 @@
                                     <!--- Step 1 of Input textfield -->
 
                                     <div class="col-md-3 mb-3">
-                                        <label for="membershiptype" class="form-label">Type of
-                                            Membership</label>
-                                        <select class="form-select" id="membershiptype" name="personal_info[membership_type]" required>
-                                            <option value="" selected disabled>Select Type of Membership </option>
-                                            @foreach ($packages['members'] as $members_type)
-                                                <option value="{{ $members_type->membership_name }}" 
-                                                        data-membership="{{ $members_type->membership_id }}"
-                                                        data-vehicle_num="{{ $members_type->vehicle_num }}">
-                                                    {{ $members_type->membership_name }}
+                                        <label for="membershiptype" class="form-label">Type of Membership</label>
+                                        <select class="form-select" id="membershiptype"
+                                            name="personal_info[membership_type]" required>
+                                            @if($selectedMembership)
+                                                <option value="{{ $selectedMembership->membership_id }}"
+                                                    data-vehicle_num="{{ $selectedMembership->vehicle_num }}" selected>
+                                                    {{ $selectedMembership->membership_name }}
                                                 </option>
-                                            @endforeach
+                                            @else
+                                                <option value="" selected disabled>Select Plan Type</option>
+                                            @endif
                                         </select>
                                     </div>
                                     <div class="col-md-3 mb-3">
                                         <label for="plantype" class="form-label">Plan Type</label>
-                                        <select class="form-select" id="plantype" name="personal_info[plan_type]" required>
-                                            <option value="" selected disabled>Select Plan Type</option>
+                                        <select class="form-select" id="plantype" name="personal_info[plan_type]"
+                                            required>
                                             @if($selectedPlan)
                                                 <option value="{{ $selectedPlan->plan_id }}" selected>
                                                     {{ $selectedPlan->plan_name }} - {{ $selectedPlan->plan_amount }}
@@ -100,191 +99,116 @@
                                         <input type="hidden" name="personal_info[plantype_id]" id="selected_plan_id">
                                     </div>
                                     <div class="col-md-3 mb-3">
-                                        <label for="pidpPlanType" class="form-label">PIDP Plan Type</label>
-                                        <input type="text" class="form-control" id="pidpPlanType">
+                                        <label for="idAttachment" class="form-label">ID Image (Upload a valid
+                                            government ID)</label>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="idAttachment" name="idpicture"
+                                                onchange="handleFileUpload(this, 'valid_id', 'idFeedback')" required>
+                                            <label class="input-group-text" for="idAttachment">
+                                                <i class="fas fa-upload"></i>
+                                            </label>
+                                        </div>
+                                        <div id="idFeedback" class="text-danger"></div>
+                                        <img id="valid_id" src="" alt="Image valid_id"
+                                            style="max-width: 200px; display: none; margin-top: 10px;">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3 mb-3">
-                                        <label for="activationDate" class="form-label">Activation Date</label>
-                                        <input type="date" class="form-control" id="activationDate" required>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="pinCode" class="form-label">PIN Code</label>
-                                        <input type="text" class="form-control" id="pinCode" required>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="initiator" class="form-label">Initiator</label>
-                                        <select class="form-select" id="initiator" required>
-                                            <option value="REGULAR" selected>REGULAR</option>
-                                            <option value="PREMIUM">PREMIUM</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label for="paInsurance" class="form-label">PA Insurance</label>
-                                        <input type="text" class="form-control" id="paInsurance">
-                                    </div>
-
-                                    <!-- Attachment fields -->
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="orcrAttachment" class="form-label">ORCR Image (Upload a clear
-                                                image of the ORCR)</label>
-                                            <div class="input-group">
-                                                <input type="file" class="form-control" id="orcrAttachment" name="orcr_image" onchange="handleFileUpload(this, 'orcr', 'orcrFeedback')" required>
-                                                <label class="input-group-text" for="orcrAttachment">
-                                                    <i class="fas fa-upload"></i>
-                                                </label>
-                                            </div>
-                                            <div id="orcrFeedback" class="text-danger"></div>
-                                            <img id="orcr" src="" alt="Image orcr"
-                                                style="max-width: 200px; display: none; margin-top: 10px;">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="idAttachment" class="form-label">ID Image (Upload a valid
-                                                government ID)</label>
-                                            <div class="input-group">
-                                            <input type="file" class="form-control" id="idAttachment" name="idpicture" onchange="handleFileUpload(this, 'valid_id', 'idFeedback')" required>
-                                                <label class="input-group-text" for="idAttachment">
-                                                    <i class="fas fa-upload"></i>
-                                                </label>
-                                            </div>
-                                            <div id="idFeedback" class="text-danger"></div>
-                                            <img id="valid_id" src="" alt="Image valid_id"
-                                                style="max-width: 200px; display: none; margin-top: 10px;">
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex justify-content-end mt-4">
-                                        <div class="navigation-buttons"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--- End of Step 1 -->
-
-
-
-
-                            <!-- Step 2: Personal Information -->
-                            <div class="form-step tab" id="step2">
-                                <h5 class="mb-4">Personal Information</h5>
-
                                 <div class="row mb-3">
                                     <div class="col-md-2">
                                         <label for="title" class="form-label">Title</label>
-                                        <select class="form-select" id="title" name="personal_info[members_title]" required>
-                                            <option value="MR">MR.</option>
-                                            <option value="MS">MS.</option>
-                                            <option value="MRS">MRS.</option>
+                                        <select class="form-select" id="title" name="personal_info[members_title]"
+                                            required>
+                                            <option value="" selected disabled>Select Title</option>
+                                            <option value="MR">MR</option>
+                                            <option value="MS">MS</option>
+                                            <option value="MRS">MRS</option>
+                                            <option value="ATTY">ATTY</option>
+                                            <option value="DR">DR</option>
+                                            <option value="ENGR">ENGR</option>
                                         </select>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstName" name="personal_info[members_firstname]" required>
+                                        <input type="text" class="form-control" id="firstName"
+                                            name="personal_info[members_firstname]" required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="middleName" class="form-label">Middle Name</label>
-                                        <input type="text" class="form-control" id="middleName" name="personal_info[members_middlename]">
+                                        <input type="text" class="form-control" id="middleName"
+                                            name="personal_info[members_middlename]">
                                     </div>
                                     <div class="col-md-3">
                                         <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastName" name="personal_info[members_lastname]" required>
+                                        <input type="text" class="form-control" id="lastName"
+                                            name="personal_info[members_lastname]" required>
                                     </div>
                                 </div>
-
                                 <div class="row mb-3">
                                     <div class="col-md-3">
                                         <label for="gender" class="form-label">Gender</label>
-                                        <select class="form-select" id="gender" name="personal_info[members_gender]" required>
+                                        <select class="form-select" id="gender" name="personal_info[members_gender]"
+                                            required>
+                                            <option value="" selected disabled>Select a Gender</option>
                                             <option value="MALE">MALE</option>
                                             <option value="FEMALE">FEMALE</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="birthdate" class="form-label">Birthdate</label>
-                                        <input type="date" class="form-control" name="personal_info[members_birthdate]" id="birthdate" required>
+                                        <input type="date" class="form-control" name="personal_info[members_birthdate]"
+                                            id="birthdate" required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="birthplace" class="form-label">Birth Place</label>
-                                        <input type="text" class="form-control" name="personal_info[members_birthplace]" id="birthplace" required>
+                                        <input type="text" class="form-control" name="personal_info[members_birthplace]"
+                                            id="birthplace" required>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="citizenship" class="form-label">Citizenship</label>
-                                        <select type="text" class="form-control" name="personal_info[citizenship]" id="citizenship" required>
-                                        <option value="" selected disabled>Select Citizenship</option>
-                                        <option value="filipino" @if (old('personal_info.citizenship') == 'filipino') {{ 'selected' }} @endif> FILIPINO</option>
-                                        <option value="foreigner" @if (old('personal_info.citizenship') == 'foreigner') {{ 'selected' }} @endif> FOREIGNER</option>    
-                                    </select>
+                                        <label for="occupation" class="form-label">Occupation</label>
+                                        <input type="text" class="form-control" name="personal_info[occupation_name]"
+                                            id="occupation" required>
                                     </div>
-                                </div>
 
+                                </div>
                                 <div class="row mb-3">
                                     <div class="col-md-3">
-                                        <label for="nationality" class="form-label">Nationality</label>
-                                        <input type="text" class="form-control" name="personal_info[nationality]" id="nationality">
-                                    </div>
-                                    <!-- <div class="col-md-3">
-                                        <label for="acrNo" class="form-label">ACR No.</label>
-                                        <input type="text" class="form-control" name="" id="acrNo">
-                                    </div> -->
-                                    <div class="col-md-3">
                                         <label for="civilStatus" class="form-label">Civil Status</label>
-                                        <select class="form-select" id="civilStatus" name="personal_info[members_civilstatus]" required>
+                                        <select class="form-select" id="civilStatus"
+                                            name="personal_info[members_civilstatus]" required>
+                                            <option value="" selected disabled>Select Civil Status</option>
                                             <option value="SINGLE">SINGLE</option>
                                             <option value="MARRIED">MARRIED</option>
-                                            <option value="DIVORCED">DIVORCED</option>
                                             <option value="WIDOWED">WIDOWED</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="occupation" class="form-label">Occupation</label>
-                                        <input type="text" class="form-control" name="personal_info[occupation_name]" id="occupation" required>
+                                        <label for="citizenship" class="form-label">Citizenship</label>
+                                        <select type="text" class="form-control" name="personal_info[citizenship]"
+                                            id="citizenship" required>
+                                            <option value="" selected disabled>Select Citizenship</option>
+                                            <option value="filipino"> FILIPINO</option>
+                                            <option value="foreigner">FOREIGNER</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3" id="add_info" style="display: none;">
+                                        <label for="nationality" class="form-label">Nationality</label>
+                                        <input type="text" class="form-control" name="personal_info[nationality]"
+                                            id="nationality">
                                     </div>
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <label for="mobileNumber" class="form-label">Mobile Number</label>
-                                        <input type="tel" class="form-control" name="personal_info[members_mobileno]" id="mobileNumber" required>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="emailAddress" class="form-label">Email Address</label>
-                                        <input type="email" class="form-control" name="personal_info[members_emailaddress]" id="emailAddress" required>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="telephoneNumber" class="form-label">Telephone
-                                            Number</label>
-                                        <input type="tel" class="form-control" name="personal_info[members_alternate_tel]" id="telephoneNumber">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="alternateMobile" class="form-label">Alternate Mobile
-                                            Number</label>
-                                        <input type="tel" class="form-control" name="personal_info[members_alternate_mobileno]" id="alternateMobile">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="alternateEmail" class="form-label">Alternate Email
-                                            Address</label>
-                                        <input type="email" class="form-control" name="personal_info[members_alternate_emailaddress]" id="alternateEmail">
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-between mt-4">
+                                <div class="d-flex justify-content-end mt-4">
                                     <div class="navigation-buttons"></div>
                                 </div>
                             </div>
+                            <!--- End of Step 1 -->
 
-                            <!-- End of Step 2 -->
-
-
-                            <!-- Step 3: Contact Information Section -->
-                            <div class="form-step tab" id="step3">
+                            <!-- Step 2: Contact Information Section -->
+                            <div class="form-step tab" id="step2">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="mail" class="form-label">Mailing Preference</label>
-                                        <select class="form-select" name="personal_info[mailing_preference]" id="mail" required>
+                                        <select class="form-select" name="personal_info[mailing_preference]" id="mail"
+                                            required>
                                             <option value="HOME">HOME</option>
                                             <option value="OFFICE">OFFICE</option>
                                         </select>
@@ -294,85 +218,117 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="street" class="form-label">Building No. / Street</label>
-                                        <input type="text" class="form-control" name="personal_info[street]" id="street" required>
+                                        <input type="text" class="form-control" name="personal_info[street]" id="street"
+                                            required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="town" class="form-label">Barangay / Towns</label>
-                                        <input type="text" class="form-control" name="personal_info[town]" id="town" required>
+                                        <input type="text" class="form-control" name="personal_info[town]" id="town"
+                                            required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="city" class="form-label">City/Municipality</label>
-                                        <input type="text" class="form-control" name="personal_info[city]" id="city" required>
+                                        <input type="text" class="form-control" name="personal_info[city]" id="city"
+                                            required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-3">
                                         <label for="province" class="form-label">Province</label>
-                                        <input type="text" class="form-control" name="personal_info[province]" id="province" required>
+                                        <input type="text" class="form-control" name="personal_info[province]"
+                                            id="province" required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="zcode" class="form-label">Zip</label>
-                                        <input type="text" class="form-control" name="personal_info[zcode]" id="zcode" required>
+                                        <input type="text" class="form-control" name="personal_info[zcode]" id="zcode"
+                                            required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="availMagazine" class="form-label">Avail Online AQ Magazine</label>
-                                        <select class="form-select" name="personal_info[availMagazine]" id="availMagazine" required>
+                                        <select class="form-select" name="personal_info[availMagazine]"
+                                            id="availMagazine" required>
                                             <option value="YES">YES</option>
                                             <option value="NO">NO</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="pt-5" id="officeAddress" style="display: none;">
-                                <h5 class="mt-4 mb-3">Office Address</h5>
-                                    <div class="row mb-3">
-                                        <div class="col-md-12">
-                                            <label for="companyName" class="form-label">Company Name</label>
-                                            <input type="text" class="form-control" name="personal_info[comname]" id="comname">
-                                        </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-3">
+                                        <label for="mobileNumber" class="form-label">Mobile Number</label>
+                                        <input type="tel" class="form-control" name="personal_info[members_mobileno]"
+                                            id="mobileNumber" required>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <label for="street" class="form-label">Building No. / Street</label>
-                                            <input type="text" class="form-control" name="personal_info[street1]" id="street1">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="town" class="form-label">Barangay / Towns</label>
-                                            <input type="text" class="form-control" name="personal_info[town1]" id="town1">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="city" class="form-label">City/Municipality</label>
-                                            <input type="text" class="form-control" name="personal_info[city1]" id="city1">
-                                        </div>
+                                    <div class="col-md-3">
+                                        <label for="alternateMobile" class="form-label">Alternate Mobile
+                                            Number</label>
+                                        <input type="tel" class="form-control"
+                                            name="personal_info[members_alternate_mobileno]" id="alternateMobile">
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-4">
-                                            <label for="province" class="form-label">Province</label>
-                                            <input type="text" class="form-control" name="personal_info[province1]" id="province1">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="zcode" class="form-label">Zip</label>
-                                            <input type="text" class="form-control" name="personal_info[zcode1]" id="zcode1">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="officePhone" class="form-label">Office Phone
-                                                Number</label>
-                                            <input type="tel" class="form-control" name="personal_info[officePhone]" id="officePhone">
-                                        </div>
+                                    <div class="col-md-3">
+                                        <label for="emailAddress" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control"
+                                            name="personal_info[members_emailaddress]" id="emailAddress" required>
                                     </div>
-                                    <div class="row mb-3">
-                                        
+                                    <div class="col-md-3">
+                                        <label for="alternateEmail" class="form-label">Alternate Email
+                                            Address</label>
+                                        <input type="email" class="form-control"
+                                            name="personal_info[members_alternate_emailaddress]" id="alternateEmail">
                                     </div>
                                 </div>
-
+                                <div class="pt-5" id="officeAddress" style="display: none;">
+                                    <h5 class="mt-4 mb-3">Office Address</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-7">
+                                            <label for="street" class="form-label">Building No. / Street</label>
+                                            <input type="text" class="form-control" name="personal_info[street1]"
+                                                id="street1">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label for="town" class="form-label">Barangay / Towns</label>
+                                            <input type="text" class="form-control" name="personal_info[town1]"
+                                                id="town1">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-5">
+                                            <label for="city" class="form-label">City/Municipality</label>
+                                            <input type="text" class="form-control" name="personal_info[city1]"
+                                                id="city1">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label for="province" class="form-label">Province</label>
+                                            <input type="text" class="form-control" name="personal_info[province1]"
+                                                id="province1">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="zcode" class="form-label">Zip</label>
+                                            <input type="text" class="form-control" name="personal_info[zcode1]"
+                                                id="zcode1">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-9">
+                                            <label for="companyName" class="form-label">Company Name</label>
+                                            <input type="text" class="form-control" name="personal_info[comname]"
+                                                id="comname">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="telephoneNumber" class="form-label">Telephone
+                                                Number</label>
+                                            <input type="tel" class="form-control"
+                                                name="personal_info[members_alternate_tel]" id="telephoneNumber">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="d-flex justify-content-between mt-4">
                                     <div class="navigation-buttons"></div>
                                 </div>
                             </div>
-                            <!-- End of Step 3 -->
+                            <!-- End of Step 2 -->
 
-                            <!-- Step 4: Vehicle Information -->
-                            <div class="form-step tab" id="step4">
+                            <!-- Step 3: Vehicle Information -->
+                            <div class="form-step tab" id="step3">
                                 <h5 class="mb-4">Vehicle Details</h5>
                                 <div id="vehicleFields">
                                     <!-- Initial Vehicle Form -->
@@ -389,51 +345,53 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Plate Number</label>
-                                                <input type="text" id="plate_number" name="vehicle_plate[]" class="form-control"
-                                                    placeholder="Enter plate number">
+                                                <input type="text" id="plate_number" name="vehicle_plate[]"
+                                                    class="form-control" placeholder="Enter plate number">
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Car Make</label>
-                                                <select class="form-control form-control-sm select2_notdynamic" id="make" name="vehicle_make[]"
-                                                    required>
+                                                <select class="form-control form-control-sm select2" id="make1"
+                                                    name="vehicle_make[]" required>
                                                     <option value="" selected>Car Make</option>
                                                     @foreach ($carMake as $row2)
-                                                        <option value="{{ $row2['brand'] }}">{{ strtoupper($row2['brand']) }}</option>
+                                                        <option value="{{ $row2['brand'] }}">
+                                                            {{ strtoupper($row2['brand']) }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Car Models</label>
-                                                <select class="form-control select2_notdynamic" id="model" name="vehicle_model[]">
-                                                <option value="" selected>Car Model</option>
+                                                <select class="form-control select2" id="model1" name="vehicle_model[]">
+                                                    <option value="" selected>Car Model</option>
                                                 </select>
                                             </div>
 
                                             <!-- Second Row -->
                                             <div class="col-md-3">
                                                 <label class="form-label">Vehicle Type</label>
-                                                <select class="form-control select2_notdynamic" id="vehicle_type" name="vehicle_type[]">
+                                                <select class="form-control select2" id="vehicle_type1"
+                                                    name="vehicle_type[]">
                                                     <option value="" selected>Vehicle Type</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Year</label>
-                                                <input type="number" id="year" name="vehicle_year[]" class="form-control"
-                                                    placeholder="Enter year">
+                                                <input type="number" id="year1" name="vehicle_year[]"
+                                                    class="form-control" placeholder="Enter year">
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Sub model</label>
-                                                <input type="text" id="submodel" name="submodel[]" class="form-control"
+                                                <input type="text" id="submodel1" name="submodel[]" class="form-control"
                                                     placeholder="Enter sub model">
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Color</label>
-                                                <input type="text" id="color" name="vehicle_color[]" class="form-control"
-                                                    placeholder="Enter color">
+                                                <input type="text" id="color" name="vehicle_color[]"
+                                                    class="form-control" placeholder="Enter color">
                                             </div>
 
                                             <!-- Third Row -->
-                                            <div class="col-md-6">
+                                            <div class="col-md-3">
                                                 <label class="form-label">Fuel Type</label>
                                                 <select class="form-select" name="vehicle_fuel[]">
                                                     <option value="GAS">GAS</option>
@@ -441,12 +399,48 @@
                                                     <option value="ELECTRIC">ELECTRIC</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-3">
                                                 <label class="form-label">Transmission Type</label>
                                                 <select class="form-select" name="vehicle_transmission[]">
                                                     <option value="AUTOMATIC">AUTOMATIC</option>
                                                     <option value="MANUAL">MANUAL</option>
                                                 </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="orAttachment" class="form-label">Upload: Official
+                                                        Receipt</label>
+                                                    <div class="input-group">
+                                                        <input type="file" class="form-control" id="orAttachment"
+                                                            name="upload_receipt"
+                                                            onchange="handleFileUpload(this, 'or', 'orFeedback')"
+                                                            required>
+                                                        <label class="input-group-text" for="orAttachment">
+                                                            <i class="fas fa-upload"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div id="orFeedback" class="text-danger"></div>
+                                                    <img id="or" src="" alt="Image or"
+                                                        style="max-width: 200px; display: none; margin-top: 10px;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="crAttachment" class="form-label">Upload: Certificate of
+                                                        Registration</label>
+                                                    <div class="input-group">
+                                                        <input type="file" class="form-control" id="crAttachment"
+                                                            name="cr_image"
+                                                            onchange="handleFileUpload(this, 'cr', 'crFeedback')"
+                                                            required>
+                                                        <label class="input-group-text" for="crAttachment">
+                                                            <i class="fas fa-upload"></i>
+                                                        </label>
+                                                    </div>
+                                                    <div id="crFeedback" class="text-danger"></div>
+                                                    <img id="cr" src="" alt="Image cr"
+                                                        style="max-width: 200px; display: none; margin-top: 10px;">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -463,8 +457,9 @@
                             </div>
 
 
-                            <!-- Step 5: Information Summary -->
-                            <div class="form-step tab" id="step5">
+
+                            <!-- Step 4: Information Summary -->
+                            <div class="form-step tab" id="step4">
                                 <h5 class="mb-4">Information Summary</h5>
 
                                 <!-- Membership Application Summary -->
@@ -609,7 +604,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -626,23 +621,25 @@
     </div>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src="/script/reg_reseller.js"></script>
-<script src="/script/sidebar.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/script/membership.js"></script>
+    <script src="/script/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     @include('vehicle_autocomp')
     @include('dynamic_vehicle')
     <script>
-$(document).ready(function() {
-    $('.select2_notdynamic').select2({
-        placeholder: 'Search...',
-        searchable: true
-    });
-});
+        // $(document).ready(function() {
+        //     $('.notdynamic').select2({
+        //         theme: 'bootstrap4',
+        //         width: '100%'
+        //     });
+        // });
+    </script>
+    <script>
 
 
         $(document).ready(function () {

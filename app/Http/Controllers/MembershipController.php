@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Town;
 use App\Models\City;
-use App\Models\Membership;
+use App\Models\MembershipType;
 use App\Models\PlanType;
 use App\Models\Vehicle;
 use App\Traits\Insurance\Get_carmake;
@@ -13,7 +13,7 @@ use App\Traits\Insurance\Get_carmake;
 class MembershipController extends Controller
 {
     use Get_carmake;
-    public function index(Request $request, $planId = null){
+    public function index(Request $request, $membershipId, $planId){
         $searchTerm = $request->input('town');
     
         $towns = Town::select('a.*', 'c.*', 'd.*')
@@ -34,18 +34,18 @@ class MembershipController extends Controller
             ->get();
     
         $carMake = json_decode($this->get_carmake(), true);
-        
-        // Get all plan types
-        $planTypes = PlanType::all();
     
-        // If a specific plan ID is passed, find that plan
-        $selectedPlan = $planId ? PlanType::where('plan_id', $planId)->first() : null;
+    // Find the selected membership
+    $selectedMembership = MembershipType::where('membership_id', $membershipId)->first();
+
+    // Find the selected plan
+    $selectedPlan = PlanType::where('plan_id', $planId)->first();
     
         return view('reseller_form/membership')->with([
             'towns'   => $towns,
             'citys'   => $citys,
             'carMake' => $carMake,
-            'planTypes' => $planTypes,
+            'selectedMembership' => $selectedMembership,
             'selectedPlan' => $selectedPlan
         ]);
     }

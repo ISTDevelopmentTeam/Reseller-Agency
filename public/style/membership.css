@@ -1,0 +1,471 @@
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 250px;
+    margin-left: 0;
+    transition: margin 0.25s ease-out, width 0.25s ease-out;
+    background-color: #4040F2;
+    position: fixed;
+    z-index: 1000;
+    height: 100%;
+    padding-bottom: 60px;
+ }
+ 
+ /* Wrapper and content adjustments */
+ #wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+ }
+ 
+ #page-content-wrapper {
+    width: 100%;
+    margin-left: 250px; /* Match sidebar width */
+    transition: margin 0.25s ease-out;
+ }
+ 
+ /* Toggled state for sidebar (collapsed) */
+ #wrapper.toggled #sidebar-wrapper {
+    width: 70px;
+ }
+ 
+ #wrapper.toggled #page-content-wrapper {
+    margin-left: 70px;
+ }
+ 
+ /* Hide text and only show icons when the sidebar is toggled */
+ #wrapper.toggled .logo-text,
+ #wrapper.toggled .menu-text {
+    display: none;
+ }
+ 
+ /* Ensure icons are always visible */
+ .list-group-item i {
+    width: 20px;
+    text-align: center;
+    display: inline-block;
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+ }
+ 
+ /* Increase icon size when sidebar is collapsed */
+ #wrapper.toggled .list-group-item i {
+    font-size: 1.5rem;
+ }
+ 
+ /* Hide copyright text when sidebar is collapsed */
+ #wrapper.toggled .copyright {
+    display: none;
+ }
+ 
+ /* Show copyright text when sidebar is expanded */
+ #wrapper:not(.toggled) .copyright {
+    display: block;
+ }
+ 
+ /* Mobile and tablet responsive styles */
+ @media (max-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+        width: 250px;
+    }
+    
+    /* Initial state - sidebar hidden on mobile */
+    #wrapper:not(.toggled) #sidebar-wrapper {
+        margin-left: -250px;
+    }
+    
+    /* When toggled - sidebar shows on mobile */
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: 0;
+        width: 250px;
+    }
+    
+    /* Content adjustments for mobile */
+    #page-content-wrapper {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    #wrapper.toggled #page-content-wrapper {
+        margin-left: 250px;
+    }
+ 
+    /* Keep text visible on mobile when sidebar is open */
+    #wrapper.toggled .logo-text,
+    #wrapper.toggled .menu-text {
+        display: inline;
+    }
+ }
+ 
+ @media (max-width: 425px) {
+    #sidebar-wrapper {
+        width: 100%; /* Full width on very small screens */
+    }
+    
+    #wrapper.toggled #page-content-wrapper {
+        margin-left: 0;
+        transform: translateX(100%);
+    }
+ }
+ 
+ /* Sidebar content styles */
+ .sidebar-heading {
+    padding: 1rem;
+    font-size: 1.2rem;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    transition: all 0.3s ease;
+ }
+ 
+ /* Center logo when sidebar is collapsed */
+ #wrapper.toggled .sidebar-heading {
+    justify-content: center; 
+ }
+ 
+ /* Adjust logo size when sidebar is collapsed */
+ #wrapper.toggled .sidebar-heading img {
+    width: 40px; 
+    height: auto;
+    margin-right: 10%;
+ }
+ 
+ /* Keep text visible when sidebar is expanded */
+ #wrapper:not(.toggled) .sidebar-heading img {
+    width: 50px; 
+ }
+ 
+ 
+ #wrapper.toggled .logo-text {
+    display: none;
+ }
+ 
+ .list-group-item {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+ }
+ 
+ .list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+ }
+ 
+ /* Copyright section */
+ .copyright {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.1);
+ }
+ 
+ /* Toggle button adjustments */
+ #sidebarToggle {
+    z-index: 1001;
+    position: relative;
+ }
+ 
+ /* Ensure icons are always visible */
+ .list-group-item i {
+    width: 20px;
+    text-align: center;
+    display: inline-block;
+ }
+ 
+ #formSubMenu {
+    background-color: rgba(0, 0, 0, 0.2);
+ }
+ 
+ #formSubMenu .submenu-item {
+    padding-left: 3rem !important;
+    background-color: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+ }
+ 
+ #formSubMenu .submenu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+ }
+ 
+ /* General sidebar styling */
+ #sidebar-wrapper .list-group-item {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 0.8rem 1.25rem;
+ }
+ 
+ #sidebar-wrapper .list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+ }
+ 
+ #sidebar-wrapper .list-group-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+ }
+    /* Custom table styling */
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+    }
+ 
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
+ 
+    .table-custom {
+        margin-top: 0 !important;
+        vertical-align: middle;
+    }
+ 
+    .table-custom th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+ 
+    .table-custom td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 1.2em;
+        display: inline-block;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 1rem;
+    }
+    
+   
+    .badge.rounded-pill {
+        min-width: 80px;
+    }
+ 
+    .btn-group .btn {
+        border-radius: 0.25rem !important;
+        margin: 0 0.2rem;
+    }
+ 
+    .pagination {
+        margin-bottom: 0;
+    }
+ 
+    .page-link {
+        padding: 0.375rem 0.75rem;
+    }
+ 
+    .input-group-text {
+        border: 1px solid #ced4da;
+        background-color: #f8f9fa;
+    }
+ 
+    .form-control:focus, .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+ 
+ .navbar .dropdown-menu {
+    min-width: 200px;
+ }
+ 
+ .navbar .nav-link {
+    padding: 0.5rem 1rem;
+ }
+ 
+ /* Hover effect for dropdown items */
+ .navbar .dropdown-item:hover {
+    background-color: #f8f9fa;
+ }
+ 
+ /* Transition for dropdown */
+ .navbar .dropdown-menu {
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transform-origin: top;
+ }
+ 
+ /* Profile picture hover effect */
+ .navbar .nav-link img {
+    transition: transform 0.2s ease;
+ }
+ 
+ .navbar .nav-link:hover img {
+    transform: scale(1.1);
+ }
+ .modal-blur {
+   backdrop-filter: blur(5px);
+   background-color: rgba(0, 0, 0, 0.5);
+ }
+ 
+ .form-step {
+   display: none;
+ }
+ 
+ .form-step.active {
+   display: block;
+ }
+ 
+ .breadcrumb-item {
+   cursor: pointer;
+ }
+ 
+ .progress {
+   height: 2px;
+   margin-bottom: 20px;
+ }
+ 
+ .scrollable-card {
+   max-height: 70vh;
+   overflow-y: auto;
+ }
+ 
+ .card-body {
+   position: relative;
+ }
+ 
+ .progress-container {
+   position: sticky;
+   top: 0;
+   background-color: white;
+   z-index: 1000;
+   padding-top: 1rem;
+ }
+ 
+ .vehicle-item {
+   background-color: #d0e1f1;
+   transition: all 0.3s ease;
+ }
+ 
+ .vehicle-item:hover {
+   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+ }
+ 
+ .btn-danger {
+   background-color: #dc3545;
+   border-color: #dc3545;
+ }
+ 
+ .btn-danger:hover {
+   background-color: #bb2d3b;
+   border-color: #b02a37;
+ }
+ 
+ .customer-fillout-btn {
+   position: absolute;
+   top: 10px;
+   right: 15px;
+ }
+ 
+ #orcr, #valid_id {
+    max-width: 200px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+ }
+ 
+ .text-danger {
+    color: red;
+    font-size: 0.9em;
+ }
+ 
+ .select2-dropdown {
+    z-index: 9999; /* Ensure the dropdown appears above other elements */
+    width: 100% !important; /* Ensure the dropdown takes the full width of the select element */
+    max-height: 200px; /* Limit the height of the dropdown */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.select2-container--open .select2-dropdown {
+    border: 1px solid #aaa; /* Optional: Add a border to the dropdown */
+    border-radius: 4px; /* Optional: Add rounded corners to the dropdown */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow to the dropdown */
+}
+
+ /* AUTOCOMPLETE LIMIT AND SCROLL FOR YEAR AND SUB MODEL */
+ .custom-menu {
+    max-height: 200px !important; /* Adjust height as needed */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    width: auto !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 0 !important;
+    margin: 2px 0 0 !important;
+    background: #fff !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+    position: absolute !important;
+    z-index: 9999 !important;
+  }
+  
+  .custom-menu-item {
+    padding: 8px 10px !important;
+    list-style: none !important;
+    border-bottom: 1px solid #eee !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    width: 34rem;
+  }
+  
+  .custom-menu-item:last-child {
+    border-bottom: none !important;
+  }
+  
+  .custom-menu-item:hover {
+    background-color: #f5f5f5 !important;
+  }
+  
+  .custom-menu-item div {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  
+  /* Scrollbar styling */
+  .custom-menu::-webkit-scrollbar {
+    width: 1px !important;
+  }
+  
+  .custom-menu::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+  }
+  
+  .custom-menu::-webkit-scrollbar-thumb {
+    background: #888 !important;
+    border-radius: 4px !important;
+  }
+  
+  .custom-menu::-webkit-scrollbar-thumb:hover {
+    background: #555 !important;
+  }
+  
+ .footer {
+   position: absolute;
+   bottom: 0;
+   width: 80%;
+   height: 50px; /* Height of the footer */
+   text-align: center;
+   padding: 20px 0;
+   background-color: #f8f9fa;
+ }
+ 
+ .footer-text {
+   color: #6c757d;
+   font-size: 14px;
+ }
