@@ -202,6 +202,60 @@
                                         <option value="foreigner" @if (old('personal_info.citizenship') == 'foreigner') {{ 'selected' }} @endif> FOREIGNER</option>    
                                     </select>
                                     </div>
+                                    <!-- Are you going to JAPAN? -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Are you going to JAPAN?</label>
+                                        <div>
+                                            <input type="radio" id="goingToJapanYes" name="going_to_japan" value="YES"> <label for="goingToJapanYes">YES</label>
+                                            <input type="radio" id="goingToJapanNo" name="going_to_japan" value="NO"> <label for="goingToJapanNo">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Destination and Purpose of Travel -->
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="destination" class="form-label">Destination</label>
+                                        <input type="text" class="form-control" id="destination" name="travel_info[destination]" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="purpose" class="form-label">Purpose of Travel</label>
+                                        <select class="form-select" id="purpose" name="travel_info[purpose]" disabled>
+                                            <option value="">Select Purpose</option>
+                                            <option value="Tourism and Work">Tourism and Work</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Departure and Return Dates -->
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="departureDate" class="form-label">Departure Date</label>
+                                        <input type="date" class="form-control" id="departureDate" name="travel_info[departure_date]" disabled>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="returnDate" class="form-label">Return Date</label>
+                                        <input type="date" class="form-control" id="returnDate" name="travel_info[return_date]" disabled>
+                                    </div>
+                                </div>
+
+                                <!-- Are you going to another country aside JAPAN? -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="anotherCountry" class="form-label">Are you going to another country aside JAPAN?</label>
+                                        <input type="text" class="form-control" id="anotherCountry" name="travel_info[another_country]" disabled>
+                                    </div>
+                                </div>
+
+                                <!-- Notes -->
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <p id="noteTourism" class="text-danger d-none">Note: To be Marketing Employee</p>
+                                        <p id="noteJapanFee" class="text-danger d-none">NOTE: Additional $20.00 fee to the Philippines IPD*</p>
+                                    </div>
+                                </div>
                                 </div>
 
                                 <div class="row mb-3">
@@ -708,6 +762,55 @@ $(document).ready(function() {
             txt.innerHTML = html;
             return txt.value;
         }
+
+
+        //for are you going to japan script
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const goingToJapanYes = document.getElementById('goingToJapanYes');
+        const goingToJapanNo = document.getElementById('goingToJapanNo');
+        const destination = document.getElementById('destination');
+        const purpose = document.getElementById('purpose');
+        const departureDate = document.getElementById('departureDate');
+        const returnDate = document.getElementById('returnDate');
+        const anotherCountry = document.getElementById('anotherCountry');
+        const noteTourism = document.getElementById('noteTourism');
+        const noteJapanFee = document.getElementById('noteJapanFee');
+
+        function updateFormFields() {
+            if (goingToJapanYes.checked) {
+                destination.value = "JAPAN";
+                purpose.disabled = false;
+                departureDate.disabled = false;
+                returnDate.disabled = false;
+                anotherCountry.disabled = false;
+                noteJapanFee.classList.remove('d-none');
+            } else {
+                destination.value = "";
+                purpose.value = "";
+                purpose.disabled = true;
+                departureDate.value = "";
+                departureDate.disabled = true;
+                returnDate.value = "";
+                returnDate.disabled = true;
+                anotherCountry.value = "";
+                anotherCountry.disabled = true;
+                noteJapanFee.classList.add('d-none');
+                noteTourism.classList.add('d-none');
+            }
+        }
+
+        purpose.addEventListener('change', function () {
+            if (purpose.value === 'Tourism and Work') {
+                noteTourism.classList.remove('d-none');
+            } else {
+                noteTourism.classList.add('d-none');
+            }
+        });
+
+        goingToJapanYes.addEventListener('change', updateFormFields);
+        goingToJapanNo.addEventListener('change', updateFormFields);
+    });
     </script>
 </body>
 

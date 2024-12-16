@@ -553,3 +553,15 @@
    color: #6c757d;
    font-size: 14px;
  }
+
+
+.radio-buttons-row {
+   display: flex;
+   gap: 10px; 
+   align-items: center; 
+}
+
+.clutchRadioOptionsGroup h6 {
+   margin-bottom: 10px; 
+}
+

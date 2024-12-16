@@ -142,75 +142,78 @@
 
                                     </div>
                                 </div>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <label for="" id='choose'>Please Select:</label><br>
-                                            <div class="custom-control custom-radio custom-control-inline radios">
-                                                <input class="radio-btn custom-control-input" type="radio"
-                                                    name="selection" id="dlcode" value="dlcode">
-                                                <label class="custom-control-label" for="dlcode">DL Codes:</label>
-                                            </div>
-                                            <div class="custom-control custom-radio custom-control-inline radios">
-                                                <input class="radio-btn custom-control-input" type="radio"
-                                                    name="selection" id="restriction" value="restriction">
-                                                <label class="custom-control-label"
-                                                    for="restriction">Restriction</label>
+                                <div class="form-group">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <label for="" id='choose'>Please Select:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="selection" id="dlcode" value="dlcode">
+                                                <label class="custom-control-label fw-bold" for="dlcode">DL Codes:</label>
                                             </div>
                                         </div>
+                                        <div class="col-auto">
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input class="custom-control-input" type="radio" name="selection" id="restriction" value="restriction">
+                                                <label class="custom-control-label fw-bold" for="restriction">Restriction</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                         <div id="selection-error" style="display: none; color: red;">Please select an
                                             option</div>
                                         <div class="col-8">
                                             <div id="restrictions" style="display:none;">
-                                                <label for="">Restriction:</label><br>
-                                                <div class="restriction-checkboxes">
+                                                <label for="" class="fw-bold">Restriction:</label><br>
+                                                <div class="restriction-checkboxes d-flex gap-5">
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="1" value="1">
-                                                        <label class="custom-control-label" for="1">1</label>
+                                                        <label class="custom-control-label fw-bold" for="1">1</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="2" value="2">
-                                                        <label class="custom-control-label" for="2">2</label>
+                                                        <label class="custom-control-label fw-bold" for="2">2</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="3" value="3">
-                                                        <label class="custom-control-label" for="3">3</label>
+                                                        <label class="custom-control-label fw-bold" for="3">3</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="4" value="4">
-                                                        <label class="custom-control-label" for="4">4</label>
+                                                        <label class="custom-control-label fw-bold" for="4">4</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="5" value="5">
-                                                        <label class="custom-control-label" for="5">5</label>
+                                                        <label class="custom-control-label fw-bold" for="5">5</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="6" value="6">
-                                                        <label class="custom-control-label" for="6">6</label>
+                                                        <label class="custom-control-label fw-bold" for="6">6</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="7" value="7">
-                                                        <label class="custom-control-label" for="7">7</label>
+                                                        <label class="custom-control-label fw-bold" for="7">7</label>
                                                     </div>
                                                     <div
                                                         class="custom-control custom-checkbox custom-control-inline checkboxes">
                                                         <input class="checkbox-btn custom-control-input restriction1"
                                                             type="checkbox" name="restriction[]" id="8" value="8">
-                                                        <label class="custom-control-label" for="8">8</label>
+                                                        <label class="custom-control-label fw-bold" for="8">8</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -220,51 +223,52 @@
                                     <div id="dlcodes" style="display:none;">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label class="d-flex">DL Codes</label>
+                                                <label class="d-flex fw-bold">DL Codes</label>
                                                 <div class="checkbox-container d-flex">
                                                     <div class="custom-card">
                                                         <input
                                                             class="dl_restric custom-control custom-checkbox checkbox-btn custom-control-input"
                                                             type="checkbox" id="restrictionCheckbox1" value="A, A1">
-                                                        <label class="custom-control-label"
+                                                        <label class="custom-control-label fw-bold"
                                                             for="restrictionCheckbox1">A, A1</label>
                                                         <div class="clutchRadioOptionsGroup"
                                                             id="clutchRadioOptionsGroup1" style="display: none;">
                                                             <h6>Clutch</h6>
-                                                            <div
-                                                                class="custom-control custom-radio custom-control-inline radios">
+                                                        <div class="radio-buttons-row d-flex">
+                                                            <div class="custom-control custom-radio custom-control-inline radios">
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions1"
                                                                     id="clutchRadio1_1" value="option1">
-                                                                <label class="custom-control-label" id='clutch1_1'
+                                                                <label class="custom-control-label fw-bold" id='clutch1_1'
                                                                     for="clutchRadio1_1">MT/AT</label>
                                                             </div>
-                                                            <div
-                                                                class="custom-control custom-radio custom-control-inline">
+                                                            <div class="custom-control custom-radio custom-control-inline">
                                                                 <input class="radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions3"
                                                                     id="clutchRadio1_2" value="option2" disabled>
-                                                                <label class="custom-control-label" for="clutchRadio1_2"
+                                                                <label class="custom-control-label fw-bold" for="clutchRadio1_2"
                                                                     data-toggle="tooltip"
                                                                     title="Only MT/AT is permitted.">AT</label>
                                                             </div>
+                                                        </div>
                                                         </div>
                                                     </div>
                                                     <div class="custom-card">
                                                         <input
                                                             class="dl_restric custom-control custom-checkbox checkbox-btn custom-control-input"
                                                             type="checkbox" id="restrictionCheckbox2" value="B, B1, B2">
-                                                        <label class="custom-control-label"
+                                                        <label class="custom-control-label fw-bold"
                                                             for="restrictionCheckbox2">B, B1, B2</label>
                                                         <div class="clutchRadioOptionsGroup" style="display: none;"
                                                             id="clutchRadioOptionsGroup2">
                                                             <h6>Clutch</h6>
+                                                        <div class="radio-buttons-row d-flex">
                                                             <div
                                                                 class="custom-control custom-radio custom-control-inline">
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions2"
                                                                     id="clutchRadio2_1" value="option1">
-                                                                <label class="custom-control-label" id='clutch2_1'
+                                                                <label class="custom-control-label fw-bold" id='clutch2_1'
                                                                     for="clutchRadio2_1">MT/AT</label>
                                                             </div>
                                                             <div
@@ -272,26 +276,28 @@
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions2"
                                                                     id="clutchRadio2_2" value="option2">
-                                                                <label class="custom-control-label" id='clutch2_2'
+                                                                <label class="custom-control-label fw-bold" id='clutch2_2'
                                                                     for="clutchRadio2_2">AT</label>
                                                             </div>
+                                                        </div>
                                                         </div>
                                                     </div>
                                                     <div class="custom-card">
                                                         <input
                                                             class="dl_restric custom-control custom-checkbox checkbox-btn custom-control-input"
                                                             type="checkbox" id="restrictionCheckbox3" value="C, D">
-                                                        <label class="custom-control-label"
+                                                        <label class="custom-control-label fw-bold"
                                                             for="restrictionCheckbox3">C, D</label>
                                                         <div class="clutchRadioOptionsGroup" style="display: none;"
                                                             id="clutchRadioOptionsGroup3">
                                                             <h6>Clutch</h6>
+                                                        <div class="radio-buttons-row d-flex">
                                                             <div
                                                                 class="custom-control custom-radio custom-control-inline">
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions3"
                                                                     id="clutchRadio3_1" value="option1">
-                                                                <label class="custom-control-label" id='clutch3_1'
+                                                                <label class="custom-control-label fw-bold" id='clutch3_1'
                                                                     for="clutchRadio3_1">MT/AT</label>
                                                             </div>
                                                             <div
@@ -299,26 +305,28 @@
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions3"
                                                                     id="clutchRadio3_2" value="option2">
-                                                                <label class="custom-control-label" id='clutch3_2'
+                                                                <label class="custom-control-label fw-bold" id='clutch3_2'
                                                                     for="clutchRadio3_2">AT</label>
                                                             </div>
+                                                        </div>
                                                         </div>
                                                     </div>
                                                     <div class="custom-card">
                                                         <input
                                                             class="dl_restric custom-control custom-checkbox checkbox-btn custom-control-input"
                                                             type="checkbox" id="restrictionCheckbox4" value="BE">
-                                                        <label class="custom-control-label"
+                                                        <label class="custom-control-label fw-bold"
                                                             for="restrictionCheckbox4">BE</label>
                                                         <div class="clutchRadioOptionsGroup" style="display: none;"
                                                             id="clutchRadioOptionsGroup4">
                                                             <h6>Clutch</h6>
+                                                        <div class="radio-buttons-row d-flex">
                                                             <div
                                                                 class="custom-control custom-radio custom-control-inline">
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions4"
                                                                     id="clutchRadio4_1" value="option1">
-                                                                <label class="custom-control-label" id='clutch4_1'
+                                                                <label class="custom-control-label fw-bold" id='clutch4_1'
                                                                     for="clutchRadio4_1">MT/AT</label>
                                                             </div>
                                                             <div
@@ -326,26 +334,28 @@
                                                                 <input class="radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions4"
                                                                     id="clutchRadio4_2" value="option2" disabled>
-                                                                <label class="custom-control-label" id='clutch4_2'
+                                                                <label class="custom-control-label fw-bold" id='clutch4_2'
                                                                     for="clutchRadio4_2" data-toggle="tooltip"
                                                                     title="Only MT/AT is permitted.">AT</label>
                                                             </div>
+                                                        </div>
                                                         </div>
                                                     </div>
                                                     <div class="custom-card">
                                                         <input class="dl_restric checkbox-btn custom-control-input"
                                                             type="checkbox" id="restrictionCheckbox5" value="CE">
-                                                        <label class="custom-control-label"
+                                                        <label class="custom-control-label fw-bold"
                                                             for="restrictionCheckbox5">CE</label>
                                                         <div class="clutchRadioOptionsGroup" style="display: none;"
                                                             id="clutchRadioOptionsGroup5">
                                                             <h6>Clutch</h6>
+                                                        <div class="radio-buttons-row d-flex">
                                                             <div
                                                                 class="custom-control custom-radio custom-control-inline">
                                                                 <input class="sub_dl radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions5"
                                                                     id="clutchRadio5_1" value="option1">
-                                                                <label class="custom-control-label" id='clutch5_1'
+                                                                <label class="custom-control-label fw-bold" id='clutch5_1'
                                                                     for="clutchRadio5_1">MT/AT</label>
                                                             </div>
                                                             <div
@@ -353,10 +363,11 @@
                                                                 <input class="radio-btn custom-control-input"
                                                                     type="radio" name="clutchRadioOptions5"
                                                                     id="clutchRadio5_2" value="option2" disabled>
-                                                                <label class="custom-control-label text-danger"
+                                                                <label class="custom-control-label text-danger fw-bold"
                                                                     for="clutchRadio5_2" data-toggle="tooltip"
                                                                     title="Only MT/AT is permitted.">AT</label>
                                                             </div>
+                                                        </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -374,8 +385,8 @@
 
 
                             <!-- Step 2: Personal Information -->
-                            <div class="form-step tab" id="step2">
-                                <h5 class="mb-4">Personal Information</h5>
+                            <div class="form-step tab" id="step2" style="margin-left: 1rem; margin-right: 1rem; margin-bottom: 0.45rem; ">
+                                <h5 class="card-title mb-4">Personal Information</h5>
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
                                         <label for="applicationType" class="form-label">Type of Application</label>
@@ -494,11 +505,72 @@
                                                 FOREIGNER</option>
                                         </select>
                                     </div>
+                                    <!-- Are you going to JAPAN? -->
+                                    <div class="col-md-3">
+                                        <label class="form-label">Are you going to JAPAN?</label>
+                                        <div>
+                                            <input type="radio" id="goingToJapanYes" name="going_to_japan" value="YES"> <label for="goingToJapanYes">YES</label>
+                                            <input type="radio" id="goingToJapanNo" name="going_to_japan" value="NO"> <label for="goingToJapanNo">NO</label>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="row mb-3 toggle-container d-none" id="japanFields">
+                                    
+                                    <!-- Destination and Purpose of Travel -->
+                                    
+                                        <div class="col-md-4">
+                                            <label for="destination" class="form-label">Destination</label>
+                                            <input type="text" class="form-control" id="destination" name="travel_info[destination]">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="purpose" class="form-label">Purpose of Travel</label>
+                                            <select class="form-select" id="purpose" name="travel_info[purpose]">
+                                                <option value="">Select Purpose</option>
+                                                <option value="Tourism and Work">Tourism and Work</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+
+
+                                    <!-- Departure and Return Dates -->
+                               
+                                    <div class="col-md-4">
+                                        <label for="departureDate" class="form-label">Departure Date</label>
+                                        <input type="date" class="form-control" id="departureDate" name="travel_info[departure_date]">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="returnDate" class="form-label">Return Date</label>
+                                        <input type="date" class="form-control" id="returnDate" name="travel_info[return_date]" >
+                                    </div>
+
+
+                                <!-- Are you going to another country aside JAPAN? -->
+                                
+                                    <div class="col-md-6">
+                                        <label for="anotherCountry" class="form-label">Are you going to another country aside JAPAN?</label>
+                                        <input type="text" class="form-control" id="anotherCountry" name="travel_info[another_country]">
+                                    </div>
+ 
+
+                                <!-- Notes -->
+
+                                    <div class="col-md-12">
+                                        <p id="noteTourism" class="text-danger d-none">Note: For Marketing Purposes Only</p>
+                                        <p id="noteJapanFee" class="text-danger d-none">NOTE: Additional ₱600.00 for Multiple PIDP</p>
+                                    </div>
+                                </div>
+
+
                                 <div class="d-flex justify-content-between mt-4">
                                     <div class="navigation-buttons"></div>
                                 </div>
+                                
                             </div>
+
+
+
+                            
+                            
 
                             <!-- End of Step 2 -->
 
@@ -1036,6 +1108,55 @@
             txt.innerHTML = html;
             return txt.value;
         }
+
+
+        //for are you going to japan
+        document.addEventListener('DOMContentLoaded', function () {
+        const goingToJapanYes = document.getElementById('goingToJapanYes');
+        const goingToJapanNo = document.getElementById('goingToJapanNo');
+        const japanFields = document.getElementById('japanFields');
+        const destinationField = document.getElementById('destination').closest('.col-md-4');
+        const purposeField = document.getElementById('purpose').closest('.col-md-4');
+        const departureDateField = document.getElementById('departureDate').closest('.col-md-4');
+        const returnDateField = document.getElementById('returnDate').closest('.col-md-4');
+        const anotherCountryField = document.getElementById('anotherCountry').closest('.col-md-6');
+        const noteJapanFee = document.getElementById('noteJapanFee');
+        const noteTourism = document.getElementById('noteTourism');
+
+        // Function to update visibility of fields
+        function updateFormFields() {
+            if (goingToJapanYes.checked) {
+                // Show all fields if 'Yes' is selected
+                japanFields.classList.remove('d-none');
+                destinationField.classList.remove('d-none');
+                purposeField.classList.remove('d-none');
+                departureDateField.classList.remove('d-none');
+                returnDateField.classList.remove('d-none');
+                anotherCountryField.classList.remove('d-none');
+                noteJapanFee.classList.remove('d-none');
+                noteTourism.classList.add('d-none');  // Hide tourism note if not applicable
+            } else if (goingToJapanNo.checked) {
+                // Show only destination and purpose fields when 'No' is selected
+                japanFields.classList.remove('d-none');
+                destinationField.classList.remove('d-none');
+                purposeField.classList.remove('d-none');
+                departureDateField.classList.add('d-none'); // Hide departure date
+                returnDateField.classList.add('d-none'); // Hide return date
+                anotherCountryField.classList.add('d-none'); // Hide "another country" field
+                noteJapanFee.classList.add('d-none'); // Hide Japan fee note
+                noteTourism.classList.remove('d-none'); // Show tourism note for "No" (optional)
+            }
+        }
+
+        // Event listeners to handle Yes/No selection changes
+        goingToJapanYes.addEventListener('change', updateFormFields);
+        goingToJapanNo.addEventListener('change', updateFormFields);
+
+        // Initial state check (in case the page loads with 'No' selected)
+        updateFormFields();
+    });
+
+
     </script>
 </body>
 
