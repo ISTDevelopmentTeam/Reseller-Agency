@@ -10,6 +10,6 @@ class MembershipType extends Model
 
     public function planTypes()
     {
-        return $this->hasMany(PlanType::class, 'membership_id', 'membership_id');
+        return $this->hasMany(PlanType::class, 'membership_id', 'id');
     }
 }

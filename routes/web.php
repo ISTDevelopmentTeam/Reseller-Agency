@@ -34,7 +34,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 // NEW
 Route::get('/event_dashboard', [EventDashboardController::class, 'event_dashboard'])->name('event_dashboard');
 // MEMBERSHIP
-Route::get('/new_membership/{planId?}', [MembershipController::class, 'index'])->name('new_membership.index');
+Route::get('/new_membership/{membershipId?}/{planId?}', [MembershipController::class, 'index'])->name('new_membership.index');
 Route::post('/new_membership', [MembershipController::class, 'store'])->name('new_membership.store');
 // PIDP
 Route::get('/new_pidp/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
