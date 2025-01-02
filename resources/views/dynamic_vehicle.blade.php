@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (membershipTypeSelect) {
             const selectedOption = membershipTypeSelect.options[membershipTypeSelect.selectedIndex];
             maxVehicles = parseInt(selectedOption.getAttribute('data-vehicle_num') || 1);
-            console.log('Max vehicles allowed:', maxVehicles);
+            // console.log('Max vehicles allowed:', maxVehicles);
         }
     }
 
@@ -49,17 +49,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 <h6 class="mb-3">Vehicle <span class="vehicle-number">${vehicleCount}</span></h6>
                 <div class="row g-3">
                     <!-- First Row -->
-                    <div class="col-md-3">
-                        <label class="form-label">Conduction Sticker</label>
-                        <select class="form-select" name="is_cs[]">
-                            <option value="0">NO</option>
-                            <option value="1">YES</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Plate Number</label>
-                        <input type="text" name="vehicle_plate[]" class="form-control" placeholder="Enter plate number">
-                    </div>
+                    <div class="col-md-3 centered-content">
+                              <label class="label" style="font-size: medium;">
+                                  Is Conduction Sticker Available?
+                              </label>
+                              <input type="hidden" id="csticker${vehicleCount}" name="is_cs[]" value="0" >
+                              <div>
+                                <div class="options-container">
+                                  <label class="radio-checkbox">
+                                      <input type="checkbox" id="csticker_yes${vehicleCount}"  value="1" onchange="updateLabeldyna('csticker_yes${vehicleCount}', 'csticker_no${vehicleCount}')" >
+                                      <span class="checkmark"></span> YES
+                                  </label>
+                                  <label class="radio-checkbox">
+                                      <input type="checkbox" id="csticker_no${vehicleCount}" value="0" onchange="updateLabeldyna('csticker_no${vehicleCount}', 'csticker_yes${vehicleCount}')" checked disabled>
+                                      <span class="checkmark"></span>NO
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-3">
+                              <label for="platenum${vehicleCount}" class="label">Plate No</label>
+                              <input name="vehicle_plate[]" type="text" class="text-input form-control form-control-sm plate_number" id="platenum${vehicleCount}"
+                                autocomplete="off" placeholder=" Enter Plate No" style="text-transform: uppercase;" required>
+                              <div class="validation-message_plateno" id="validation-message_plateno" style="color: red;"></div>
+                            </div>
                     <div class="col-md-3">
                         <label class="form-label">Car Make</label>
                         <select class="form-control form-control-sm select2" id="make${vehicleCount}" name="vehicle_make[]" required>
