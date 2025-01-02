@@ -10,8 +10,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <link rel="stylesheet" href="{{ asset('link/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ asset('style/new_reseller.css') }}">
+    <link rel="stylesheet" href="{{ asset('style/membership.css') }}">
 </head>
 
 <body>
@@ -52,10 +54,10 @@
 
                             <!-- Step 1:  Membership Application -->
                             <div class="form-step tab active" id="step1">
-                                <button class="btn btn-primary customer-fillout-btn"
+                                <!-- <button class="btn btn-primary customer-fillout-btn"
                                     onclick="window.open('{{ route('customer_qr') }}', '_blank')">
                                     <i class="fas fa-user-edit me-2"></i>Customer Fill-out
-                                </button>
+                                </button> -->
                                 <h5 class="card-title mb-4">Personal Information</h5>
                                 <div class="row">
                                     <div class="col-md-3 mb-3">
@@ -129,18 +131,21 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstName"
+                                        <input type="text" class="form-control letters_only_fname" id="firstName"
                                             name="personal_info[members_firstname]" required>
+                                            <div class="validation-message_fname" style="color: red;"></div>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="middleName" class="form-label">Middle Name</label>
-                                        <input type="text" class="form-control" id="middleName"
+                                        <input type="text" class="form-control letters_only_mname" id="middleName"
                                             name="personal_info[members_middlename]">
+                                            <div class="validation-message_mname" style="color: red;"></div>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastName"
+                                        <input type="text" class="form-control letters_only_lname" id="lastName"
                                             name="personal_info[members_lastname]" required>
+                                            <div class="validation-message_lname" style="color: red;"></div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -154,9 +159,9 @@
                                         </select>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="birthdate" class="form-label">Birthdate</label>
-                                        <input type="date" class="form-control" name="personal_info[members_birthdate]"
-                                            id="birthdate" required>
+                                        <label class="form-label">Birthdate</label>
+                                        <input type="text" class="form-control" name="personal_info[members_birthdate]"
+                                            id="birthdate" placeholder="MM/DD/YYYY" maxlength="10" required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="birthplace" class="form-label">Birth Place</label>
@@ -255,14 +260,21 @@
                                 <div class="row mb-3">
                                     <div class="col-md-3">
                                         <label for="mobileNumber" class="form-label">Mobile Number</label>
-                                        <input type="tel" class="form-control" name="personal_info[members_mobileno]"
-                                            id="mobileNumber" required>
+                                        <input type="tel" class="form-control phone-input" name="personal_info[members_mobileno]"
+                                            id="mobileNumber"
+                                            data-error-container="error-msg-1" data-valid-container="valid-msg-1" data-code-input="ccode-1"
+                                            required>
+                                            <span id="valid-msg-1" class="hide valid-msg"></span>
+                                            <span id="error-msg-1" class="hide error-msg"></span>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="alternateMobile" class="form-label">Alternate Mobile
                                             Number</label>
-                                        <input type="tel" class="form-control"
-                                            name="personal_info[members_alternate_mobileno]" id="alternateMobile">
+                                        <input type="tel" class="form-control phone-input"
+                                            name="personal_info[members_alternate_mobileno]" id="alternateMobile"
+                                            data-error-container="error-msg-2" data-valid-container="valid-msg-2" data-code-input="ccode-2">
+                                            <span id="valid-msg-2" class="hide valid-msg"></span>
+                                            <span id="error-msg-2" class="hide error-msg"></span>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="emailAddress" class="form-label">Email Address</label>
@@ -309,7 +321,7 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-9">
-                                            <label for="companyName" class="form-label">Company Name</label>
+                                            <label for="comname" class="form-label">Company Name</label>
                                             <input type="text" class="form-control" name="personal_info[comname]"
                                                 id="comname">
                                         </div>
@@ -336,17 +348,36 @@
                                         <h6 class="mb-3">Vehicle <span class="vehicle-number">1</span></h6>
                                         <div class="row g-3">
                                             <!-- First Row -->
-                                            <div class="col-md-3">
-                                                <label class="form-label">Conduction Sticker</label>
-                                                <select class="form-select" name="is_cs[]">
-                                                    <option value="0">NO</option>
-                                                    <option value="1">YES</option>
-                                                </select>
+                                            <div class="col-md-3 centered-content">
+                                                <label class="label" style="font-size: medium;">
+                                                    Is Conduction Sticker Available?
+                                                </label>
+                                                <input type="hidden" id="csticker" name="is_cs[]" value="0">
+                                                <div>
+                                                    <div class="options-container">
+                                                        <label class="radio-checkbox">
+                                                            <input type="checkbox" id="csticker_yes" value="1"
+                                                                onchange="updateLabeldyna('csticker_yes', 'csticker_no')">
+                                                            <span class="checkmark"></span>
+                                                            YES
+                                                        </label>
+                                                        <label class="radio-checkbox">
+                                                            <input type="checkbox" id="csticker_no" value="0"
+                                                                onchange="updateLabeldyna('csticker_no', 'csticker_yes')" checked disabled>
+                                                            <span class="checkmark"></span>
+                                                            NO
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="form-label">Plate Number</label>
-                                                <input type="text" id="plate_number" name="vehicle_plate[]"
-                                                    class="form-control" placeholder="Enter plate number">
+                                                <label for="platenum" class="label">Plate No</label>
+                                                <input name="vehicle_plate[]" type="text"
+                                                    class="text-input form-control form-control-sm plate_number" id="platenum"
+                                                    autocomplete="off" placeholder=" Enter Plate No" style="text-transform: uppercase;"
+                                                    required>
+                                                <div class="validation-message_plateno" id="validation-message_plateno" style="color: red;">
+                                                </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Car Make</label>
@@ -361,7 +392,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Car Models</label>
-                                                <select class="form-control select2" id="model1" name="vehicle_model[]">
+                                                <select class="form-control select2" id="model1" name="vehicle_model[]" required>
                                                     <option value="" selected>Car Model</option>
                                                 </select>
                                             </div>
@@ -370,30 +401,30 @@
                                             <div class="col-md-3">
                                                 <label class="form-label">Vehicle Type</label>
                                                 <select class="form-control select2" id="vehicle_type1"
-                                                    name="vehicle_type[]">
+                                                    name="vehicle_type[]" required>
                                                     <option value="" selected>Vehicle Type</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Year</label>
                                                 <input type="number" id="year1" name="vehicle_year[]"
-                                                    class="form-control" placeholder="Enter year">
+                                                    class="form-control" placeholder="Enter year" required>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Sub model</label>
                                                 <input type="text" id="submodel1" name="submodel[]" class="form-control"
-                                                    placeholder="Enter sub model">
+                                                    placeholder="Enter sub model" required>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Color</label>
                                                 <input type="text" id="color" name="vehicle_color[]"
-                                                    class="form-control" placeholder="Enter color">
+                                                    class="form-control" placeholder="Enter color" required>
                                             </div>
 
                                             <!-- Third Row -->
                                             <div class="col-md-3">
                                                 <label class="form-label">Fuel Type</label>
-                                                <select class="form-select" name="vehicle_fuel[]">
+                                                <select class="form-select" name="vehicle_fuel[]" required>
                                                     <option value="GAS">GAS</option>
                                                     <option value="DIESEL">DIESEL</option>
                                                     <option value="ELECTRIC">ELECTRIC</option>
@@ -401,7 +432,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Transmission Type</label>
-                                                <select class="form-select" name="vehicle_transmission[]">
+                                                <select class="form-select" name="vehicle_transmission[]" required>
                                                     <option value="AUTOMATIC">AUTOMATIC</option>
                                                     <option value="MANUAL">MANUAL</option>
                                                 </select>
@@ -625,12 +656,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="/script/membership.js"></script>
-    <script src="/script/sidebar.js"></script>
+    <script src="{{ asset('script/sidebar.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     @include('vehicle_autocomp')
     @include('dynamic_vehicle')
+    @include('countrycode')
     <script>
         // $(document).ready(function() {
         //     $('.notdynamic').select2({

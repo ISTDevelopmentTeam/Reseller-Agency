@@ -36,14 +36,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 //modal for profile and settings
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Update the Profile link
-    const profileLink = document.querySelector('.dropdown-item:nth-child(1)');
-    profileLink.setAttribute('data-bs-toggle', 'modal');
-    profileLink.setAttribute('data-bs-target', '#profileModal');
+// document.addEventListener('DOMContentLoaded', function () {
+//     // Update the Profile link
+//     const profileLink = document.querySelector('.dropdown-item:nth-child(1)');
+//     profileLink.setAttribute('data-bs-toggle', 'modal');
+//     profileLink.setAttribute('data-bs-target', '#profileModal');
 
-    // Update the Settings link
-    const settingsLink = document.querySelector('.dropdown-item:nth-child(2)');
-    settingsLink.setAttribute('data-bs-toggle', 'modal');
-    settingsLink.setAttribute('data-bs-target', '#settingsModal');
-});
+//     // Update the Settings link
+//     const settingsLink = document.querySelector('.dropdown-item:nth-child(2)');
+//     settingsLink.setAttribute('data-bs-toggle', 'modal');
+//     settingsLink.setAttribute('data-bs-target', '#settingsModal');
+// });
