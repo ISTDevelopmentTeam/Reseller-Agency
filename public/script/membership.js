@@ -35,281 +35,113 @@ $('.letters_only_lname').on('input', function (event) {
 // END FOR VALIDATION INPUT
 
 // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
-// Function to handle validation for each step
-// function validateStep(stepNumber) {
-//   const currentStep = document.querySelector(`#step${stepNumber}`);
-//   let isValid = true;
-
-//   // Special handling for step 2
-//   if (stepNumber === 2) {
-//     toggleRequiredAttributes();
-//     const emailInput = document.getElementById('emailAddress');
-    
-//     if (emailInput.hasAttribute('required')) {
-//       isValid = emailInput.checkValidity();
-//       if (!isValid) {
-//         emailInput.reportValidity();
-//       }
-//     }
-    
-//     // Check existing error messages
-//     if ($('.error-msg').text().trim() !== "" || $('.validation-message_email').text().trim() !== "") {
-//       isValid = false;
-//     }
-//   }
-
-//   // Special handling for vehicle step
-//   if (stepNumber === 3) {
-//     const vehicles = currentStep.querySelectorAll('.vehicle-item');
-    
-//     // Ensure at least one vehicle is present
-//     if (vehicles.length === 0) {
-//       isValid = false;
-//       alert('At least one vehicle is required.');
-//       return false;
-//     }
-
-//     // Validate each vehicle
-//     vehicles.forEach((vehicle) => {
-//       const requiredFields = vehicle.querySelectorAll('input[required], select[required]');
-//       requiredFields.forEach(field => {
-//         const isFieldValid = field.checkValidity();
-//         if (!isFieldValid) {
-//           isValid = false;
-//           field.reportValidity();
-//         }
-//       });
-//     });
-
-//     return isValid;
-//   }
-
-//   // Standard validation for other steps
-//   const requiredFields = currentStep.querySelectorAll('[required]');
-//   requiredFields.forEach(field => {
-//     const isFieldValid = field.checkValidity();
-//     if (!isFieldValid) {
-//       isValid = false;
-//       field.reportValidity();
-//     }
-//   });
-
-//   return isValid;
-// }
-
-function validateStep(stepNumber) {
-  const currentStep = document.querySelector(`#step${stepNumber}`);
-  let isValid = true;
-
-  // Prevent form submission which would trigger default browser validation
-  const form = currentStep.closest('form');
-  if (form) {
-      form.addEventListener('submit', (e) => e.preventDefault());
-  }
-
-  // Step 2: Email validation
-  if (stepNumber === 2) {
-      toggleRequiredAttributes();
-      // const emailInput = document.getElementById('emailAddress');
-      
-      // if (emailInput && emailInput.hasAttribute('required')) {
-      //     // Trigger validation immediately
-      //     emailInput.focus();
-      //     isValid = emailInput.checkValidity();
-      //     if (!isValid) {
-      //         emailInput.reportValidity();
-      //         return false;
-      //     }
-      // }
-      
-      if ($('.error-msg').text().trim() !== "" || $('.validation-message_email').text().trim() !== "") {
-          isValid = false;
-      }
-  }
-
-  // Step 3: Vehicle validation
-  if (stepNumber === 3) {
-      const vehicles = currentStep.querySelectorAll('.vehicle-item');
-      
-      if (vehicles.length === 0) {
-          isValid = false;
-          alert('At least one vehicle is required.');
-          return false;
-      }
-
-      // Validate each vehicle's required fields
-      for (const vehicle of vehicles) {
-          const requiredFields = vehicle.querySelectorAll('input[required], select[required]');
-          for (const field of requiredFields) {
-              field.focus(); // Focus each field to trigger validation
-              if (!field.checkValidity()) {
-                  field.reportValidity();
-                  isValid = false;
-                  return false; // Stop at first invalid field
-              }
-          }
-      }
-
-      return isValid;
-  }
-
-  // Standard validation for all other steps
-  const requiredFields = currentStep.querySelectorAll('[required]');
-  for (const field of requiredFields) {
-      // Focus each field to trigger immediate validation
-      field.focus();
-      if (!field.checkValidity()) {
-          field.reportValidity();
-          isValid = false;
-          return false; // Stop at first invalid field
-      }
-  }
-
-  return isValid;
-}
-
+// Form validation and submission handling
 document.addEventListener('DOMContentLoaded', function() {
-  // Add real-time validation as user types
-  const form = document.querySelector('form');
-  if (form) {
-      const inputs = form.querySelectorAll('input, select, textarea');
-      
-      inputs.forEach(input => {
-          // Validate on input change
-          input.addEventListener('input', function() {
-              if (this.hasAttribute('required')) {
-                  this.checkValidity();
-              }
-          });
+    const resellerForm = document.getElementById('resellerForm');
+    const submitBtn = document.getElementById('submit_btn');
+    const mobileInput = document.getElementById('mobileNumber');
+    const errorMsg = document.getElementById('error-msg-1');
 
-          // Validate immediately when field loses focus
-          input.addEventListener('blur', function() {
-              if (this.hasAttribute('required')) {
-                  this.reportValidity();
-              }
-          });
-      });
-  }
+    // Function to check if all required fields are filled and valid
+    function isFormValid() {
+        // Check required fields
+        const requiredElements = resellerForm.querySelectorAll('[required]');
+        for (const element of requiredElements) {
+            if (!element.value.trim()) {
+                return {
+                    valid: false,
+                    message: 'Please fill in all required fields'
+                };
+            }
+
+            // Special check for file inputs
+            if (element.type === 'file' && !element.files.length) {
+                return {
+                    valid: false,
+                    message: 'Please upload all required files'
+                };
+            }
+
+            // Special check for select elements
+            if (element.tagName === 'SELECT' && element.value === '') {
+                return {
+                    valid: false,
+                    message: 'Please select all required options'
+                };
+            }
+        }
+
+        // Check if mobile number has error message displayed
+        if (!errorMsg.classList.contains('hide')) {
+            return {
+                valid: false,
+                message: 'Please enter a valid mobile number'
+            };
+        }
+
+        return {
+            valid: true,
+            message: ''
+        };
+    }
+
+    // Handle form submission
+    resellerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formValidation = isFormValid();
+
+        if (!formValidation.valid) {
+            // Show error message using SweetAlert
+            Swal.fire({
+                title: 'Validation Error',
+                text: formValidation.message,
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+            return;
+        }
+
+        // If form is valid, show confirmation SweetAlert
+        Swal.fire({
+            title: 'Submit Form?',
+            text: 'Are you sure you want to submit this form?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'No, cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form
+                resellerForm.submit();
+            }
+        });
+    });
+
+    // File input validation
+    const fileInputs = resellerForm.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const feedback = document.getElementById(this.getAttribute('data-feedback'));
+            if (this.files.length === 0 && feedback) {
+                feedback.textContent = 'Please select a file';
+            } else if (feedback) {
+                feedback.textContent = '';
+            }
+        });
+    });
 });
 
-function updateNavigationButtons() {
-  const steps = document.querySelectorAll('.form-step');
-  const currentStep = document.querySelector('.form-step.active');
-  const currentStepNumber = parseInt(currentStep.id.replace('step', ''));
-  const isLastStep = currentStepNumber === steps.length;
-  const isFirstStep = currentStepNumber === 1;
-
-  const existingNavArea = currentStep.querySelector('.nav-area');
-  if (existingNavArea) {
-    existingNavArea.remove();
-  }
-
-  const navArea = document.createElement('div');
-  navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
-  currentStep.appendChild(navArea);
-
-  const leftNav = document.createElement('div');
-  leftNav.className = 'previous';
-  navArea.appendChild(leftNav);
-
-  const rightNav = document.createElement('div');
-  rightNav.className = 'next';
-  navArea.appendChild(rightNav);
-
-  if (!isFirstStep) {
-    const prevButton = document.createElement('button');
-    prevButton.type = 'button';
-    prevButton.className = 'btn btn-secondary rounded';
-    prevButton.textContent = 'Previous';
-    prevButton.onclick = previousStep;
-    leftNav.appendChild(prevButton);
-  }
-
-  const nextButton = document.createElement('button');
-  nextButton.type = isLastStep ? 'submit' : 'button';
-  nextButton.className = 'btn btn-primary rounded';
-
-  if (isLastStep) {
-    nextButton.textContent = 'Submit Application';
-    nextButton.onclick = () => {
-      if (validateStep(currentStepNumber)) {
-        submitForm();
-      }
-    };
-  } else {
-    nextButton.textContent = 'Next';
-    nextButton.onclick = () => nextStep(currentStepNumber);
-  }
-  rightNav.appendChild(nextButton);
-}
-
-
-function nextStep(currentStepNumber) {
-  if (validateStep(currentStepNumber)) {
-    const currentStep = document.querySelector(`#step${currentStepNumber}`);
-    const nextStep = document.querySelector(`#step${currentStepNumber + 1}`);
-
-    if (currentStep && nextStep) {
-      currentStep.classList.remove('active');
-      nextStep.classList.add('active');
-
-      const progress = document.querySelector('.progress-bar');
-      progress.style.width = `${(currentStepNumber) * 25}%`;
-
-      updateBreadcrumb(currentStepNumber + 1);
-      // manageFieldDisabling();
-      updateNavigationButtons();
-
-      if (currentStepNumber + 1 === 5) {
-        summary_fetch();
-      }
-    }
-  }
-}
-
-function previousStep() {
-  const currentStep = document.querySelector('.form-step.active');
-  const stepNumber = parseInt(currentStep.id.replace('step', ''));
-
-  if (stepNumber > 1) {
-    currentStep.classList.remove('active');
-    const previousStep = document.querySelector(`#step${stepNumber - 1}`);
-    previousStep.classList.add('active');
-
-    const progress = document.querySelector('.progress-bar');
-    progress.style.width = `${(stepNumber - 2) * 25}%`;
-
-    updateBreadcrumb(stepNumber - 1);
-    // manageFieldDisabling();
-    updateNavigationButtons();
-  }
-}
-
-function updateBreadcrumb(stepNumber) {
-  const steps = document.getElementsByClassName('breadcrumb-item');
-  for (let i = 0; i < steps.length; i++) {
-    steps[i].classList.remove("active");
-  }
-  steps[stepNumber - 1].classList.add("active");
-}
-
-// Handle input changes
-// document.addEventListener('input', function (e) {
-//   if (e.target.hasAttribute('required')) {
-//     e.target.classList.remove('is-invalid');
-//     const errorMessage = e.target.parentNode.querySelector('.error-message');
-//     if (errorMessage) {
-//       errorMessage.remove();
-//     }
-//   }
-// });
 
 
 document.addEventListener('DOMContentLoaded', function () {
   // manageFieldDisabling();
-  updateNavigationButtons();
+  // updateNavigationButtons();
   // VehicleHandling();
   FileUploads();
+  toggleRequiredAttributes();
 });
 // ----------------------------------------------------------Validation for TAB/STEP-----------------------------------------------------------------//
 
@@ -375,27 +207,27 @@ function handleFileUpload(input, imageId, feedbackId) {
 // END FILE UPLOAD
 
 // Start Title Gender-----------------
-// document.getElementById('title').addEventListener('change', function() {
-//     const title = this.value;
-//     const genderSelect = document.getElementById('gender');
+document.getElementById('title').addEventListener('change', function() {
+    const title = this.value;
+    const genderSelect = document.getElementById('gender');
 
-//     switch (title) {
-//         case 'MR':
-//             genderSelect.value = 'MALE';
-//             break;
-//         case 'MS':
-//         case 'MRS':
-//             genderSelect.value = 'FEMALE';
-//             break;
-//         case 'ATTY':
-//         case 'DR':
-//         case 'ENGR':
-//             genderSelect.value = '';
-//             break;
-//         default:
-//             genderSelect.value = '';
-//     }
-// });
+    switch (title) {
+        case 'MR':
+            genderSelect.value = 'MALE';
+            break;
+        case 'MS':
+        case 'MRS':
+            genderSelect.value = 'FEMALE';
+            break;
+        case 'ATTY':
+        case 'DR':
+        case 'ENGR':
+            genderSelect.value = '';
+            break;
+        default:
+            genderSelect.value = '';
+    }
+});
 
 // Start Citizenship Dropdown-------------------
 document.addEventListener('DOMContentLoaded', function () {
@@ -653,6 +485,27 @@ function updateLabeldyna(checkedId, uncheckedId) {
           }
         }
       }
+
+      $(document).on('focus', '.platenum', function () {
+        if (!$(this).data('masked')) {
+          $(this).mask('AAAAAAAA', {
+            translation: {
+              'A': {
+                pattern: /[A-Za-z0-9\s-]/,
+                transform: function (val) {
+                  let currentVal = this.el.val();
+                  // Only allow 7 alphanumeric characters plus one separator (dash or space)
+                  if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
+                    return '';
+                  }
+                  return val;
+                }
+              }
+            },
+          });
+          $(this).data('masked', true);
+        }
+      });
 
 // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
 function summary_fetch() {
