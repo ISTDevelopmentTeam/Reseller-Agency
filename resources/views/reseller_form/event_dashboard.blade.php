@@ -369,13 +369,16 @@
                                 @foreach ($results as $plan)
                                     @if ($plan->plan_id == 11)
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
+                                        <a href="{{ route('new_motorcyle.index', ['planId' => $plan->plan_id]) }}"
+                                            class="btn btn-custom">
+                                            APPLY NOW
+                                        </a>
                                     @endif
                                 @endforeach
                                 <br>
                                 <br>
                                 <p>Register 1 motorcycle (200cc and below). FREE AAP-Caltex SavePlus Discount Card upon
                                     registration (valid in Luzon, Visayas, and Davao region only).</p>
-                                <button class="btn btn-custom"><a href="/motorcycle">APPLY NOW</a></button>
                             </div>
                         </div>
                     </div>

@@ -41,7 +41,7 @@ class MotorcycleController extends Controller
         // If a specific plan ID is passed, find that plan
         $selectedPlan = $planId ? PlanType::where('plan_id', $planId)->first() : null;
     
-        return view('reseller_form/pidp')->with([
+        return view('reseller_form/motorcycle')->with([
             'towns'   => $towns,
             'citys'   => $citys,
             'carMake' => $carMake,
