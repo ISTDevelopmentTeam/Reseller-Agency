@@ -565,3 +565,12 @@
    margin-bottom: 10px; 
 }
 
+.modal-header .modal-title {
+   margin-left: auto;
+   margin-right: auto;
+   text-align: center;
+   width: 100%;
+}
+
+
+
