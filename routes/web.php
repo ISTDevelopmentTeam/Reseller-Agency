@@ -78,7 +78,7 @@ Route::get('/customer_fillout_form/{token}', function ($token) {
     }
     
     // If token is valid, display the temporary page
-    return view('reseller_form/customer_fillout_form', ['token' => $token]);
+    return view('reseller_form/event_dashboard', ['token' => $token]);
     })->name('customer_fillout_form');
 
 

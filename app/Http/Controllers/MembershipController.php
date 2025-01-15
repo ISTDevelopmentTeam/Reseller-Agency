@@ -7,24 +7,49 @@ use App\Models\Town;
 use App\Models\City;
 use App\Models\MembershipType;
 use App\Models\PlanType;
+use App\Http\Requests\MembershipRequest;
 use App\Models\Vehicle;
+use App\Models\Membership;
 use App\Traits\Insurance\Get_carmake;
+use Illuminate\Support\Facades\Auth;
 
 class MembershipController extends Controller
 {
     use Get_carmake;
-    public function index(Request $request, $membershipId, $planId){
-        $searchTerm = $request->input('town');
+
+    protected $token;
+    private $encryption_key;
+    private $encryption_iv;
+    public function __construct()
+    {
+        $this->encryption_key = base64_decode(env('ENCRYPTION_KEY'));
+        $this->encryption_iv = base64_decode(env('ENCRYPTION_IV'));
+    }
+
     
+    public function encrypt($data) {
+        $encrypted = openssl_encrypt($data, 'AES-256-CBC',$this->encryption_key  , OPENSSL_RAW_DATA, $this->encryption_iv);
+        return base64_encode($encrypted);
+    }
+
+    public function decrypt($data) {
+        $decrypted = openssl_decrypt(base64_decode($data), 'AES-256-CBC',$this->encryption_key  , OPENSSL_RAW_DATA, $this->encryption_iv);
+        return $decrypted;
+    }
+
+    public function index(Request $request, $membershipId, $planId)
+    {
+        $searchTerm = $request->input('town');
+
         $towns = Town::select('a.*', 'c.*', 'd.*')
             ->from('aap_zipcode as a')
             ->leftJoin('address_city as c', 'a.az_city', '=', 'c.city_id')
             ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
             ->where('az_barangay', 'like', '%' . $searchTerm . '%')
             ->get();
-    
+
         $city = $request->input('city');
-    
+
         $citys = City::select('a.az_zipcode', 'c.city_name', 'c.city_id', 'd.*')
             ->from('address_city as c')
             ->leftJoin('aap_zipcode as a', 'c.city_id', '=', 'a.az_city')
@@ -32,88 +57,136 @@ class MembershipController extends Controller
             ->where('c.city_name', 'like', '%' . $city . '%')
             ->where('a.az_barangay', '')
             ->get();
-    
-        $carMake = json_decode($this->get_carmake(), true);
-    
-    // Find the selected membership
-    $selectedMembership = MembershipType::where('membership_id', $membershipId)->first();
 
-    // Find the selected plan
-    $selectedPlan = PlanType::where('plan_id', $planId)->first();
-    
+        $carMake = json_decode($this->get_carmake(), true);
+
+        // Find the selected membership
+        $selectedMembership = MembershipType::where('membership_id', $membershipId)->first();
+
+        // Find the selected plan
+        $selectedPlan = PlanType::where('plan_id', $planId)->first();
+
         return view('reseller_form/membership')->with([
-            'towns'   => $towns,
-            'citys'   => $citys,
+            'towns' => $towns,
+            'citys' => $citys,
             'carMake' => $carMake,
             'selectedMembership' => $selectedMembership,
             'selectedPlan' => $selectedPlan
         ]);
     }
 
-    // public function store(Request $request){
-    //     $request_array = $request->personal_info;
+    public function store(MembershipRequest $request)
+    {
 
-    //     $request_array["typesofapplication"] = 'NEW';
-    //     $request_array["platform"]           = 'Reseller';
-    //     $request_array["category"]           = 'KIOSK';
-    //     $request_array["status"]             = 'PENDING';
-    //     $request_array["application_date"]   = date("Y-m-d");
+        // Additional token validation
+        if (!$request->session()->token() === $request->input('_token')) {
+            abort(403, 'CSRF token mismatch');
+        }
 
-        
-    //     // dd($request->all());
-    //     // Generate random filenames for images
-    // if ($request->hasFile('orcr_image')) {
-    //     $orcrImageFile = $request->file('orcr_image');
-    //     $orcrImageName = 'orcr_' . uniqid() . '.' . $orcrImageFile->getClientOriginalExtension();
-    //     $orcrImagePath = $orcrImageFile->storeAs('memberships', $orcrImageName, 'public');
-    //     $request_array['orcr_image'] = $orcrImagePath;
-    // }
+        $user = Auth::user();
+        $authorized_name = $user->name;
+        // dd($authorized_name);
 
-    // if ($request->hasFile('idpicture')) {
-    //     $idImageFile = $request->file('idpicture');
-    //     $idImageName = 'id_' . uniqid() . '.' . $idImageFile->getClientOriginalExtension();
-    //     $idImagePath = $idImageFile->storeAs('memberships', $idImageName, 'public');
-    //     $request_array['idpicture'] = $idImagePath;
-    // }
+        $request_array = $request->personal_info;
 
-    // // dd($request_array);
-    //     $page = Membership::create($request_array);
+        $request_array["typesofapplication"] = 'NEW';
+        $request_array["platform"]           = 'Reseller Platform';
+        $request_array["category"]           = 'Reseller';
+        $request_array["status"]             = 'PENDING';
+        $request_array["application_date"]   = date("Y-m-d");
+        $request_array['option']             = 'Authorized';
+        $request_array['representative_name'] = $authorized_name;
+
+        if ($request->hasFile('idpicture')) {
+            $idImageFile = $request->file('idpicture');
+            $idImageName = 'idpicture_' . uniqid() . '.' . $idImageFile->getClientOriginalExtension();
+            $idImagePath = $idImageFile->storeAs('img', $idImageName, 'public');
+            $request_array['idpicture'] = $this->encrypt($idImagePath);
+        }
 
 
-    //     $details = [];
-       
-    //     foreach ($request->input('vehicle_plate') as $key => $value) {
-    //         $details[] = [
-    //             'is_cs'        => !empty($request->input('is_cs')[$key])  ?  $request->input('is_cs')[$key] : 0,
-    //             'plate'        => !empty($request->input('vehicle_plate')[$key]),
-    //             'make'         => !empty($request->input('vehicle_make')[$key]) ? $request->input('vehicle_make')[$key] : null,
-    //             'model'        => !empty($request->input('vehicle_model')[$key]) ? $request->input('vehicle_model')[$key] : null,
-    //             'year'         => !empty($request->input('vehicle_year')[$key]) ? $request->input('vehicle_year')[$key] : null,
-    //             'color'        => !empty($request->input('vehicle_color')[$key]) ? $request->input('vehicle_color')[$key] : null,
-    //             'fuel'         => !empty($request->input('vehicle_fuel')[$key]) ? $request->input('vehicle_fuel')[$key] : null,
-    //             'transmission' => !empty($request->input('vehicle_transmission')[$key]) ? $request->input('vehicle_transmission')[$key] : null,
-    //             'or_image'     => null,
-    //             'cr_image'     => null,
+        $encrypt_field = [
+               'members_title'                  => true,
+               'members_lastname'               => false,
+               'members_birthdate'              => false,
+               'members_emailaddress'           => false,
+               'members_alternate_emailaddress' => true,
+               'alt_email'                      => true,
+               'occupation_name'                => false,
+               'members_mobileno'               => false,
+               'members_alternate_tel'          => true,
+               'members_alternate_mobileno'     => true,
+               'tele_num'                       => true,
+               'members_haddress1'              => false,
+               'members_oaddress1'              => true,
+               'representative_name'            => true,
+               'representative_contactno'       => true,
+               'representative_address'         => true,
+               'nationality'                    => true,
+               'members_gender'                 => false,
+               'members_civilstatus'            => false,
+               'citizenship'                    => false,
+               'members_birthplace'             => false
+           ];
+   
+           
+           foreach($encrypt_field as $field => $is_representative){
+               
+               if ($is_representative) {
+                   // If representative and alt mobile/email field are not empty.
+                   if (!empty($request_array[$field])) {
+                       $request_array[$field] = $this->encrypt(strip_tags($request_array[$field]));
+                   }
+               } else {
+                //   return dd($request_array['members_title']);
+                   $request_array[$field] = $this->encrypt(strip_tags($request_array[$field]));
+   
+               }
+           }
 
-                
-    //             'vehicle_type'   => !empty($request->input('vehicle_type')[$key]) ? $request->input('vehicle_type')[$key] : null,
-    //             'submodel'       => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
-    //             'no_of_pass'     => !empty($request->input('no_of_pass')[$key]) ? $request->input('no_of_pass')[$key] : null,
-    //             'amount'         => !empty($request->input('amount')[$key]) ? $request->input('amount')[$key] : 0,
-    //             'acts_of_nature' => !empty($request->input('acts_of_nature')[$key]) ? $request->input('acts_of_nature')[$key] : null,
-    //             'mortgaged'      => !empty($request->input('mortgaged')[$key]) ? $request->input('mortgaged')[$key] : null,
-    //             'bank_id'        => !empty($request->input('bank')[$key]) ? $request->input('bank')[$key] : null,
-    //             'is_active'      => 1,
+        // dd($request_array);
+        $page = Membership::create($request_array);
 
-    //             'is_diplomat' => !empty($request->input('is_diplomat')[$key]) ? $request->input('is_diplomat')[$key] : 0,
-            
+        $details = [];
 
-    //         ];
-    //     }
+        foreach ($request->input('vehicle_plate') as $key => $value) {
+            $details[] = [
+                'is_cs'        => !empty($request->input('is_cs')[$key]) ? $request->input('is_cs')[$key] : 0,
+                'plate'        => !empty($request->input('vehicle_plate')[$key])  ? $this->encrypt($request->input('vehicle_plate')[$key]) : null,
+                'make'         => !empty($request->input('vehicle_make')[$key]) ? $request->input('vehicle_make')[$key] : null,
+                'model'        => !empty($request->input('vehicle_model')[$key]) ? $request->input('vehicle_model')[$key] : null,
+                'year'         => !empty($request->input('vehicle_year')[$key]) ? $request->input('vehicle_year')[$key] : null,
+                'color'        => !empty($request->input('vehicle_color')[$key]) ? $request->input('vehicle_color')[$key] : null,
+                'fuel'         => !empty($request->input('vehicle_fuel')[$key]) ? $request->input('vehicle_fuel')[$key] : null,
+                'transmission' => !empty($request->input('vehicle_transmission')[$key]) ? $request->input('vehicle_transmission')[$key] : null,
+                // Handle OR image upload
+                'or_image' => $request->hasFile("or_image.{$key}") ?
+                $this->encrypt($request->file("or_image.{$key}")->storeAs(
+                        'img',
+                        'or_' . uniqid() . '.' . $request->file("or_image.{$key}")->getClientOriginalExtension(),
+                        'public'
+                    )) : null,
 
-    //     $page->vehicles()->createMany($details);
+                // Handle CR image upload
+                'cr_image' => $request->hasFile("cr_image.{$key}") ?
+                $this->encrypt($request->file("cr_image.{$key}")->storeAs(
+                        'img',
+                        'cr_' . uniqid() . '.' . $request->file("cr_image.{$key}")->getClientOriginalExtension(),
+                        'public'
+                    )) : null,
 
-        
-    //     return redirect()->route('new_reseller.index');
-    //  }
+                'vehicle_type' => !empty($request->input('vehicle_type')[$key]) ? $request->input('vehicle_type')[$key] : null,
+                'submodel' => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
+                'is_active' => 1,
+                'is_diplomat' => !empty($request->input('is_diplomat')[$key]) ? $request->input('is_diplomat')[$key] : 0,
+
+            ];
+        }
+
+        // dd($details);
+        $page->vehicles()->createMany($details);
+
+
+        return redirect()->route('event_dashboard');
+    }
 }

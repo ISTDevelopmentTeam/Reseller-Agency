@@ -29,6 +29,8 @@ class Membership extends Model
         'category',
         'platform',
         'idpicture',
+        'option',
+        'representative_name',
         
         // Personal Info Fields
         'members_title',
@@ -45,10 +47,10 @@ class Membership extends Model
         
         // Contact Info
         'members_mobileno',
-        'email_address',
-        'telephone_number',
         'members_alternate_mobileno',
+        'members_emailaddress',
         'members_alternate_emailaddress',
+        'tele_num',
         
         // Address Fields
         'mailing_preference',
@@ -64,6 +66,20 @@ class Membership extends Model
         'members_officecity',
         'members_officedistrict',
         'members_officezipcode',
+
+        // BENEFICIARIES
+        'insured1',
+        'beneficiary1',
+        'relation1',
+        'bday_insured1',
+        'insured2',
+        'beneficiary2',
+        'relation2',
+        'bday_insured2',
+        'insured3',
+        'beneficiary3',
+        'relation3',
+        'bday_insured3',
         
         // Additional Fields
         'avail_magazine',

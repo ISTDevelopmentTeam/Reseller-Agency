@@ -57,7 +57,7 @@
                         <div class="modal-body">
                             <form>
                                 <div class="mb-3 text-center">
-                                    <img src="https://via.placeholder.com/100" class="rounded-circle mb-3"
+                                    <img src="{{ asset('images/diablo_user.jpg') }}" class="rounded-circle mb-3"
                                         alt="Profile Picture">
                                     <div>
                                         <button type="button" class="btn btn-sm btn-outline-secondary">Change
