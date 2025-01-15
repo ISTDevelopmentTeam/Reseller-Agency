@@ -32,6 +32,18 @@ $('.letters_only_lname').on('input', function (event) {
     $('.validation-message_lname').text("");
   }
 });
+
+// this for number-only and letters will not work.
+$('.number_only').on('keypress', function(event) {
+  var charCode = event.which || event.keyCode;
+  var charStr = String.fromCharCode(charCode);
+
+  var numberRegex = /^[0-9]+$/;
+
+  if (!numberRegex.test(charStr)) {
+      event.preventDefault();
+  } 
+});
 // END FOR VALIDATION INPUT
 
 // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
@@ -163,18 +175,16 @@ function FileUploads() {
 }
 
 
-function handleFileUpload(input, imageId, feedbackId) {
+function handleGeneralFileUpload(input, imageId, feedbackId) {
   const file = input.files && input.files[0];
   if (!file) {
-    return; // No file selected, exit the function
+      return;
   }
 
   const feedback = document.getElementById(feedbackId);
   const imagePreview = document.getElementById(imageId);
 
   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-
-  // Maximum file size (8MB)
   const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
 
   // Reset previous feedback and preview
@@ -184,23 +194,23 @@ function handleFileUpload(input, imageId, feedbackId) {
 
   // Validate file type
   if (!allowedTypes.includes(file.type)) {
-    feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
-    input.value = ''; // Clear the input
-    return;
+      feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
+      input.value = '';
+      return;
   }
 
   // Validate file size
   if (file.size > maxSizeInBytes) {
-    feedback.textContent = 'File size exceeds 8MB limit.';
-    input.value = ''; // Clear the input
-    return;
+      feedback.textContent = 'File size exceeds 8MB limit.';
+      input.value = '';
+      return;
   }
 
-  // If file passes validation, create preview
+  // Create preview
   const reader = new FileReader();
   reader.onload = function (e) {
-    imagePreview.src = e.target.result;
-    imagePreview.style.display = 'block';
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
@@ -366,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   mailingAddressDropdown.addEventListener('change', function () {
-    if (mailingAddressDropdown.value === 'OFFICE') {
+    if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
       officeAddressSection.style.display = 'block';
       updateRequiredFields(true);
     } else {
@@ -405,107 +415,118 @@ function toggleRequiredAttributes() {
   }
 }
 
+function maskTelNo(id) {
+  $("#" + id).mask("9-999-9999");
+}
+
 // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
 
+// vehicleFileUpload function to work with dynamic IDs
+function handleVehicleFileUpload(input, imageId, feedbackId) {
+  const file = input.files && input.files[0];
+  if (!file) {
+      return;
+  }
+
+  const feedback = document.getElementById(feedbackId);
+  const imagePreview = document.getElementById(imageId);
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+  const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
+
+  // Reset previous feedback and preview
+  feedback.textContent = '';
+  imagePreview.style.display = 'none';
+  imagePreview.src = '';
+
+  // Validate file type
+  if (!allowedTypes.includes(file.type)) {
+      feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
+      input.value = '';
+      return;
+  }
+
+  // Validate file size
+  if (file.size > maxSizeInBytes) {
+      feedback.textContent = 'File size exceeds 8MB limit.';
+      input.value = '';
+      return;
+  }
+
+  // Create preview
+  const reader = new FileReader();
+  reader.onload = function (e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
 function updateLabeldyna(checkedId, uncheckedId) {
+  const checkedCheckbox = document.getElementById(checkedId);
+  const uncheckedCheckbox = document.getElementById(uncheckedId);
+  uncheckedCheckbox.disabled = false;
+  uncheckedCheckbox.checked = false;
+  checkedCheckbox.disabled = true;
 
-        const checkedCheckbox = document.getElementById(checkedId);
-        const uncheckedCheckbox = document.getElementById(uncheckedId);
-        uncheckedCheckbox.disabled = false;
-        uncheckedCheckbox.checked = false;
-        checkedCheckbox.disabled = true;
+  let platenumLabel, platenumInput, var_csticker;
 
-        if (checkedCheckbox.id == 'csticker_yes' || checkedCheckbox.id == 'csticker_no') {
+  if (checkedCheckbox.id === 'csticker_yes' || checkedCheckbox.id === 'csticker_no') {
+      platenumLabel = document.querySelector('label[for="platenum"]');
+      platenumInput = document.getElementById("platenum");
+      var_csticker = document.getElementById("csticker");
+  } else {
+      platenumLabel = document.querySelector('label[for="platenum' + checkedCheckbox.id.slice(-1) + '"]');
+      platenumInput = document.getElementById("platenum" + checkedCheckbox.id.slice(-1));
+      var_csticker = document.getElementById("csticker" + checkedCheckbox.id.slice(-1));
+  }
 
-          var platenumLabel = document.querySelector('label[for="platenum"]');
-          var platenumInput = document.getElementById("platenum");
-          var var_csticker = document.getElementById("csticker");
+  // Clear any existing mask
+  $(platenumInput).unmask();
+  
+  if (checkedCheckbox.value == 1) {
+      platenumLabel.textContent = "Conduction Sticker";
+      platenumInput.placeholder = "Enter conduction sticker";
+      platenumInput.dataset.inputType = 'conduction'; // Set input type
+      $(platenumInput).mask('AAAA-AAAAAAAA');
+      platenumInput.value = "";
+      var_csticker.value = 1;
+  } else {
+      platenumLabel.textContent = "Plate No";
+      platenumInput.placeholder = "Enter plate no";
+      platenumInput.dataset.inputType = 'plate'; // Set input type
+      applyPlateMask(platenumInput);
+      platenumInput.value = "";
+      var_csticker.value = 0;
+  }
+}
 
-          if (checkedCheckbox.value == 1) {
-            platenumLabel.textContent = "Conduction Sticker";
-            platenumInput.placeholder = "Enter conduction sticker";
-            $(platenumInput).mask('AAAAAA');
-            platenumInput.value = "";
-            var_csticker.value = 1
-
-          } else {
-            platenumLabel.textContent = "Plate No";
-            platenumInput.placeholder = "Enter plate no";
-            $(platenumInput).mask('AAAAAAAA', {
-              translation: {
-                'A': {
-                  pattern: /[A-Za-z0-9\s-]/,
-                  transform: function (val) {
-                    let currentVal = this.el.val();
-                    // Only allow 7 alphanumeric characters plus one separator (dash or space)
-                    if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                      return '';
-                    }
-                    return val;
-                  }
-                }
-              },
-            });
-            platenumInput.value = "";
-            var_csticker.value = 0
-          }
-        } else {
-          const radioButtons = document.querySelectorAll(
-            `input[name="is_cs[]"][id^="csticker${checkedCheckbox.id.slice(-1)}"]`);
-          var platenumLabel = document.querySelector('label[for="platenum' + checkedCheckbox.id.slice(-1) + '"]');
-          var platenumInput = document.getElementById("platenum" + checkedCheckbox.id.slice(-1));
-          var var_csticker = document.getElementById("csticker" + checkedCheckbox.id.slice(-1));
-
-          if (checkedCheckbox.value == 1) {
-            platenumLabel.textContent = "Conduction Sticker";
-            platenumInput.placeholder = "Enter conduction sticker";
-            $(platenumInput).mask('AAAAAA');
-            platenumInput.value = "";
-            var_csticker.value = 1
-          } else {
-            platenumLabel.textContent = "Plate No";
-            platenumInput.placeholder = "Enter plate no";
-            $(platenumInput).mask('AAAAAAAA', {
-              translation: {
-                'A': {
-                  pattern: /[A-Za-z0-9\s-]/,
-                  transform: function (val) {
-                    let currentVal = this.el.val();
-                    // Only allow 7 alphanumeric characters plus one separator (dash or space)
-                    if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                      return '';
-                    }
-                    return val;
-                  }
-                }
-              },
-            });
-            platenumInput.value = "";
-            var_csticker.value = 0
-          }
-        }
-      }
-
-      $(document).on('focus', '.platenum', function () {
-        if (!$(this).data('masked')) {
-          $(this).mask('AAAAAAAA', {
-            translation: {
-              'A': {
-                pattern: /[A-Za-z0-9\s-]/,
-                transform: function (val) {
+// Function to apply plate number mask
+function applyPlateMask(element) {
+  $(element).mask('AAAAAAAA', {
+      translation: {
+          'A': {
+              pattern: /[A-Za-z0-9\s-]/,
+              transform: function(val) {
                   let currentVal = this.el.val();
-                  // Only allow 7 alphanumeric characters plus one separator (dash or space)
                   if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                    return '';
+                      return '';
                   }
                   return val;
-                }
               }
-            },
-          });
-          $(this).data('masked', true);
-        }
-      });
+          }
+      }
+  });
+}
+
+// Modified focus handler
+$(document).on('focus', '.platenum', function() {
+  if (this.dataset.inputType === 'plate') {
+      applyPlateMask(this);
+  } else if (this.dataset.inputType === 'conduction') {
+      $(this).mask('AAAA-AAAAAAAA');
+  }
+});
 
 // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
 function summary_fetch() {
@@ -537,8 +558,6 @@ function summary_fetch() {
   var emailAddress = $('#emailAddress').val();
   var occupation   = $('#occupation').val();
   var civilStatus  = $('#civilStatus').val();
-
-
 
     // Step 3 Values
 

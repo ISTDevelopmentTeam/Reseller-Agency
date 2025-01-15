@@ -32,15 +32,58 @@ $('.letters_only_fname').on('input', function (event) {
       $('.validation-message_lname').text("");
     }
   });
-  // END FOR VALIDATION INPUT
+  
+// Beneficiaries 
+
+// Insured 1
+$('.fullname').on('input', function(event) {
+  var inputValue = $(this).val();
+  var letterRegex = /^[a-zA-ZñÑ\s.]*$/;
+
+  if (!letterRegex.test(inputValue)) {
+      $(this).val(inputValue.replace(/[^a-zA-ZñÑ\s.]/g, ''));
+      $('.validation-message_fullname').text("Only Letters Allowed");
+  } else {
+      $('.validation-message_fullname').text("");
+  }
+});
+
+// Insured 2
+$('.fullname1').on('input', function(event) {
+  var inputValue = $(this).val();
+  var letterRegex = /^[a-zA-ZñÑ\s.]*$/;
+
+  if (!letterRegex.test(inputValue)) {
+      $(this).val(inputValue.replace(/[^a-zA-ZñÑ\s.]/g, ''));
+      $('.validation-message_fullname1').text("Only Letters Allowed");
+  } else {
+      $('.validation-message_fullname1').text("");
+  }
+});
+
+// Insured 3
+$('.fullname2').on('input', function(event) {
+  var inputValue = $(this).val();
+  var letterRegex = /^[a-zA-ZñÑ\s.]*$/;
+
+  if (!letterRegex.test(inputValue)) {
+      $(this).val(inputValue.replace(/[^a-zA-ZñÑ\s.]/g, ''));
+      $('.validation-message_fullname2').text("Only Letters Allowed");
+  } else {
+      $('.validation-message_fullname2').text("");
+  }
+});
+
+// END Beneficiaries
+
   
   // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
   // Form validation and submission handling
   document.addEventListener('DOMContentLoaded', function() {
-    const resellerForm = document.getElementById('resellerForm');
-    const submitBtn = document.getElementById('submit_btn');
-    const mobileInput = document.getElementById('mobileNumber');
-    const errorMsg = document.getElementById('error-msg-1');
+    const resellerForm   = document.getElementById('resellerForm');
+    const submitBtn      = document.getElementById('submit_btn');
+    const mobileInput    = document.getElementById('mobileNumber');
+    const errorMsg       = document.getElementById('error-msg-1');
     const validationMsg1 = document.getElementById('validationMessage');
     const validationMsg2 = document.getElementById('validationMessage2');
     const validationMsg3 = document.getElementById('validationMessage3');
@@ -379,7 +422,7 @@ $('.letters_only_fname').on('input', function (event) {
     }
   
     mailingAddressDropdown.addEventListener('change', function () {
-      if (mailingAddressDropdown.value === 'OFFICE') {
+      if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
         officeAddressSection.style.display = 'block';
         updateRequiredFields(true);
       } else {
@@ -416,6 +459,10 @@ $('.letters_only_fname').on('input', function (event) {
     } else {
       phoneInput.setAttribute('required', 'required');
     }
+  }
+
+  function maskTelNo(id) {
+    $("#" + id).mask("9-999-9999");
   }
 
 // ---------------------------------------------------Motorcycle Insured FUNCTION-------------------------------------------------------- //
@@ -730,110 +777,76 @@ class DatePickerManager {
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
   
   function updateLabeldyna(checkedId, uncheckedId) {
-  
-          const checkedCheckbox = document.getElementById(checkedId);
-          const uncheckedCheckbox = document.getElementById(uncheckedId);
-          uncheckedCheckbox.disabled = false;
-          uncheckedCheckbox.checked = false;
-          checkedCheckbox.disabled = true;
-  
-          if (checkedCheckbox.id == 'csticker_yes' || checkedCheckbox.id == 'csticker_no') {
-  
-            var platenumLabel = document.querySelector('label[for="platenum"]');
-            var platenumInput = document.getElementById("platenum");
-            var var_csticker = document.getElementById("csticker");
-  
-            if (checkedCheckbox.value == 1) {
-              platenumLabel.textContent = "Conduction Sticker";
-              platenumInput.placeholder = "Enter conduction sticker";
-              $(platenumInput).mask('AAAAAA');
-              platenumInput.value = "";
-              var_csticker.value = 1
-  
-            } else {
-              platenumLabel.textContent = "Plate No";
-              platenumInput.placeholder = "Enter plate no";
-              $(platenumInput).mask('AAAAAAAA', {
-                translation: {
-                  'A': {
-                    pattern: /[A-Za-z0-9\s-]/,
-                    transform: function (val) {
-                      let currentVal = this.el.val();
-                      // Only allow 7 alphanumeric characters plus one separator (dash or space)
-                      if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                        return '';
-                      }
-                      return val;
-                    }
-                  }
-                },
-              });
-              platenumInput.value = "";
-              var_csticker.value = 0
-            }
-          } else {
-            const radioButtons = document.querySelectorAll(
-              `input[name="is_cs[]"][id^="csticker${checkedCheckbox.id.slice(-1)}"]`);
-            var platenumLabel = document.querySelector('label[for="platenum' + checkedCheckbox.id.slice(-1) + '"]');
-            var platenumInput = document.getElementById("platenum" + checkedCheckbox.id.slice(-1));
-            var var_csticker = document.getElementById("csticker" + checkedCheckbox.id.slice(-1));
-  
-            if (checkedCheckbox.value == 1) {
-              platenumLabel.textContent = "Conduction Sticker";
-              platenumInput.placeholder = "Enter conduction sticker";
-              $(platenumInput).mask('AAAAAA');
-              platenumInput.value = "";
-              var_csticker.value = 1
-            } else {
-              platenumLabel.textContent = "Plate No";
-              platenumInput.placeholder = "Enter plate no";
-              $(platenumInput).mask('AAAAAAAA', {
-                translation: {
-                  'A': {
-                    pattern: /[A-Za-z0-9\s-]/,
-                    transform: function (val) {
-                      let currentVal = this.el.val();
-                      // Only allow 7 alphanumeric characters plus one separator (dash or space)
-                      if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                        return '';
-                      }
-                      return val;
-                    }
-                  }
-                },
-              });
-              platenumInput.value = "";
-              var_csticker.value = 0
-            }
-          }
-        }
-  
-        $(document).on('focus', '.platenum', function () {
-          if (!$(this).data('masked')) {
-            $(this).mask('AAAAAAAA', {
-              translation: {
-                'A': {
-                  pattern: /[A-Za-z0-9\s-]/,
-                  transform: function (val) {
+    const checkedCheckbox = document.getElementById(checkedId);
+    const uncheckedCheckbox = document.getElementById(uncheckedId);
+    uncheckedCheckbox.disabled = false;
+    uncheckedCheckbox.checked = false;
+    checkedCheckbox.disabled = true;
+
+    let platenumLabel, platenumInput, var_csticker;
+
+    if (checkedCheckbox.id === 'csticker_yes' || checkedCheckbox.id === 'csticker_no') {
+        platenumLabel = document.querySelector('label[for="platenum"]');
+        platenumInput = document.getElementById("platenum");
+        var_csticker = document.getElementById("csticker");
+    } else {
+        platenumLabel = document.querySelector('label[for="platenum' + checkedCheckbox.id.slice(-1) + '"]');
+        platenumInput = document.getElementById("platenum" + checkedCheckbox.id.slice(-1));
+        var_csticker = document.getElementById("csticker" + checkedCheckbox.id.slice(-1));
+    }
+
+    // Clear any existing mask
+    $(platenumInput).unmask();
+    
+    if (checkedCheckbox.value == 1) {
+        platenumLabel.textContent = "Conduction Sticker";
+        platenumInput.placeholder = "Enter conduction sticker";
+        platenumInput.dataset.inputType = 'conduction'; // Set input type
+        $(platenumInput).mask('AAAA-AAAAAAAA');
+        platenumInput.value = "";
+        var_csticker.value = 1;
+    } else {
+        platenumLabel.textContent = "Plate No";
+        platenumInput.placeholder = "Enter plate no";
+        platenumInput.dataset.inputType = 'plate'; // Set input type
+        applyPlateMask(platenumInput);
+        platenumInput.value = "";
+        var_csticker.value = 0;
+    }
+}
+
+// Function to apply plate number mask
+function applyPlateMask(element) {
+    $(element).mask('AAAAAAAA', {
+        translation: {
+            'A': {
+                pattern: /[A-Za-z0-9\s-]/,
+                transform: function(val) {
                     let currentVal = this.el.val();
-                    // Only allow 7 alphanumeric characters plus one separator (dash or space)
                     if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                      return '';
+                        return '';
                     }
                     return val;
-                  }
                 }
-              },
-            });
-            $(this).data('masked', true);
-          }
-        });
+            }
+        }
+    });
+}
+
+// Modified focus handler
+$(document).on('focus', '.platenum', function() {
+    if (this.dataset.inputType === 'plate') {
+        applyPlateMask(this);
+    } else if (this.dataset.inputType === 'conduction') {
+        $(this).mask('AAAA-AAAAAAAA');
+    }
+});
   
   // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
   function summary_fetch() {
   
       // Step 1 Values
-    var membershipType  = $('#membership_type').val();
+    // var membershipType  = $('#membership_type').val();
     var plan_type       = $('#plan_type').val();
     var pin_code        = $('#pinCode').val();
     var paInsurance     = $('#paInsurance').val();
