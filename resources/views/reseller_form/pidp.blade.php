@@ -79,6 +79,10 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-9"> <!-- Adjusted column width -->
+                <div class="card-header custom-header mb-3 text-center">
+                    <h2 class="header-title mb-0 typewriter">New PIDP Form</h2>
+                    <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
+                </div>
                 <form id="resellerForm" action="{{ route('new_motorcyle.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
