@@ -55,7 +55,7 @@
                             <div class="form-step tab active" id="step1">
                                 <button class="btn btn-primary customer-fillout-btn"
                                     onclick="window.open('{{ route('customer_qr') }}', '_blank')">
-                                    <i class="fas fa-user-edit me-2"></i>Customer Fill-out
+                                    <i class="fas fa-qrcode me-2"></i>Customer/Client Form QR
                                 </button>
                                 <h5 class="card-title mb-4">Membership Application</h5>
                                 <div class="row">

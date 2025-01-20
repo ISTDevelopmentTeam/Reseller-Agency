@@ -112,7 +112,7 @@
     <button class="btn btn-primary customer-fillout-btn"
         style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);"
         onclick="window.open('{{ route('customer_qr') }}', '_blank')">
-        <i class="fas fa-user-edit me-2"></i>Customer Fill-out
+        <i class="fas fa-qrcode me-2"></i> Customer/Client Form QR  
     </button>
 </div>
         <br>

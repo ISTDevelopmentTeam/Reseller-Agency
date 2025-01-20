@@ -15,7 +15,7 @@
 
                 <a href="#" class="list-group-item list-group-item-action" id="formDropdown" data-bs-toggle="collapse"
                     data-bs-target="#formSubMenu" aria-expanded="false" aria-controls="formSubMenu">
-                    <i class="fas fa-file-invoice me-2"></i><span class="menu-text">Form</span>
+                    <i class="fas fa-file-invoice me-2"></i><span class="menu-text">Application Form</span>
                 </a>
 
                 <div class="collapse" id="formSubMenu">
