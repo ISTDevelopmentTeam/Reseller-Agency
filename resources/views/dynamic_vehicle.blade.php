@@ -70,7 +70,7 @@
 
                     <div class="col-md-4">
                         <label for="platenum${vehicleCount}" class="label">Plate No</label>
-                        <input name="vehicle_plate[]" type="text" class="text-input form-control form-control-sm platenum" id="platenum${vehicleCount}"
+                        <input name="vehicle_plate[]" type="text" class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror" id="platenum${vehicleCount}"
                         autocomplete="off" placeholder=" Enter Plate No" style="text-transform: uppercase;" required>
                         <div class="validation-message_plateno" id="validation-message_plateno" style="color: red;"></div>
                     </div>

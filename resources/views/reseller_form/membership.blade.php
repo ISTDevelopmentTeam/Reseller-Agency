@@ -79,11 +79,6 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-9"> <!-- Adjusted column width -->
-                <!-- Header Section -->
-                <div class="card-header custom-header mb-3 text-center">
-                    <h2 class="header-title mb-0 typewriter">New Membership Form</h2>
-                    <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
-                </div>
                 <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
@@ -116,7 +111,7 @@
                                         <option value="{{ $selectedPlan->plan_name }}" selected>
                                             {{ $selectedPlan->plan_name }} - {{ $selectedPlan->plan_amount }}
                                         </option>
-                                        <input type="hidden" name="personal_info[plantype_id]" value="{{$selectedPlan->plan_id}}" id="selected_plan_id">
+                                        
                                     @else
                                         <option value="" selected disabled>Select Plan Type</option>
                                     @endif
@@ -125,9 +120,12 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
+                            @if($selectedPlan)
+                                <input type="hidden" name="personal_info[plantype_id]" value="{{$selectedPlan->plan_id}}" id="selected_plan_id">
+                            @endif
 
                             <div class="col-md-4 mb-3">
-                                <label for="idAttachment" class="form-label">ID Image (Upload a valid government ID)</label>
+                                <label for="idAttachment" class="form-label">Upload Image: 2x2 or passport size id picture</label>
                                 <div class="input-group">
                                     <input type="file" class="form-control" id="idAttachment" name="idpicture"
                                            onchange="handleGeneralFileUpload(this, 'valid_id', 'idFeedback')" required>
@@ -722,7 +720,7 @@
 
                         <!-- Add Vehicle Button -->
                         <button type="button" class="btn btn-primary mt-3" id="addVehicle">
-                            <i class="bi bi-plus-circle me-2"></i>Add Item
+                            <i class="bi bi-plus-circle me-2"></i>+ Add another vehicle
                         </button>
 
                         <div class="d-flex justify-content-end mt-4">
@@ -740,8 +738,8 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="/script/membership.js"></script>
-    <script src="{{ asset('script/sidebar.js')}}"></script>
+    <script src="{{ asset('script/reseller_side/membership.js') }} "></script>
+    <script src="{{ asset('script/sidebar.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

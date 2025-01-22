@@ -112,7 +112,7 @@
     <button class="btn btn-primary customer-fillout-btn"
         style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);"
         onclick="window.open('{{ route('customer_qr') }}', '_blank')">
-        <i class="fas fa-qrcode me-2"></i> Customer/Client Form QR  
+        <i class="fas fa-user-edit me-2"></i>Customer Fill-out
     </button>
 </div>
         <br>
@@ -128,10 +128,11 @@
                                 @foreach ($results as $plan)
                                     @if ($plan->plan_id == 8)
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <a href="{{ route('new_pidp.index', ['planId' => $plan->plan_id]) }}"
-                                            class="btn btn-custom">
-                                            APPLY NOW
-                                        </a>
+                                        <button class="btn btn-custom">
+                                            <a href="{{ route('new_pidp.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
+                                                APPLY NOW
+                                            </a>
+                                        </button>
                                     @endif
                                 @endforeach
                                 <br>
@@ -147,10 +148,11 @@
                                 @foreach ($results as $plan)
                                     @if ($plan->plan_id == 9)
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <a href="{{ route('new_pidp.index', ['planId' => $plan->plan_id]) }}"
-                                            class="btn btn-custom">
-                                            APPLY NOW
-                                        </a>
+                                        <button class="btn btn-custom">
+                                            <a href="{{ route('new_pidp.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
+                                                APPLY NOW
+                                            </a>
+                                        </button>
                                     @endif
                                 @endforeach
                                 <br>
@@ -166,10 +168,11 @@
                                 @foreach ($results as $plan)
                                     @if ($plan->plan_id == 10)
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <a href="{{ route('new_pidp.index', ['planId' => $plan->plan_id]) }}"
-                                            class="btn btn-custom">
-                                            APPLY NOW
-                                        </a>
+                                        <button class="btn btn-custom">
+                                            <a href="{{ route('new_pidp.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
+                                                APPLY NOW
+                                            </a>
+                                        </button>
                                     @endif
                                 @endforeach
                                 <br>

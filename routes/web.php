@@ -37,7 +37,7 @@ Route::get('/event_dashboard', [EventDashboardController::class, 'event_dashboar
 Route::get('/new_membership/{membershipId?}/{planId?}', [MembershipController::class, 'index'])->name('new_membership.index');
 Route::post('/new_membership', [MembershipController::class, 'store'])->name('new_membership.store');
 // PIDP
-Route::get('/new_pidp/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
+Route::get('/new_pidp/{membershipId?}/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
 Route::post('/new_pidp', [PidpController::class, 'store'])->name('new_pidp.store');
 // MOTORCYLE
 Route::get('/new_motorcyle/{planId?}', [MotorcycleController::class, 'index'])->name('new_motorcyle.index');

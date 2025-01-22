@@ -19,9 +19,10 @@ class Membership extends Model
     protected $fillable = [
         // Add all the fields you want to be mass-assignable
         'typesofapplication',
-        'membership_type',
-        'plan_type',
         'plantype_id',
+        'plan_type',
+        'pidp_plantype',
+        'membership_type',
         'activation_date',
         'pin_code',
         'initiator',
@@ -31,6 +32,28 @@ class Membership extends Model
         'idpicture',
         'option',
         'representative_name',
+
+        // License Info Field
+        'imglicense',
+        'members_licenseno',
+        'members_licensetype',
+        'members_licensecard',
+        'members_licenseexpirationdate',
+        'members_licenserest',
+        'members_licensedlcode',
+
+        // PIDP Destination
+        'members_destination',
+        'members_destination2',
+        'members_purposetravel',
+        'departure_date',
+        'arrival_date',
+        'agreejpn1',
+        'agreejpn2',
+        'agreeothrs',
+        'is_ofw',
+        'is_dlcode',
+
         
         // Personal Info Fields
         'members_title',
@@ -82,7 +105,7 @@ class Membership extends Model
         'bday_insured3',
         
         // Additional Fields
-        'avail_magazine',
+        'is_aq',
         'application_date',
         'status'
     ];
