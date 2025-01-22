@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <link rel="stylesheet" href="{{ asset('link/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ asset('style/membership.css') }}">
+    <link rel="stylesheet" href="{{ asset('style/motorcycle.css') }}">
 </head>
 
 <body>
@@ -78,7 +78,11 @@
     </style>
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-9"> <!-- Adjusted column width -->
+            <div class="col-md-10 col-lg-11"> <!-- Adjusted column width -->
+                <div class="card-header custom-header mb-3 text-center">
+                    <h2 class="header-title mb-0 typewriter">New Motorcycle Form</h2>
+                    <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
+                </div>
                 <form id="resellerForm" action="{{ route('new_motorcyle.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
