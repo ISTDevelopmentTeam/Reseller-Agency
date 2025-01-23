@@ -33,9 +33,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 // NEW
 Route::get('/event_dashboard', [EventDashboardController::class, 'event_dashboard'])->name('event_dashboard');
-// MEMBERSHIP
+// MEMBERSHIP (reseller side)
 Route::get('/new_membership/{membershipId?}/{planId?}', [MembershipController::class, 'index'])->name('new_membership.index');
 Route::post('/new_membership', [MembershipController::class, 'store'])->name('new_membership.store');
+// Customer Side
+Route::get('/membership/{membershipId?}/{planId?}/{token}', [MembershipController::class, 'fetch'])->name('membership.fetch');
 // PIDP
 Route::get('/new_pidp/{membershipId?}/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
 Route::post('/new_pidp', [PidpController::class, 'store'])->name('new_pidp.store');
@@ -48,8 +50,17 @@ Route::get('/renew_reseller', [RenewResellerController::class, 'index'])->name('
 Route::post('/search_member', [RenewResellerController::class, 'search_member'])->name('search_member');
 Route::get('/reseller_form/{id}/{vehicle}', [RenewResellerController::class, 'reseller_form'])->name('reseller_form');
 
+// CUSTOMER
 Route::get('/customer_qr', [QRCustomerController::class, 'index'])->name('customer_qr');
-Route::get('/customer/{token }', [NewResellerController::class, 'event_dashboard'])->name('customer');
+// Route for handling customer form with token
+Route::get('/customer_fillout_form/{token}', [EventDashboardController::class, 'customer_event_dashboard'])
+    ->name('customer_fillout_form');
+// Route for the expired page
+Route::get('/token-expired', function () {
+    return view('webpage_expiration_page');
+})->name('webpage_expiration_page');
+
+
 Route::get('/subscription_plan_cms', [CMS_FetchingController::class, 'cms_fetch'])->name('subscription_plan_cms');
 Route::get('/edit_cms', [CMS_FetchingController::class, 'Edit_Fetch'])->name('edit_cms_page');
 Route::get('/view_cms', [CMS_FetchingController::class, 'View_Fetch'])->name('view_cms_page');
@@ -65,21 +76,21 @@ Route::get('/audit_trail', [AuditTrailController::class, 'index'])->name('audit_
 //URL Token Validation Routes
 
 // Route for the temporary page
-Route::get('/customer_fillout_form/{token}', function ($token) {
+// Route::get('/customer_fillout_form/{token}', function ($token) {
 
 
-    // Check if the token exists and is not expired
-    $temporaryToken = TokenModel::where('token', $token)->first();
+//     // Check if the token exists and is not expired
+//     $temporaryToken = TokenModel::where('token', $token)->first();
 
-    // If token doesn't exist or is expired
-    if (!$temporaryToken || $temporaryToken->expires_at < now()) 
-    {
-        return redirect()->route('webpage_expiration_page'); // Redirect to expired page
-    }
+//     // If token doesn't exist or is expired
+//     if (!$temporaryToken || $temporaryToken->expires_at < now()) 
+//     {
+//         return redirect()->route('webpage_expiration_page'); // Redirect to expired page
+//     }
     
-    // If token is valid, display the temporary page
-    return view('reseller_form/event_dashboard', ['token' => $token]);
-    })->name('customer_fillout_form');
+//     // If token is valid, display the temporary page
+//     return view('reseller_form/event_dashboard', ['token' => $token]);
+//     })->name('customer_fillout_form');
 
 
 

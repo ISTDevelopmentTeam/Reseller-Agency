@@ -8,58 +8,51 @@ use Illuminate\Support\Carbon;
 
 class QRCustomerController extends Controller
 {
-    public function index(){
+    public function index()
+    {
 
 
- // Generate a unique token
- $token = Str::random(40);
-   
- // Define the expiration time (1 Day for testing)
- $expiresAt = Carbon::now()->addDay();
+        // Generate a unique token
+        $token = Str::random(40);
 
- // Save the token to the database
- TokenModel::create([
-   'token' => $token,
-   'expires_at' => $expiresAt,
-]);
+        // Define the expiration time (1 Day for testing)
+        $expiresAt = Carbon::now()->addDay();
 
-// Create the URL with the token
-$url = route('customer_fillout_form', ['token' => $token]);
+        // Save the token to the database
+        TokenModel::create([
+            'token' => $token,
+            'expires_at' => $expiresAt,
+        ]);
 
-// Include the QRcode library
-require_once app_path('Libraries/phpqrcode/qrlib.php');
+        // Create the URL with the token
+        $url = route('customer_fillout_form', ['token' => $token]);
 
-// Start output buffering
-ob_start();
+        // Include the QRcode library
+        require_once app_path('Libraries/phpqrcode/qrlib.php');
 
-// Generate the QR code and output it to the buffer
-\QRcode::png($url, null, QR_ECLEVEL_L, 4); // QR_ECLEVEL_L is for low error correction
+        // Start output buffering
+        ob_start();
 
-// Get the image data from the buffer
-$imageData = ob_get_contents();
+        // Generate the QR code and output it to the buffer
+        \QRcode::png($url, null, QR_ECLEVEL_L, 4); // QR_ECLEVEL_L is for low error correction
 
-// Clean (erase) the output buffer and turn off output buffering
-ob_end_clean();
+        // Get the image data from the buffer
+        $imageData = ob_get_contents();
+
+        // Clean (erase) the output buffer and turn off output buffering
+        ob_end_clean();
 
 
 
-// Return the image data as a response with the correct content type
-return view('customer_qr', [
-    'url'   => $url,
-    'imageData' => $imageData,
-]);
+        // Return the image data as a response with the correct content type
+        return view('customer_qr', [
+            'url' => $url,
+            'imageData' => $imageData,
+        ]);
 
 
     }
 
-
-    // public function generateQRCode()
-    // {
-            
-           
-           
-    //    }
-   
 
 
 }
