@@ -7,6 +7,7 @@ use App\Models\Town;
 use App\Models\City;
 use App\Models\MembershipType;
 use App\Models\PlanType;
+use App\Models\TokenModel;
 use App\Http\Requests\MembershipRequest;
 use App\Models\Vehicle;
 use App\Models\Membership;
@@ -25,7 +26,6 @@ class MembershipController extends Controller
         $this->encryption_key = base64_decode(env('ENCRYPTION_KEY'));
         $this->encryption_iv = base64_decode(env('ENCRYPTION_IV'));
     }
-
     
     public function encrypt($data) {
         $encrypted = openssl_encrypt($data, 'AES-256-CBC',$this->encryption_key  , OPENSSL_RAW_DATA, $this->encryption_iv);
@@ -67,6 +67,52 @@ class MembershipController extends Controller
         $selectedPlan = PlanType::where('plan_id', $planId)->first();
 
         return view('reseller_form/membership')->with([
+            'towns' => $towns,
+            'citys' => $citys,
+            'carMake' => $carMake,
+            'selectedMembership' => $selectedMembership,
+            'selectedPlan' => $selectedPlan
+        ]);
+    }
+
+    public function fetch(Request $request, $membershipId, $planId, $token)
+    {
+        // Check if the token exists and is not expired
+        $temporaryToken = TokenModel::where('token', $token)->first();
+
+        // If token doesn't exist or is expired
+        if (!$temporaryToken || $temporaryToken->expires_at < now()) {
+            return redirect()->route('webpage_expiration_page');
+        }
+
+        $searchTerm = $request->input('town');
+
+        $towns = Town::select('a.*', 'c.*', 'd.*')
+            ->from('aap_zipcode as a')
+            ->leftJoin('address_city as c', 'a.az_city', '=', 'c.city_id')
+            ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
+            ->where('az_barangay', 'like', '%' . $searchTerm . '%')
+            ->get();
+
+        $city = $request->input('city');
+
+        $citys = City::select('a.az_zipcode', 'c.city_name', 'c.city_id', 'd.*')
+            ->from('address_city as c')
+            ->leftJoin('aap_zipcode as a', 'c.city_id', '=', 'a.az_city')
+            ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
+            ->where('c.city_name', 'like', '%' . $city . '%')
+            ->where('a.az_barangay', '')
+            ->get();
+
+        $carMake = json_decode($this->get_carmake(), true);
+
+        // Find the selected membership
+        $selectedMembership = MembershipType::where('membership_id', $membershipId)->first();
+
+        // Find the selected plan
+        $selectedPlan = PlanType::where('plan_id', $planId)->first();
+
+        return view('customer_form/membership')->with([
             'towns' => $towns,
             'citys' => $citys,
             'carMake' => $carMake,
@@ -183,7 +229,6 @@ class MembershipController extends Controller
             ];
         }
 
-        // dd($details);
         $page->vehicles()->createMany($details);
 
 
