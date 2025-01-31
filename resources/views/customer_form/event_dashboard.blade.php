@@ -140,21 +140,25 @@
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
                                         <button class="btn btn-custom">
                                             @if($membershipType->membership_code === 'MP')
-                                                <a href="{{ route('new_motorcyle.index', ['planId' => $plan->plan_id]) }}">
+                                                <a href="{{ route('motorcycle.fetch', [
+                                                'planId' => $plan->plan_id,
+                                                'token'  => $token
+                                                ]) }}">
                                                     APPLY NOW
                                                 </a>
                                             @elseif($membershipType->membership_code === 'P')
-                                                <a href="{{ route('new_pidp.index', [
+                                                <a href="{{ route('pidp.fetch', [
                                                     'membershipId' => $membershipType->membership_id,
-                                                    'planId' => $plan->plan_id
+                                                    'planId'       => $plan->plan_id,
+                                                    'token'        => $token
                                                 ]) }}">
                                                     APPLY NOW
                                                 </a>
                                             @else
                                                 <a href="{{ route('membership.fetch', [
                                                     'membershipId' => $membershipType->membership_id,
-                                                    'planId' => $plan->plan_id,
-                                                    'token' =>$token
+                                                    'planId'       => $plan->plan_id,
+                                                    'token'        => $token
                                                 ]) }}">
                                                     APPLY NOW
                                                 </a>

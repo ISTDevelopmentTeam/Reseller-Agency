@@ -1,26 +1,33 @@
 <?php
 
-namespace App\Actions\Agent\Motorcycle;
+namespace App\Actions\Renew\Renew_Membership;
+
 use App\Models\Town;
 use App\Models\City;
+use App\Models\MembershipType;
 use App\Models\PlanType;
+use App\Traits\Member_data;
 use App\Traits\Insurance\Get_carmake;
-class FetchMotorcycle
+
+class Renew_membership_fetch
 {
-    use Get_carmake;
-    public function handle($request, $planId)
+    use Get_carmake, Member_data;
+
+    public function handle(object $request)
     {
+        $membership = MembershipType::whereIn('membership_id', [1, 2, 4, 5])->get();
+        $packages = PlanType::whereIn('membership_id', [1, 2, 4, 5])->get();
+
         $searchTerm = $request->input('town');
-    
+        $city = $request->input('city');
+
         $towns = Town::select('a.*', 'c.*', 'd.*')
             ->from('aap_zipcode as a')
             ->leftJoin('address_city as c', 'a.az_city', '=', 'c.city_id')
             ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
             ->where('az_barangay', 'like', '%' . $searchTerm . '%')
             ->get();
-    
-        $city = $request->input('city');
-    
+
         $citys = City::select('a.az_zipcode', 'c.city_name', 'c.city_id', 'd.*')
             ->from('address_city as c')
             ->leftJoin('aap_zipcode as a', 'c.city_id', '=', 'a.az_city')
@@ -28,21 +35,23 @@ class FetchMotorcycle
             ->where('c.city_name', 'like', '%' . $city . '%')
             ->where('a.az_barangay', '')
             ->get();
-    
+
+        $pincode   = $request->segment(2);
+        $record_no = $request->segment(3);
+        $records   = $this->get_member_data($pincode, $record_no);
+        // dd($records);
+
         $carMake = json_decode($this->get_carmake(), true);
-        
-        // Get all plan types
-        $planTypes = PlanType::all();
-    
-        // If a specific plan ID is passed, find that plan
-        $selectedPlan = $planId ? PlanType::where('plan_id', $planId)->first() : null;
-    
+        // dd($records);
+
         return [
-            'towns'        => $towns,
-            'citys'        => $citys,
-            'carMake'      => $carMake,
-            'planTypes'    => $planTypes,
-            'selectedPlan' => $selectedPlan
+            'title'      => 'Membership Renewal Form',
+            'membership' => $membership,
+            'packages'   => $packages,
+            'towns'      => $towns,
+            'citys'      => $citys,
+            'records'    => $records,
+            'carMake'    => $carMake,
         ];
     }
 }

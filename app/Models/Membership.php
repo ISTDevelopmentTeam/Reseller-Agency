@@ -32,6 +32,7 @@ class Membership extends Model
         'idpicture',
         'option',
         'representative_name',
+        'agent',
 
         // License Info Field
         'imglicense',

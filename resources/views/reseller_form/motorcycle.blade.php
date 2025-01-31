@@ -83,7 +83,7 @@
                     <h2 class="header-title mb-0 typewriter">New Motorcycle Form</h2>
                     <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
                 </div>
-                <form id="resellerForm" action="{{ route('new_motorcyle.store') }}" method="POST"
+                <form id="resellerForm" action="{{ route('new_motorcycle.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @foreach ($errors->all() as $key => $error)
@@ -740,6 +740,7 @@
                         </div>
                     </div>
                     <!-- Card 4: Contact Information -->
+                    
                     <!-- Card 3: Vehicle Details -->
                     <div class="card bordered">
                         <h5 class="mb-4">Vehicle Details</h5>

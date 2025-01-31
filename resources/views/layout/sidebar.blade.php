@@ -9,16 +9,13 @@
             <a href="{{route('dashboard')}}" class="list-group-item list-group-item-action {{ Request::routeIs('dashboard') ? 'active' : '' }}">
                 <i class="fas fa-tachometer-alt me-2"></i><span class="menu-text">Dashboard</span>
             </a>
-            <!-- <a href="#" class="list-group-item list-group-item-action">
-                <i class="fas fa-id-badge me-2"></i><span class="menu-text">Membership</span>
-            </a> -->
 
-            <a href="#" class="list-group-item list-group-item-action" id="formDropdown" data-bs-toggle="collapse"
-                data-bs-target="#formSubMenu" aria-expanded="false" aria-controls="formSubMenu">
-                <i class="fas fa-file-invoice me-2"></i><span class="menu-text">Application Form</span>
+            <a href="#applicationSubmenu" class="list-group-item list-group-item-action {{ Request::routeIs('event_dashboard') || Request::routeIs('renew_reseller') ? 'active' : '' }}"
+                id="formDropdown" data-bs-toggle="collapse" data-bs-target="#formSubMenu" aria-expanded="{{ Request::routeIs('event_dashboard') || Request::routeIs('renew_reseller') ? 'true' : 'false' }}"
+                aria-controls="formSubMenu"><i class="fas fa-file-invoice me-2"></i><span class="menu-text">Application Form</span>
             </a>
 
-            <div class="collapse" id="formSubMenu">
+            <div class="collapse {{ Request::routeIs('event_dashboard') || Request::routeIs('renew_reseller') ? 'show' : '' }}" id="formSubMenu">
                 <a href="{{route('event_dashboard')}}" class="list-group-item list-group-item-action submenu-item {{ Request::routeIs('event_dashboard') ? 'active' : '' }}">
                     <i class="fas fa-plus me-2"></i><span class="menu-text">New</span>
                 </a>
@@ -27,15 +24,14 @@
                 </a>
             </div>
 
+
             <!-- Roles Validation if whast icon to show or hide base on the user role --->
-            @if(session('roles') == 'Member')
-            <a href="{{route('subscription_plan_cms')}}" class="list-group-item list-group-item-action">
+            <a href="{{route('subscription_plan_cms')}}" class="list-group-item list-group-item-action {{ Request::routeIs('subscription_plan_cms') ? 'active' : '' }}">
                 <i class="fas fa-users me-2"></i><span class="menu-text">CMS</span>
             </a>
-            @endif
             <!-- End of Code --->
 
-            <a href="{{route('audit_trail')}}" class="list-group-item list-group-item-action" {{ Request::routeIs('audit_trail') ? 'active' : '' }}>
+            <a href="{{route('audit_trail')}}" class="list-group-item list-group-item-action {{ Request::routeIs('audit_trail') ? 'active' : '' }} ">
                 <i class="fas fa-file-alt me-2"></i><span class="menu-text">Reports</span>
             </a>
             <!-- <a href="#" class="list-group-item list-group-item-action" data-bs-toggle="modal"

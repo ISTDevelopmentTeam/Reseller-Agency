@@ -45,8 +45,12 @@
 
   <div class="session-container">
     <div class="session-title">Session Expired</div>
-    <p class="session-message">Your session has expired. Please log in again to continue.</p>
-    <a href="/login" class="btn btn-primary">Back to Login</a>
+    @if(session('error'))
+    {{ session('error') }}
+  @else
+  {{-- <p class="session-message">Your session has expired. Please log in again to continue.</p> --}}
+  <p class="session-message">This link has already been used</p>
+  @endif
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

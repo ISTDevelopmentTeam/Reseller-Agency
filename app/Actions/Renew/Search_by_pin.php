@@ -81,13 +81,13 @@ class Search_by_pin
                 }
             } else {
                 // If 'details' key is not present, return no records found
-                return view('renew_reseller')->with('membership_info', []);
+                return view('renew_form/renew_reseller')->with('membership_info', []);
             }
         }
         if (empty($membership_info)) {
-            return view('renew_reseller')->with('membership_info', []);
+            return view('renew_form/renew_reseller')->with('membership_info', []);
         }
 
-        return view('renew_reseller', compact('membership_info'));
+        return view('renew_form/renew_reseller', compact('membership_info'));
     }
 }

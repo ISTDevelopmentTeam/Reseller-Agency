@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_input_data', function (Blueprint $table) {
-            $table->id();
-            $table->string('full_name'); 
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('phone_number');
-            $table->timestamps();
+        Schema::table('temporary_tokens', function (Blueprint $table) {
+            $table->boolean('used')->default(false);
         });
     }
 
@@ -26,7 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_input_data');
-
+        Schema::table('temporary_tokens', function (Blueprint $table) {
+            $table->dropColumn('used');
+        });
     }
 };

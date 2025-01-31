@@ -84,13 +84,13 @@ Class Regular_search
                     $membership_info[] = $details;
                 }
             }else{
-                return view('renew_reseller')->with('membership_info', []);
+                return view('renew_form/renew_reseller')->with('membership_info', []);
             }      
         }
         if (empty($membership_info)) {
-            return view('renew_reseller')->with('membership_info', []);
+            return view('renew_form/renew_reseller')->with('membership_info', []);
         }
-        return view('renew_reseller', compact('membership_info'));
+        return view('renew_form/renew_reseller', compact('membership_info'));
     }
     
 }

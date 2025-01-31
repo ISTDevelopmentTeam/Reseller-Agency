@@ -270,66 +270,55 @@ document.addEventListener("DOMContentLoaded", function () {
   let datePicker;
   let lastValue = "";
 
-  // Calculate the maximum allowed date (18 years ago from today)
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
 
-  // Initialize Flatpickr
   datePicker = flatpickr("#birthdate", {
     dateFormat: "m/d/Y",
     allowInput: true,
-    maxDate: maxDate, // Set the maximum allowed date
+    maxDate: maxDate,
+    formatDate: (date) => {
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${month}/${day}/${date.getFullYear()}`;
+    },
     onChange: function (selectedDates, dateStr, instance) {
       if (selectedDates.length > 0) {
-        input.value = dateStr;
-        lastValue = dateStr;
+        const formattedDate = instance.formatDate(selectedDates[0], "m/d/Y");
+        input.value = formattedDate;
+        lastValue = formattedDate;
       }
     }
   });
 
-  // Add input event listener for manual typing
   input.addEventListener('input', function (e) {
     let v = this.value;
 
-    // Handle backspace/delete - allow normal deletion
     if (v.length < lastValue.length) {
       lastValue = v;
-      if (v.length === 0) {
-        datePicker.clear();
-      }
+      if (v.length === 0) datePicker.clear();
       return;
     }
 
-    // Only proceed with formatting if we're adding characters
     if (v.length > lastValue.length) {
-      // Handle MM/ format
       if (v.match(/^\d{2}$/) !== null) {
         let month = parseInt(v);
-        v = (month > 12 ? 12 : month) + '/';
+        v = v.padStart(2, '0');
+        v = (month > 12 ? '12' : v) + '/';
       }
-      // Handle MM/DD/ format
       else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-        let parts = v.split('/');
-        let month = parseInt(parts[0]);
-        let day = parseInt(parts[1]);
-        v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
+        let [month, day] = v.split('/').map(num => parseInt(num));
+        v = month.toString().padStart(2, '0') + '/' + 
+            (day > 31 ? '31' : day.toString().padStart(2, '0')) + '/';
       }
-      // Handle complete date format MM/DD/YYYY
       else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
-        let parts = v.split('/');
-        let month = parseInt(parts[0]);
-        let day = parseInt(parts[1]);
-        let year = parseInt(parts[2]);
-
-        // Create a date object and update the calendar
-        let dateStr = `${month}/${day}/${year}`;
+        let [month, day, year] = v.split('/').map(num => parseInt(num));
+        let dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
         let date = new Date(dateStr);
 
-        // Only update if it's a valid date and at least 18 years ago
         if (!isNaN(date.getTime()) && date <= maxDate) {
           datePicker.setDate(date, true);
         } else {
-          // If the date is not valid or not at least 18 years ago, clear the input
           this.value = lastValue;
           return;
         }
@@ -340,12 +329,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Add keydown listener for better backspace handling
   input.addEventListener('keydown', function (e) {
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      if (this.value.length === 0) {
-        datePicker.clear();
-      }
+    if ((e.key === 'Backspace' || e.key === 'Delete') && this.value.length === 0) {
+      datePicker.clear();
     }
   });
 });
@@ -469,39 +455,71 @@ function updateLabeldyna(checkedId, uncheckedId) {
   uncheckedCheckbox.checked = false;
   checkedCheckbox.disabled = true;
 
-  let platenumLabel, platenumInput, var_csticker;
+  const vehicleNum = checkedId.match(/\d+$/)?.[0] || '';
+  const platenumId = vehicleNum ? `platenum${vehicleNum}` : 'platenum';
+  const cstickerId = vehicleNum ? `csticker${vehicleNum}` : 'csticker';
 
-  if (checkedCheckbox.id === 'csticker_yes' || checkedCheckbox.id === 'csticker_no') {
-      platenumLabel = document.querySelector('label[for="platenum"]');
-      platenumInput = document.getElementById("platenum");
-      var_csticker = document.getElementById("csticker");
-  } else {
-      platenumLabel = document.querySelector('label[for="platenum' + checkedCheckbox.id.slice(-1) + '"]');
-      platenumInput = document.getElementById("platenum" + checkedCheckbox.id.slice(-1));
-      var_csticker = document.getElementById("csticker" + checkedCheckbox.id.slice(-1));
-  }
+  const platenumInput = document.getElementById(platenumId);
+  const platenumLabel = document.querySelector(`label[for="${platenumId}"]`);
+  const var_csticker = document.getElementById(cstickerId);
 
-  // Clear any existing mask
   $(platenumInput).unmask();
   
   if (checkedCheckbox.value == 1) {
       platenumLabel.textContent = "Conduction Sticker";
       platenumInput.placeholder = "Enter conduction sticker";
-      platenumInput.dataset.inputType = 'conduction'; // Set input type
+      platenumInput.dataset.inputType = 'conduction';
       $(platenumInput).mask('AAAAAA');
-      platenumInput.value = "";
-      var_csticker.value = 1;
   } else {
       platenumLabel.textContent = "Plate No";
       platenumInput.placeholder = "Enter plate no";
-      platenumInput.dataset.inputType = 'plate'; // Set input type
-      applyPlateMask(platenumInput);
-      platenumInput.value = "";
-      var_csticker.value = 0;
+      platenumInput.dataset.inputType = 'plate';
+      $(platenumInput).mask('AAAAAAAA', {
+          translation: {
+              'A': {
+                  pattern: /[A-Za-z0-9\s-]/,
+                  transform: function(val) {
+                      let currentVal = this.el.val();
+                      if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
+                          return '';
+                      }
+                      return val;
+                  }
+              }
+          }
+      });
   }
+  platenumInput.value = "";
+  var_csticker.value = checkedCheckbox.value;
 }
 
-// Function to apply plate number mask
+document.addEventListener('DOMContentLoaded', function() {
+  // Initial vehicle plate mask
+  const initialPlateInput = document.getElementById('platenum');
+  if (initialPlateInput) {
+      applyPlateMask(initialPlateInput);
+  }
+
+  // Observer for dynamic vehicles
+  const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+          mutation.addedNodes.forEach(function(node) {
+              if (node.classList?.contains('vehicle-item')) {
+                  const plateInput = node.querySelector('.platenum');
+                  if (plateInput) {
+                      applyPlateMask(plateInput);
+                  }
+              }
+          });
+      });
+  });
+
+  const vehicleContainer = document.getElementById('vehicleFields');
+  if (vehicleContainer) {
+      observer.observe(vehicleContainer, { childList: true, subtree: true });
+  }
+});
+
 function applyPlateMask(element) {
   $(element).mask('AAAAAAAA', {
       translation: {
@@ -518,15 +536,6 @@ function applyPlateMask(element) {
       }
   });
 }
-
-// Modified focus handler
-$(document).on('focus', '.platenum', function() {
-  if (this.dataset.inputType === 'plate') {
-      applyPlateMask(this);
-  } else if (this.dataset.inputType === 'conduction') {
-      $(this).mask('AAAAAA');
-  }
-});
 
 // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
 function summary_fetch() {

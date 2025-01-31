@@ -118,9 +118,7 @@
       departure: new DatePickerManager('departure_date'),
       return: new DatePickerManager('return_date'),
       departure1: new DatePickerManager('departure_date1'),
-      return1: new DatePickerManager('return_date1'),
-      oneway_depart: new DatePickerManager('oneway_depart'), 
-      expiration: new DatePickerManager('expiration', {
+      return1: new DatePickerManager('return_date1', {
         onChange: function(selectedDates, dateStr, instance) {
           if (selectedDates.length > 0) {
             // Ensure the dateStr maintains leading zeros

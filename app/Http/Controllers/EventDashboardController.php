@@ -35,32 +35,41 @@ class EventDashboardController extends Controller
 
     public function customer_event_dashboard($token)
     {
-        // Check if the token exists and is not expired
-        $temporaryToken = TokenModel::where('token', $token)->first();
+        return DB::transaction(function () use ($token) {
+            $temporaryToken = TokenModel::where('token', $token)
+                ->lockForUpdate()
+                ->first();
 
-        // If token doesn't exist or is expired
-        if (!$temporaryToken || $temporaryToken->expires_at < now()) {
-            return redirect()->route('webpage_expiration_page');
-        }
+            // Check if token exists, is expired, or already accessed a form
+            if (
+                !$temporaryToken ||
+                $temporaryToken->expires_at < now() ||
+                $temporaryToken->form_completed ||
+                !empty($temporaryToken->form_type) ||
+                $temporaryToken->used  // Add this to check if dashboard was already accessed
+            ) {
+                return redirect()->route('webpage_expiration_page')
+                    ->with('error', 'This link has expired or has already been used');
+            }
 
-        // Get membership types with their active plan types
-        $membershipTypes = MembershipType::where('membership_status', 'ACTIVE')
-            ->with([
-                'planTypes' => function ($query) {
-                    $query->where('plan_status', 'ACTIVE')
-                        ->orderBy('plan_amount');
-                }
-            ])
-            ->orderBy('membership_id')
-            ->get();
+            // Mark token as used for dashboard access
+            $temporaryToken->used = true;
+            $temporaryToken->save();
 
-        // Add debug logging
-        \Log::info('Membership Types:', $membershipTypes->toArray());
+            $membershipTypes = MembershipType::where('membership_status', 'ACTIVE')
+                ->with([
+                    'planTypes' => function ($query) {
+                        $query->where('plan_status', 'ACTIVE')
+                            ->orderBy('plan_amount');
+                    }
+                ])
+                ->orderBy('membership_id')
+                ->get();
 
-        return view('customer_form/event_dashboard', [
-            'membershipTypes' => $membershipTypes,
-            'token' => $token
-        ]);
+            return view('customer_form/event_dashboard', [
+                'membershipTypes' => $membershipTypes,
+                'token' => $token
+            ]);
+        });
     }
-
 }
