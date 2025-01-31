@@ -46,7 +46,7 @@ Route::get('/thankyou', [MembershipController::class, 'thank'])->name('thankyou'
 // PIDP (reseller side)
 Route::get('/new_pidp/{membershipId?}/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
 Route::post('/new_pidp', [PidpController::class, 'store'])->name('new_pidp.store');
-// PIDP (reseller side)
+// PIDP (customer side)
 Route::get('/pidp/{membershipId?}/{planId?}/{token}', [PidpController::class, 'fetch'])->name('pidp.fetch');
 Route::post('/pidp/{token}', [PidpController::class, 'storing'])->name('pidp.storing');
 Route::get('/thankyou', [PidpController::class, 'thank'])->name('thankyou');

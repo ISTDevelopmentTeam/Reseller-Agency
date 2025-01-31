@@ -30,7 +30,6 @@ class StoreMotorcycle
         }
 
         $user = Auth::user();
-        $authorized_name = $user->name;
         // dd($authorized_name);
 
         $request_array = $request->personal_info;
@@ -42,7 +41,8 @@ class StoreMotorcycle
         $request_array["application_date"]    = date("Y-m-d");
         $request_array["membership_type"]     = 'MOTORCYCLE MEMBERSHIP PLUS';
         $request_array['option']              = 'Authorized';
-        $request_array['representative_name'] = $authorized_name;
+        $request_array['representative_name'] = $user->name;
+        $request_array['agent']               = $user->id;
 
         if ($request->hasFile('idpicture')) {
             $idImageFile                = $request->file('idpicture');

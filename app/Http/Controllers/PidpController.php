@@ -28,7 +28,7 @@ class PidpController extends Controller
     public function index(Request $request, $membershipId, $planId)
     {
         $data = $this->fetchPidp->handle($request, $membershipId, $planId);
-        return view('reseller_form/membership')->with($data);
+        return view('reseller_form/pidp')->with($data);
     }
 
     public function store(PidpRequest $request)
@@ -43,22 +43,18 @@ class PidpController extends Controller
             $temporaryToken = TokenModel::where('token', $token)
                 ->where('used', true)
                 ->where('form_completed', false)
+                ->whereNull('form_type')
                 ->lockForUpdate()
                 ->first();
-    
-            if (!$temporaryToken || 
-                $temporaryToken->expires_at < now() || 
-                ($temporaryToken->form_type && $temporaryToken->form_type !== 'pidp')
-            ) {
+
+            if (!$temporaryToken || $temporaryToken->expires_at < now()) {
                 return redirect()->route('webpage_expiration_page')
                     ->with('error', 'This link has already been used or already been submitted');
             }
-    
-            // Set form type only if not set yet
-            if (!$temporaryToken->form_type) {
-                $temporaryToken->form_type = 'pidp';
-                $temporaryToken->save();
-            }
+
+            // Mark this token as being used for membership form
+            $temporaryToken->form_type = 'pidp';
+            $temporaryToken->save();
     
             $data = $this->customerPidp->handle($request, $membershipId, $planId, $token);
     

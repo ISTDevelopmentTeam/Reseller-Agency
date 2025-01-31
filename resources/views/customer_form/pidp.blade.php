@@ -1095,7 +1095,50 @@
                             <!-- Step 4: Vehicle Information -->
                             <div class="form-step tab" id="step4">
                                 <h5 class="mb-4">Vehicle Details</h5>
-                                <div id="vehicleFields" class="vehicle-entry">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="vehicle-ownership-container p-2 mb-3"
+                                            style="
+                                            background-color: #f0f8ff;
+                                            border: 2px solid #4682b4;
+                                            border-radius: 8px;
+                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                            margin-bottom: 20px;
+                                            text-align: center;
+                                        ">
+                                            <h2
+                                                style="
+                                                font-size: 1.2rem;
+                                                font-weight: bold;
+                                                color: #00008b;
+                                            ">
+                                                Vehicle Ownership
+                                            </h2>
+                                            <div class="form-group">
+                                                <label for="vehicleOwnership" id="own_vehicle_phil" style="font-size: medium;">Do you have a vehicle here in the
+                                                    Philippines?</label>
+                                                <div class="d-flex justify-content-center">
+                                                    <input type="hidden" id="with_vehicle" name="with_vehicle" value="no">
+                                                    <div class="form-check mr-3">
+                                                        <input class="form-check-input" type="radio" name="vehicleOwnership"
+                                                            id="vehicleOwnershipYes" value="yes" onchange="toggleVehicleDetails(this)">
+                                                        <label class="form-check-label" for="vehicleOwnershipYes">
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="vehicleOwnership"
+                                                            id="vehicleOwnershipNo" value="no" onchange="toggleVehicleDetails(this)">
+                                                        <label class="form-check-label" for="vehicleOwnershipNo">
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="vehicleFields" class="vehicle-entry" style="display: none;">
                                     <!-- Initial Vehicle Form -->
                                     <div class="vehicle-item border rounded p-3 mb-3">
                                         <h6 class="mb-3">Vehicle <span class="vehicle-number">1</span></h6>
@@ -1134,7 +1177,7 @@
                                                 <input name="vehicle_plate[]" type="text"
                                                     class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
                                                     id="platenum" value="{{ old('vehicle_plate.0') }}" autocomplete="off"
-                                                    placeholder="Enter Plate No" style="text-transform: uppercase;" required
+                                                    placeholder="Enter Plate No" style="text-transform: uppercase;" 
                                                     data-input-type="plate"> <!-- Added data attribute to track input type -->
                                                 @error('vehicle_plate.*')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -1171,7 +1214,7 @@
                                                 <label class="form-label">Car Make</label>
                                                 <select
                                                     class="form-control form-control-sm select2 @error('vehicle_make.*') is-invalid @enderror"
-                                                    id="make1" name="vehicle_make[]" required>
+                                                    id="make1" name="vehicle_make[]" >
                                                     <option value="" selected>Car Make</option>
                                                     @foreach ($carMake as $row2)
                                                         <option value="{{ $row2['brand'] }}" {{ old('vehicle_make.0') == $row2['brand'] ? 'selected' : '' }}>
@@ -1188,7 +1231,7 @@
                                                 <label class="form-label">Car Models</label>
                                                 <select
                                                     class="form-control select2 @error('vehicle_model.*') is-invalid @enderror"
-                                                    id="model1" name="vehicle_model[]" required>
+                                                    id="model1" name="vehicle_model[]" >
                                                     <option value="" selected>Car Model</option>
                                                     <!-- Models will be populated via JavaScript -->
                                                     @if (old('vehicle_model.0'))
@@ -1207,7 +1250,7 @@
                                                 <label class="form-label">Vehicle Type</label>
                                                 <select
                                                     class="form-control select2 @error('vehicle_type.*') is-invalid @enderror"
-                                                    id="vehicle_type1" name="vehicle_type[]" required>
+                                                    id="vehicle_type1" name="vehicle_type[]" >
                                                     <option value="" selected>Vehicle Type</option>
                                                     <!-- Vehicle types will be populated via JavaScript -->
                                                     @if (old('vehicle_type.0'))
@@ -1225,7 +1268,7 @@
                                                 <label class="form-label">Year</label>
                                                 <input type="text" id="year1" name="vehicle_year[]" maxlength="4"
                                                     class="form-control number_only @error('vehicle_year.*') is-invalid @enderror"
-                                                    value="{{ old('vehicle_year.0') }}" placeholder="Enter year" required>
+                                                    value="{{ old('vehicle_year.0') }}" placeholder="Enter year" >
                                                 @error('vehicle_year.*')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -1235,7 +1278,7 @@
                                                 <label class="form-label">Sub model</label>
                                                 <input type="text" id="submodel1" name="submodel[]"
                                                     class="form-control @error('submodel.*') is-invalid @enderror"
-                                                    value="{{ old('submodel.0') }}" placeholder="Enter sub model" required>
+                                                    value="{{ old('submodel.0') }}" placeholder="Enter sub model" >
                                                 @error('submodel.*')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -1245,7 +1288,7 @@
                                                 <label class="form-label">Color</label>
                                                 <input type="text" id="color" name="vehicle_color[]"
                                                     class="form-control @error('vehicle_color.*') is-invalid @enderror"
-                                                    value="{{ old('vehicle_color.0') }}" placeholder="Enter color" required>
+                                                    value="{{ old('vehicle_color.0') }}" placeholder="Enter color" >
                                                 @error('vehicle_color.*')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -1255,7 +1298,7 @@
                                             <div class="col-md-3">
                                                 <label class="form-label">Fuel Type</label>
                                                 <select class="form-select @error('vehicle_fuel.*') is-invalid @enderror"
-                                                    name="vehicle_fuel[]" required>
+                                                    name="vehicle_fuel[]" >
                                                     <option disabled selected value="">Fuel Type</option>
                                                     @foreach (['GAS', 'DIESEL', 'ELECTRIC'] as $fuel)
                                                         <option value="{{ $fuel }}" {{ old('vehicle_fuel.0') == $fuel ? 'selected' : '' }}>
@@ -1272,7 +1315,7 @@
                                                 <label class="form-label">Transmission Type</label>
                                                 <select
                                                     class="form-select @error('vehicle_transmission.*') is-invalid @enderror"
-                                                    name="vehicle_transmission[]" required>
+                                                    name="vehicle_transmission[]" >
                                                     <option disabled selected value="">Select Transmission Type</option>
                                                     @foreach (['AUTOMATIC', 'MANUAL'] as $transmission)
                                                         <option value="{{ $transmission }}" {{ old('vehicle_transmission.0') == $transmission ? 'selected' : '' }}>
@@ -1293,7 +1336,7 @@
                                                         <input type="file"
                                                             class="form-control @error('or_image.*') is-invalid @enderror"
                                                             id="orAttachment" name="or_image[]"
-                                                            onchange="handleVehicleFileUpload(this, 'or', 'orFeedback')" required>
+                                                            onchange="handleVehicleFileUpload(this, 'or', 'orFeedback')" >
                                                         <label class="input-group-text" for="orAttachment">
                                                             <i class="fas fa-upload"></i>
                                                         </label>
@@ -1315,7 +1358,7 @@
                                                         <input type="file"
                                                             class="form-control @error('cr_image.*') is-invalid @enderror"
                                                             id="crAttachment" name="cr_image[]"
-                                                            onchange="handleVehicleFileUpload(this, 'cr', 'crFeedback')" required>
+                                                            onchange="handleVehicleFileUpload(this, 'cr', 'crFeedback')" >
                                                         <label class="input-group-text" for="crAttachment">
                                                             <i class="fas fa-upload"></i>
                                                         </label>
