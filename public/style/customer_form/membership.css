@@ -326,11 +326,6 @@
   cursor: pointer;
 }
 
-.progress {
-  height: 2px;
-  margin-bottom: 20px;
-}
-
 .scrollable-card {
   max-height: 70vh;
   overflow-y: auto;
@@ -340,22 +335,39 @@
   position: relative;
 }
 
-.progress-container {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1000;
-  padding-top: 1rem;
-}
-
 .vehicle-item {
+   position: relative;
   background-color: #d0e1f1;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.vehicle-item:hover {
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+.vehicle-item::before {
+   content: '';
+   position: absolute;
+   width: 110%;
+   height: 84px;
+   aspect-ratio: 1;
+   top: -35px;
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: 2;
+   border-radius: 50%;
+   background-color: #0071aa;
+   box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 }
+
+.vehicle-item * {
+   position: relative;
+   z-index: 3;
+}
+
+/* .vehicle-item:hover {
+   border: 1px solid #002D6A;
+  /* box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+} */
 
 .btn-danger {
   background-color: #dc3545;
@@ -373,11 +385,26 @@
   right: 15px;
 }
 
-#orcr, #valid_id {
-   max-width: 200px;
-   margin-top: 10px;
+#orcr, #valid_id_container {
    border: 1px solid #ddd;
    border-radius: 4px;
+}
+
+#orcr {
+   max-width: 200px;
+   margin-top: 10px;
+}
+
+#valid_id_container {
+   width: 200px;
+   aspect-ratio: 1;
+   margin: auto;
+   background-color: #f8f9fa;
+}
+
+#valid_id {
+   max-height: 100%;
+   margin: auto;
 }
 
 .text-danger {
@@ -386,7 +413,8 @@
 }
 
 .select2-container {
-   width: 100% !important;
+   width: unset !important;
+   max-width: 100% !important;
 }
 
 .select2-container .select2-selection--single {
@@ -520,17 +548,18 @@
 
 .options-container {
    display: flex;
-   gap: 20px;
+   gap: 24px;
    margin-top: 5px;
 }
 
 .radio-checkbox {
    display: flex;
    align-items: center;
-   position: relative;
-   padding-left: 30px;
+   gap: 9px;
    cursor: pointer;
    user-select: none;
+   border: 1px solid var(--bs-primary-border-subtle);
+   border-radius: 6px;
 }
 
 .radio-checkbox input {
@@ -542,18 +571,17 @@
 }
 
 .checkmark {
-   position: absolute;
-   left: 0;
    height: 20px;
    width: 20px;
    background-color: #fff;
    border: 2px solid #ccc;
    border-radius: 50%;
+   transition: all 0.1s ease;
 }
 
-.radio-checkbox input:checked ~ .checkmark {
+/* .radio-checkbox input:checked ~ .checkmark {
    border-color: #2196F3;
-}
+} */
 
 .checkmark:after {
    content: "";
@@ -562,10 +590,10 @@
    top: 50%;
    left: 50%;
    transform: translate(-50%, -50%);
-   width: 12px;
-   height: 12px;
+   width: 7px;
+   height: 7px;
    border-radius: 50%;
-   background: #2196F3;
+   background: var(--dirty-white);
 }
 
 .radio-checkbox input:checked ~ .checkmark:after {
@@ -574,15 +602,18 @@
  
 .footer {
   position: absolute;
+  left: 0;
   bottom: 0;
-  width: 80%;
-  height: 50px; /* Height of the footer */
+  height: 50px;
   text-align: center;
-  padding: 20px 0;
-  background-color: #f8f9fa;
+  place-content: center;
+  background-color: rgba(248, 249, 250, 0.8);
+  backdrop-filter: blur(2px);
+  border-top: 1px solid #FFDD00;
 }
 
 .footer-text {
-  color: #6c757d;
+  color: #002D6A;
   font-size: 14px;
+  margin: auto;
 }

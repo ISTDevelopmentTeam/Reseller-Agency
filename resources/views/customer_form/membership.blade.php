@@ -14,251 +14,280 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <link rel="stylesheet" href="{{ asset('link/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('style/customer_form/membership.css') }}">
+    <link rel="stylesheet" href="{{ asset('style/customer_form/mem_branch.css') }}">
 </head>
 
-<body>
+<body style="background-image: url({{ asset('images/bg-4.png') }});">
 
-    <div class="row g-4">
+    <div class="container-xl p-0 d-flex flex-column main-container shadow">
         <!-- Form Card -->
-        <div class="row justify-content-center mt-5">
-            <div class="col-12 col-md-10">
-                <div class="scrollable-card card shadow-lg">
-
-                    <div class="card-body">
-
-                        <!-- Progress bar -->
-                        <div class="progress mb-4">
-                            <div class="progress-bar" role="progressbar" style="width: 33%"></div>
+        <div class="container-fluid p-4 overflow-hidden progress-container">
+            <div class="d-flex gap-2 align-items-center form-title-container">
+                <!-- Logo -->
+                <div class="sm-logo-container">
+                    <img class="img-fluid" src="{{ asset('images/aap_logo.png') }}" alt="Logo" class="logo">
+                </div>
+                <!-- Title -->
+                <h3>Customer Fillout Form</h3>
+            </div>
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb position-relative gap-4" style="--bs-breadcrumb-divider: none; --bs-breadcrumb-item-padding-x: 0;">
+                    <!-- Progress bar -->
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <li class="breadcrumb-item position-relative ps-0 active" data-step="1">
+                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-user"></i></span>
+                        <h6>Personal Information</h6>
+                    </li>
+                    <li class="breadcrumb-item position-relative ps-0" data-step="2">
+                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-address-book"></i></span>
+                        <h6>Contact Information</h6>
+                    </li>
+                    <li class="breadcrumb-item position-relative ps-0" data-step="3">
+                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-car"></i></span>
+                        <h6>Vehicle Details</h6>
+                    </li>
+                    <li class="breadcrumb-item position-relative ps-0" data-step="4">
+                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-list"></i></span>
+                        <h6>Information Summary</h6>
+                    </li>
+                </ol>
+            </nav>
+            <div class="position-absolute xl-logo-container">
+                <img class="img-fluid" src="{{ asset('images/aap_logo_cropped.png') }}" alt="Logo" class="logo">
+            </div>
+        </div>
+        <div class="container-fluid ps-5 pe-5 pb-5 flex-grow-1" id="formContainer">
+            <div class="card-body">
+                <form id="resellerForm" action="{{ route('membership.storing', ['token' => $token]) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" id="hiddenFormData" name="form_data" value="">
+                    @foreach ($errors->all() as $key => $error)
+                        <p style="color: red">{{ $key }} : {{ $error }}</p>
+                    @endforeach
+                    <!-- Step 1:  Membership Application -->
+                    <div class="form-step tab active" id="step1">
+                        <div class="step-title-container pt-4">
+                            <div class="mb-3">
+                                <h5 class="card-title mb-2">Step 1&#58; <span class="fw-normal">Provide essential identifying details about yourself, including your name, date of birth, and citizenship.</span></h5>
+                            </div>
+                            <hr />
                         </div>
-
-                        <!-- Breadcrumb -->
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item active" data-step="1">Personal Information</li>
-                                <li class="breadcrumb-item" data-step="2">Contact Information</li>
-                                <li class="breadcrumb-item" data-step="3">Vehicle Details</li>
-                                <li class="breadcrumb-item" data-step="4">Information Summary</li>
-                            </ol>
-                        </nav>
-
-
-                        <form id="resellerForm" action="{{ route('membership.storing', ['token' => $token]) }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" id="hiddenFormData" name="form_data" value="">
-                            @foreach ($errors->all() as $key => $error)
-                                <p style="color: red">{{ $key }} : {{ $error }}</p>
-                            @endforeach
-
-                            <!-- Step 1:  Membership Application -->
-                            <div class="form-step tab active" id="step1">
-                                <h5 class="card-title mb-4">Personal Information</h5>
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="membershiptype" class="form-label">Type of Membership</label>
-                                        <select class="form-select" id="membershiptype"
-                                            name="personal_info[membership_type]" required>
-                                            @if($selectedMembership)
-                                                <option value="{{ $selectedMembership->membership_name }}"
-                                                    data-vehicle_num="{{ $selectedMembership->vehicle_num }}" selected>
-                                                    {{ $selectedMembership->membership_name }}
-                                                </option>
-                                            @else
-                                                <option value="" selected disabled>Select Plan Type</option>
-                                            @endif
-                                        </select>
-                                        @error('personal_info.membership_type')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-4 mb-3">
-                                        <label for="plantype" class="form-label">Plan Type</label>
-                                        <select class="form-select" id="plantype" name="personal_info[plan_type]"
-                                            required>
-                                            @if($selectedPlan)
-                                                <option value="{{ $selectedPlan->plan_name }}" selected>
-                                                    {{ $selectedPlan->plan_name }} - {{ $selectedPlan->plan_amount }}
-                                                </option>
-
-                                            @else
-                                                <option value="" selected disabled>Select Plan Type</option>
-                                            @endif
-                                        </select>
-                                        @error('personal_info.plan_type')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    @if($selectedPlan)
-                                        <input type="hidden" name="personal_info[plantype_id]"
-                                            value="{{$selectedPlan->plan_id}}" id="selected_plan_id">
+                        <div class="row mb-2">
+                            <div class="col-xl-3 mb-4">
+                                <label for="membershiptype" class="form-label">Type of Membership</label>
+                                <select class="form-select" id="membershiptype"
+                                    name="personal_info[membership_type]" required>
+                                    @if($selectedMembership)
+                                        <option value="{{ $selectedMembership->membership_name }}"
+                                            data-vehicle_num="{{ $selectedMembership->vehicle_num }}" selected>
+                                            {{ $selectedMembership->membership_name }}
+                                        </option>
+                                    @else
+                                        <option value="" selected disabled>Select Plan Type</option>
                                     @endif
-
-                                    <div class="col-md-4 mb-3">
-                                        <label for="idAttachment" class="form-label">Upload Image: 2x2 or passport size
-                                            id picture</label>
-                                        <div class="input-group">
-                                            <input type="file" class="form-control" id="idAttachment" name="idpicture"
-                                                onchange="handleGeneralFileUpload(this, 'valid_id', 'idFeedback')"
-                                                required>
-                                            <label class="input-group-text" for="idAttachment">
-                                                <i class="fas fa-upload"></i>
-                                            </label>
+                                </select>
+                                @error('personal_info.membership_type')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-4 flex-grow-1">
+                                <label for="plantype" class="form-label">Plan Type</label>
+                                <select class="form-select" id="plantype" name="personal_info[plan_type]"
+                                    required>
+                                    @if($selectedPlan)
+                                        <option value="{{ $selectedPlan->plan_name }}" selected>
+                                            {{ $selectedPlan->plan_name }} - {{ $selectedPlan->plan_amount }}
+                                        </option>
+                                    @else
+                                        <option value="" selected disabled>Select Plan Type</option>
+                                    @endif
+                                </select>
+                                @error('personal_info.plan_type')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            @if($selectedPlan)
+                                <input type="hidden" name="personal_info[plantype_id]"
+                                    value="{{$selectedPlan->plan_id}}" id="selected_plan_id">
+                            @endif
+                            <div class="col-md-4 mb-4 d-grid flex-grow-1" style="place-items: center;">
+                                <label for="idAttachment" class="form-label" style="place-self: start;">Upload Image: 2x2 or passport size
+                                    ID picture</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="idAttachment" name="idpicture"
+                                        onchange="handleGeneralFileUpload(this, 'valid_id', 'idFeedback')"
+                                        required>
+                                    <label class="input-group-text" for="idAttachment">
+                                        <i class="fas fa-upload"></i>
+                                    </label>
+                                </div>
+                                <div id="pictureDropdown" class="dropdown">
+                                    <button type="button" id="pictureDropdownButton" class="dropdown-toggle" data-bs-toggle="dropdown"></button>
+                                    <div class="dropdown-menu w-100" style="place-content: center;">
+                                        <div id="valid_id_container">
+                                            <img id="valid_id" class="img-fluid" src="{{ asset('images/image-placeholder.png') }}" alt="Image valid_id" style="object-fit: contain;">
                                         </div>
-                                        @error('idpicture')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                        <div id="idFeedback" class="text-danger"></div>
-                                        <img id="valid_id" src="" alt="Image valid_id"
-                                            style="max-width: 200px; display: none; margin-top: 10px;">
                                     </div>
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-2">
-                                        <label for="title" class="form-label">Title</label>
-                                        <select class="form-select" id="title" name="personal_info[members_title]"
-                                            required>
-                                            <option value="" {{ !old('personal_info.members_title') ? 'selected' : '' }}
-                                                disabled>Select Title</option>
-                                            @foreach(['MR', 'MS', 'MRS', 'ATTY', 'DR', 'ENGR'] as $title)
-                                                <option value="{{ $title }}" {{ old('personal_info.members_title') == $title ? 'selected' : '' }}>
-                                                    {{ $title }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('personal_info.members_title')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="firstName" class="form-label">First Name</label>
-                                        <input type="text" class="form-control letters_only_fname" id="firstName"
-                                            name="personal_info[members_firstname]"
-                                            value="{{ old('personal_info.members_firstname') }}" required>
-                                        @error('personal_info.members_firstname')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                        <div class="validation-message_fname" style="color: red;"></div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="middleName" class="form-label">Middle Name</label>
-                                        <input type="text" class="form-control letters_only_mname" id="middleName"
-                                            name="personal_info[members_middlename]"
-                                            value="{{ old('personal_info.members_middlename') }}">
-                                        @error('personal_info.members_middlename')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                        <div class="validation-message_mname" style="color: red;"></div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="lastName" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control letters_only_lname" id="lastName"
-                                            name="personal_info[members_lastname]"
-                                            value="{{ old('personal_info.members_lastname') }}" required>
-                                        @error('personal_info.members_lastname')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                        <div class="validation-message_lname" style="color: red;"></div>
-                                    </div>
+                                @error('idpicture')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                                <div id="idFeedback" class="text-danger"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3 mb-4">
+                                <label for="title" class="form-label">Title</label>
+                                <select class="form-select" id="title" name="personal_info[members_title]"
+                                    required>
+                                    <option value="" {{ !old('personal_info.members_title') ? 'selected' : '' }}
+                                        disabled>Select Title</option>
+                                    @foreach(['MR', 'MS', 'MRS', 'ATTY', 'DR', 'ENGR'] as $title)
+                                        <option value="{{ $title }}" {{ old('personal_info.members_title') == $title ? 'selected' : '' }}>
+                                            {{ $title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('personal_info.members_title')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control letters_only_fname" id="firstName"
+                                    name="personal_info[members_firstname]"
+                                    value="{{ old('personal_info.members_firstname') }}" required>
+                                @error('personal_info.members_firstname')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                                <div class="validation-message_fname" style="color: red;"></div>
+                            </div>
+                            <div class="col-md-2 mb-4">
+                                <label for="middleName" class="form-label">Middle Name</label>
+                                <input type="text" class="form-control letters_only_mname" id="middleName"
+                                    name="personal_info[members_middlename]"
+                                    value="{{ old('personal_info.members_middlename') }}">
+                                @error('personal_info.members_middlename')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                                <div class="validation-message_mname" style="color: red;"></div>
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control letters_only_lname" id="lastName"
+                                    name="personal_info[members_lastname]"
+                                    value="{{ old('personal_info.members_lastname') }}" required>
+                                @error('personal_info.members_lastname')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                                <div class="validation-message_lname" style="color: red;"></div>
+                            </div>
+                        </div>
+                        {{-- <div class="row mb-2">
+                            <div class="col-md-8">
+                                <div class="row">
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-2">
-                                        <label for="gender" class="form-label">Gender</label>
-                                        <select class="form-select" id="gender" name="personal_info[members_gender]"
-                                            required>
-                                            <option value="" {{ !old('personal_info.members_gender') ? 'selected' : '' }} disabled>Select a Gender</option>
-                                            <option value="MALE" {{ old('personal_info.members_gender') == 'MALE' ? 'selected' : '' }}>MALE</option>
-                                            <option value="FEMALE" {{ old('personal_info.members_gender') == 'FEMALE' ? 'selected' : '' }}>FEMALE</option>
-                                        </select>
-                                        @error('personal_info.members_gender')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Birthdate</label>
-                                        <input type="text" class="form-control" name="personal_info[members_birthdate]"
-                                            id="birthdate" autocomplete="off" placeholder="MM/DD/YYYY" maxlength="10"
-                                            value="{{ old('personal_info.members_birthdate') }}" required>
-                                        @error('personal_info.members_birthdate')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="birthplace" class="form-label">Birth Place</label>
-                                        <input type="text" class="form-control" name="personal_info[members_birthplace]"
-                                            id="birthplace" value="{{ old('personal_info.members_birthplace') }}"
-                                            required>
-                                        @error('personal_info.members_birthplace')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="occupation" class="form-label">Occupation</label>
-                                        <input type="text" class="form-control" name="personal_info[occupation_name]"
-                                            id="occupation" value="{{ old('personal_info.occupation_name') }}" required>
-                                        @error('personal_info.occupation_name')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="row">
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <label for="civilStatus" class="form-label">Civil Status</label>
-                                        <select class="form-select" id="civilStatus"
-                                            name="personal_info[members_civilstatus]" required>
-                                            <option value="" {{ !old('personal_info.members_civilstatus') ? 'selected' : '' }} disabled>Select Civil Status</option>
-                                            @foreach(['SINGLE', 'MARRIED', 'WIDOWED'] as $status)
-                                                <option value="{{ $status }}" {{ old('personal_info.members_civilstatus') == $status ? 'selected' : '' }}>
-                                                    {{ $status }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('personal_info.members_civilstatus')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="citizenship" class="form-label">Citizenship</label>
-                                        <select class="form-select" name="personal_info[citizenship]" id="citizenship"
-                                            required>
-                                            <option value="" {{ !old('personal_info.citizenship') ? 'selected' : '' }}
-                                                disabled>Select Citizenship</option>
-                                            <option value="filipino" {{ old('personal_info.citizenship') == 'filipino' ? 'selected' : '' }}>FILIPINO</option>
-                                            <option value="foreigner" {{ old('personal_info.citizenship') == 'foreigner' ? 'selected' : '' }}>FOREIGNER</option>
-                                        </select>
-                                        @error('personal_info.citizenship')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3" id="add_info"
-                                        style="{{ old('personal_info.citizenship') == 'foreigner' ? '' : 'display: none;' }}">
-                                        <label for="nationality" class="form-label">Nationality</label>
-                                        <input type="text" class="form-control" name="personal_info[nationality]"
-                                            id="nationality" value="{{ old('personal_info.nationality') }}">
-                                        @error('personal_info.nationality')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="row">
                                 </div>
                             </div>
-                            <!--- End of Step 1 -->
-
-                            <!-- Step 2: Contact Information Section -->
+                        </div> --}}
+                        <div class="row mb-2">
+                            <div class="col-md-3 mb-4">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="personal_info[members_gender]"
+                                    required>
+                                    <option value="" {{ !old('personal_info.members_gender') ? 'selected' : '' }} disabled>Select a Gender</option>
+                                    <option value="MALE" {{ old('personal_info.members_gender') == 'MALE' ? 'selected' : '' }}>MALE</option>
+                                    <option value="FEMALE" {{ old('personal_info.members_gender') == 'FEMALE' ? 'selected' : '' }}>FEMALE</option>
+                                </select>
+                                @error('personal_info.members_gender')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <label class="form-label">Birthdate</label>
+                                <input type="text" class="form-control" name="personal_info[members_birthdate]"
+                                    id="birthdate" autocomplete="off" placeholder="MM/DD/YYYY" maxlength="10"
+                                    value="{{ old('personal_info.members_birthdate') }}" required>
+                                @error('personal_info.members_birthdate')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <label for="birthplace" class="form-label">Birth Place</label>
+                                <input type="text" class="form-control" name="personal_info[members_birthplace]"
+                                    id="birthplace" placeholder="e.g. City/Town, Province/State" value="{{ old('personal_info.members_birthplace') }}"
+                                    required>
+                                @error('personal_info.members_birthplace')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <label for="occupation" class="form-label">Occupation</label>
+                                <input type="text" class="form-control" name="personal_info[occupation_name]"
+                                    id="occupation" placeholder="Profession/job role" value="{{ old('personal_info.occupation_name') }}" required>
+                                @error('personal_info.occupation_name')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3 mb-4">
+                                <label for="civilStatus" class="form-label">Civil Status</label>
+                                <select class="form-select" id="civilStatus"
+                                    name="personal_info[members_civilstatus]" required>
+                                    <option value="" {{ !old('personal_info.members_civilstatus') ? 'selected' : '' }} disabled>Select Civil Status</option>
+                                    @foreach(['SINGLE', 'MARRIED', 'WIDOWED'] as $status)
+                                        <option value="{{ $status }}" {{ old('personal_info.members_civilstatus') == $status ? 'selected' : '' }}>
+                                            {{ $status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('personal_info.members_civilstatus')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <label for="citizenship" class="form-label">Citizenship</label>
+                                <select class="form-select" name="personal_info[citizenship]" id="citizenship"
+                                    required>
+                                    <option value="" {{ !old('personal_info.citizenship') ? 'selected' : '' }}
+                                        disabled>Select Citizenship</option>
+                                    <option value="filipino" {{ old('personal_info.citizenship') == 'filipino' ? 'selected' : '' }}>FILIPINO</option>
+                                    <option value="foreigner" {{ old('personal_info.citizenship') == 'foreigner' ? 'selected' : '' }}>FOREIGNER</option>
+                                </select>
+                                @error('personal_info.citizenship')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 mb-4" id="add_info"
+                                style="{{ old('personal_info.citizenship') == 'foreigner' ? '' : 'display: none;' }}">
+                                <label for="nationality" class="form-label">Nationality</label>
+                                <input type="text" class="form-control" name="personal_info[nationality]"
+                                    id="nationality" value="{{ old('personal_info.nationality') }}">
+                                @error('personal_info.nationality')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <!--- End of Step 1 -->
+                    <!-- Step 2: Contact Information Section -->
                             <div class="form-step tab" id="step2">
-                                <h5 class="card-title mb-4">Contact Information</h5>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
+                                <div class="step-title-container pt-4">
+                                    <div class="mb-3">
+                                        <h5 class="card-title mb-2">Step 2&#58; <span class="fw-normal">Enter your primary contact information, including your mailing address, telephone number, and email address.</span></h5>
+                                    </div>
+                                    <hr />
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
                                         <label for="mail" class="form-label">Mailing Preference</label>
                                         <select class="form-select" name="personal_info[mailing_preference]" id="mail"
                                             required>
@@ -271,90 +300,94 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <h5 class="mt-4 mb-3">Home Address</h5>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="street" class="form-label">Building No. / Street</label>
-                                        <input type="text" class="form-control" name="personal_info[members_haddress1]"
-                                            id="street" value="{{ old('personal_info.members_haddress1') }}" required>
-                                        @error('personal_info.members_haddress1')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                <div class="w-100 mb-4">
+                                    <h5 class="mt-1 mb-3">Home Address</h5>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 mb-4">
+                                            <label for="street" class="form-label">Building No. / Street</label>
+                                            <input type="text" class="form-control" name="personal_info[members_haddress1]"
+                                                id="street" value="{{ old('personal_info.members_haddress1') }}" required>
+                                            @error('personal_info.members_haddress1')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <label for="town" class="form-label">Barangay / Towns</label>
+                                            <input type="text" class="form-control" name="personal_info[members_haddress2]"
+                                                id="town" value="{{ old('personal_info.members_haddress2') }}" required>
+                                            @error('personal_info.members_haddress2')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <label for="city" class="form-label">City/Municipality</label>
+                                            <input type="text" class="form-control" name="personal_info[members_housecity]"
+                                                id="city" value="{{ old('personal_info.members_housecity') }}" required>
+                                            @error('personal_info.members_housecity')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label for="town" class="form-label">Barangay / Towns</label>
-                                        <input type="text" class="form-control" name="personal_info[members_haddress2]"
-                                            id="town" value="{{ old('personal_info.members_haddress2') }}" required>
-                                        @error('personal_info.members_haddress2')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="city" class="form-label">City/Municipality</label>
-                                        <input type="text" class="form-control" name="personal_info[members_housecity]"
-                                            id="city" value="{{ old('personal_info.members_housecity') }}" required>
-                                        @error('personal_info.members_housecity')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                                    <div class="row">
+                                        <div class="col-md-5 mb-4">
+                                            <label for="province" class="form-label">Province</label>
+                                            <input type="text" class="form-control"
+                                                name="personal_info[members_housedistrict]" id="province"
+                                                value="{{ old('personal_info.members_housedistrict') }}" required>
+                                            @error('personal_info.members_housedistrict')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3 mb-4">
+                                            <label for="zcode" class="form-label">Zip</label>
+                                            <input type="text" class="form-control number_only" maxlength="4"
+                                                name="personal_info[members_housezipcode]" id="zcode"
+                                                value="{{ old('personal_info.members_housezipcode') }}" required>
+                                            @error('personal_info.members_housezipcode')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-4 mb-4">
+                                            <label for="availMagazine" class="form-label">Avail Online AQ Magazine</label>
+                                            <select class="form-select" name="personal_info[availMagazine]"
+                                                id="availMagazine" required>
+                                                <option value="YES">YES</option>
+                                                <option value="NO">NO</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <label for="province" class="form-label">Province</label>
-                                        <input type="text" class="form-control"
-                                            name="personal_info[members_housedistrict]" id="province"
-                                            value="{{ old('personal_info.members_housedistrict') }}" required>
-                                        @error('personal_info.members_housedistrict')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="zcode" class="form-label">Zip</label>
-                                        <input type="text" class="form-control number_only" maxlength="4"
-                                            name="personal_info[members_housezipcode]" id="zcode"
-                                            value="{{ old('personal_info.members_housezipcode') }}" required>
-                                        @error('personal_info.members_housezipcode')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="availMagazine" class="form-label">Avail Online AQ Magazine</label>
-                                        <select class="form-select" name="personal_info[availMagazine]"
-                                            id="availMagazine" required>
-                                            <option value="YES">YES</option>
-                                            <option value="NO">NO</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <label for="mobileNumber" class="form-label">Mobile Number</label>
+                                    <div class="col-xl-3 col-md-6 mb-4 with-number">
+                                        <label for="mobileNumber" class="form-label">Mobile Number
+                                            <span id="valid-msg-1" class="hide valid-msg"></span>
+                                            <span id="error-msg-1" class="hide error-msg"></span>
+                                        </label>
                                         <input type="tel" class="form-control phone-input"
                                             name="personal_info[members_mobileno]" id="mobileNumber"
                                             data-error-container="error-msg-1" data-valid-container="valid-msg-1"
                                             data-code-input="ccode-1"
                                             value="{{ old('personal_info.members_mobileno') }}" required>
-                                        <span id="valid-msg-1" class="hide valid-msg"></span>
-                                        <span id="error-msg-1" class="hide error-msg"></span>
                                         @error('personal_info.members_mobileno')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-xl-3 col-md-6 mb-4 with-number">
                                         <label for="alternateMobile" class="form-label">Alternate Mobile
-                                            Number</label>
+                                            Number
+                                            <span id="valid-msg-2" class="hide valid-msg"></span>
+                                            <span id="error-msg-2" class="hide error-msg"></span>
+                                        </label>
                                         <input type="tel" class="form-control phone-input"
                                             name="personal_info[members_alternate_mobileno]" id="alternateMobile"
                                             data-error-container="error-msg-2" data-valid-container="valid-msg-2"
                                             data-code-input="ccode-2"
                                             value="{{ old('personal_info.members_alternate_mobileno') }}">
-                                        <span id="valid-msg-2" class="hide valid-msg"></span>
-                                        <span id="error-msg-2" class="hide error-msg"></span>
                                         @error('personal_info.members_alternate_mobileno')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-xl-3 col-md-6 mb-4">
                                         <label for="emailAddress" class="form-label">Email Address</label>
                                         <input type="email" class="form-control"
                                             name="personal_info[members_emailaddress]" id="emailAddress"
@@ -363,7 +396,7 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-xl-3 col-md-6 mb-4">
                                         <label for="alternateEmail" class="form-label">Alternate Email
                                             Address</label>
                                         <input type="email" class="form-control"
@@ -376,8 +409,8 @@
                                 </div>
                                 <div class="pt-5" id="officeAddress" style="display: none;">
                                     <h5 class="mt-4 mb-3">Office Address</h5>
-                                    <div class="row mb-3">
-                                        <div class="col-md-7">
+                                    <div class="row mb-4">
+                                        <div class="col-md-9">
                                             <label for="street1" class="form-label">Building No. / Street</label>
                                             <input type="text" class="form-control"
                                                 name="personal_info[members_oaddress1]" id="street1"
@@ -386,7 +419,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-3">
                                             <label for="town1" class="form-label">Barangay / Towns</label>
                                             <input type="text" class="form-control"
                                                 name="personal_info[members_oaddress2]" id="town1"
@@ -396,7 +429,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+                                    <div class="row mb-4">
                                         <div class="col-md-5">
                                             <label for="city1" class="form-label">City/Municipality</label>
                                             <input type="text" class="form-control"
@@ -406,7 +439,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-4">
                                             <label for="province1" class="form-label">Province</label>
                                             <input type="text" class="form-control"
                                                 name="personal_info[members_officedistrict]" id="province1"
@@ -425,8 +458,8 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-9">
+                                    <div class="row mb-4">
+                                        <div class="col-md-7">
                                             <label for="comname" class="form-label">Company Name</label>
                                             <input type="text" class="form-control"
                                                 name="personal_info[members_businessname]" id="comname"
@@ -456,86 +489,93 @@
 
                             <!-- Step 3: Vehicle Information -->
                             <div class="form-step tab" id="step3">
-                                <h5 class="mb-4">Vehicle Details</h5>
-                                <div id="vehicleFields" class="vehicle-entry">
+                                <div class="step-title-container pt-4">
+                                    <div class="mb-3">
+                                        <h5 class="card-title mb-2">Step 3&#58; <span class="fw-normal">Specify details about your vehicle&lpar;s&rpar;, including the make, model year, and license plate number.</span></h5>
+                                    </div>
+                                    <hr />
+                                </div>
+                                <div id="vehicleFields" class="gap-5 mb-4 vehicle-entry">
                                     <!-- Initial Vehicle Form -->
-                                    <div class="vehicle-item border rounded p-3 mb-3">
-                                        <h6 class="mb-3">Vehicle <span class="vehicle-number">1</span></h6>
-                                        <div class="row g-3">
+                                    <div class="vehicle-item border rounded p-3">
+                                        <div class="vehicle-title mb-4">
+                                            <h6>Vehicle <span class="vehicle-number">1</span></h6>
+                                        </div>
+                                        <div class="row g-4 mt-0">
                                             <!-- First Row -->
-                                            <div class="col-md-4 centered-content">
-                                                <label class="label" style="font-size: medium;">
-                                                    Is Conduction Sticker Available?
-                                                </label>
-                                                <input type="hidden" id="csticker" name="is_cs[]" value="{{ old('is_cs.0', '0') }}">
-                                                <div>
-                                                    <div class="options-container">
-                                                        <label class="radio-checkbox">
-                                                            <input type="checkbox" id="csticker_yes" value="1"
-                                                                {{ old('is_cs.0') == '1' ? 'checked' : '' }}
-                                                                onchange="updateLabeldyna('csticker_yes', 'csticker_no')">
-                                                            <span class="checkmark"></span>
-                                                            YES
-                                                        </label>
-                                                        <label class="radio-checkbox">
-                                                            <input type="checkbox" id="csticker_no" value="0"
-                                                                {{ old('is_cs.0') == '0' ? 'checked' : '' }}
-                                                                onchange="updateLabeldyna('csticker_no', 'csticker_yes')"
-                                                                {{ old('is_cs.0') == '1' ? '' : 'checked disabled' }}>
-                                                            <span class="checkmark"></span>
-                                                            NO
-                                                        </label>
+                                            <div class="w-100 mt-1 psd-container">
+                                                <div class="col-md-4 pt-0 pb-0 ps-0 pe-3 centered-content c-sticker-container">
+                                                    <label class="label" style="font-size: medium;">
+                                                        Is Conduction Sticker Available?
+                                                    </label>
+                                                    <input type="hidden" id="csticker" name="is_cs[]" value="{{ old('is_cs.0', '0') }}">
+                                                    <div>
+                                                        <div class="options-container">
+                                                            <label class="p-1 radio-checkbox">
+                                                                <input type="checkbox" id="csticker_yes" value="1"
+                                                                    {{ old('is_cs.0') == '1' ? 'checked' : '' }}
+                                                                    onchange="updateLabeldyna('csticker_yes', 'csticker_no')">
+                                                                <span class="checkmark"></span>
+                                                                YES
+                                                            </label>
+                                                            <label class="p-1 radio-checkbox">
+                                                                <input type="checkbox" id="csticker_no" value="0"
+                                                                    {{ old('is_cs.0') == '0' ? 'checked' : '' }}
+                                                                    onchange="updateLabeldyna('csticker_no', 'csticker_yes')"
+                                                                    {{ old('is_cs.0') == '1' ? '' : 'checked disabled' }}>
+                                                                <span class="checkmark"></span>
+                                                                NO
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    @error('is_cs.*')
+                                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-4 p-0 platenum-container">
+                                                    <label for="platenum" class="label">Plate No</label>
+                                                    <input name="vehicle_plate[]" type="text"
+                                                        class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
+                                                        id="platenum" 
+                                                        value="{{ old('vehicle_plate.0') }}" 
+                                                        autocomplete="off"
+                                                        placeholder="Enter Plate No" 
+                                                        style="text-transform: uppercase;" 
+                                                        required
+                                                        data-input-type="plate"> <!-- Added data attribute to track input type -->
+                                                    @error('vehicle_plate.*')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                    <div class="validation-message_plateno" style="color: red;"></div>
+                                                </div>
+
+                                                <div class="col-md-4 pt-0 pb-0 ps-3 pe-0 centered-content is-diplomat-container">
+                                                    <label class="label" style="font-size: medium;">
+                                                        Is Diplomat?
+                                                    </label>
+                                                    <input type="hidden" id="is_diplomat_1" name="is_diplomat[]" value="{{ old('is_diplomat.0', '0') }}">
+                                                    <div>
+                                                        <div class="options-container">
+                                                            <label class="p-1 radio-checkbox">
+                                                                <input type="checkbox" id="is_diplomat_yes_1" value="1"
+                                                                    {{ old('is_diplomat.0') == '1' ? 'checked' : '' }}
+                                                                    onchange="update_diplomat('is_diplomat_yes_1', 'is_diplomat_no_1')">
+                                                                <span class="checkmark"></span>
+                                                                YES
+                                                            </label>
+                                                            <label class="p-1 radio-checkbox">
+                                                                <input type="checkbox" id="is_diplomat_no_1" value="0"
+                                                                    {{ old('is_diplomat.0') == '0' ? 'checked' : '' }}
+                                                                    onchange="update_diplomat('is_diplomat_no_1', 'is_diplomat_yes_1')"
+                                                                    {{ old('is_diplomat.0') == '1' ? '' : 'checked disabled' }}>
+                                                                <span class="checkmark"></span>
+                                                                NO
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                @error('is_cs.*')
-                                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                                @enderror
                                             </div>
-
-                                            <div class="col-md-4">
-                                                <label for="platenum" class="label">Plate No</label>
-                                                <input name="vehicle_plate[]" type="text"
-                                                    class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
-                                                    id="platenum" 
-                                                    value="{{ old('vehicle_plate.0') }}" 
-                                                    autocomplete="off"
-                                                    placeholder="Enter Plate No" 
-                                                    style="text-transform: uppercase;" 
-                                                    required
-                                                    data-input-type="plate"> <!-- Added data attribute to track input type -->
-                                                @error('vehicle_plate.*')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <div class="validation-message_plateno" style="color: red;"></div>
-                                            </div>
-
-                                            <div class="col-md-3 centered-content">
-                                                <label class="label" style="font-size: medium;">
-                                                    Is Diplomat?
-                                                </label>
-                                                <input type="hidden" id="is_diplomat_1" name="is_diplomat[]" value="{{ old('is_diplomat.0', '0') }}">
-                                                <div>
-                                                    <div class="options-container">
-                                                        <label class="radio-checkbox">
-                                                            <input type="checkbox" id="is_diplomat_yes_1" value="1"
-                                                                {{ old('is_diplomat.0') == '1' ? 'checked' : '' }}
-                                                                onchange="update_diplomat('is_diplomat_yes_1', 'is_diplomat_no_1')">
-                                                            <span class="checkmark"></span>
-                                                            YES
-                                                        </label>
-                                                        <label class="radio-checkbox">
-                                                            <input type="checkbox" id="is_diplomat_no_1" value="0"
-                                                                {{ old('is_diplomat.0') == '0' ? 'checked' : '' }}
-                                                                onchange="update_diplomat('is_diplomat_no_1', 'is_diplomat_yes_1')"
-                                                                {{ old('is_diplomat.0') == '1' ? '' : 'checked disabled' }}>
-                                                            <span class="checkmark"></span>
-                                                            NO
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 d-flex flex-column with-select2">
                                                 <label class="form-label">Car Make</label>
                                                 <select class="form-control form-control-sm select2 @error('vehicle_make.*') is-invalid @enderror" 
                                                         id="make1"
@@ -554,7 +594,7 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 d-flex flex-column with-select2">
                                                 <label class="form-label">Car Models</label>
                                                 <select class="form-control select2 @error('vehicle_model.*') is-invalid @enderror" 
                                                         id="model1"
@@ -572,7 +612,7 @@
                                             </div>
 
                                             <!-- Second Row -->
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 d-flex flex-column with-select2">
                                                 <label class="form-label">Vehicle Type</label>
                                                 <select class="form-control select2 @error('vehicle_type.*') is-invalid @enderror" 
                                                         id="vehicle_type1"
@@ -811,7 +851,7 @@
             </div>
         </div>
     </div>
-    <footer class="footer">
+    <footer class="footer container-fluid">
         <div class="footer-text">
             Copyright © 2024 Automobile Association of the Philippines
         </div>
@@ -826,6 +866,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('script/customer_side/membership.js') }}"></script>
+    <script src="{{ asset('script/customer_side/mem_branch.js') }}"></script>
     <script src="{{ asset('script/sidebar.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

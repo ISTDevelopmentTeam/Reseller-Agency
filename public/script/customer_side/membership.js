@@ -111,8 +111,9 @@ function updateNavigationButtons() {
     existingNavArea.remove();
   }
 
-  const navArea           = document.createElement('div');
-        navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
+
+  const navArea = document.createElement('div');
+  navArea.className = 'nav-area d-flex justify-content-between mt-5 w-100';
   currentStep.appendChild(navArea);
 
   const leftNav            = document.createElement('div');
@@ -165,8 +166,8 @@ function nextStep(currentStepNumber) {
       currentStep.classList.remove('active');
       nextStep.classList.add('active');
 
-      const progress             = document.querySelector('.progress-bar');
-            progress.style.width = `${currentStepNumber * 25}%`;
+      const progress = document.querySelector('.progress-bar');
+      progress.style.width = `${(currentStepNumber) * 33.3333}%`;
 
       updateBreadcrumb(currentStepNumber + 1);
       updateNavigationButtons();
@@ -187,8 +188,8 @@ function previousStep() {
     const previousStep = document.querySelector(`#step${stepNumber - 1}`);
     previousStep.classList.add('active');
 
-    const progress             = document.querySelector('.progress-bar');
-          progress.style.width = `${(stepNumber - 2) * 25}%`;
+    const progress = document.querySelector('.progress-bar');
+    progress.style.width = `${(stepNumber - 2) * 33.3333}%`;
 
     updateBreadcrumb(stepNumber - 1);
     updateNavigationButtons();
@@ -544,6 +545,8 @@ function updateLabeldyna(checkedId, uncheckedId) {
       platenumInput.placeholder = "Enter conduction sticker";
       platenumInput.dataset.inputType = 'conduction';
       $(platenumInput).mask('AAAAAA');
+      checkedCheckbox.parentElement.classList.add("cbox-yes");
+      uncheckedCheckbox.parentElement.classList.remove("cbox-no");
   } else {
       platenumLabel.textContent = "Plate No";
       platenumInput.placeholder = "Enter plate no";
