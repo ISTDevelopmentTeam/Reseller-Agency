@@ -205,7 +205,7 @@ function updateNavigationButtons() {
   }
 
   const navArea = document.createElement('div');
-  navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
+  navArea.className = 'nav-area d-flex justify-content-between mt-5 w-100';
   currentStep.appendChild(navArea);
 
   const leftNav = document.createElement('div');
@@ -219,25 +219,28 @@ function updateNavigationButtons() {
   if (!isFirstStep) {
     const prevButton = document.createElement('button');
     prevButton.type = 'button';
-    prevButton.className = 'btn btn-secondary rounded';
-    prevButton.textContent = 'Previous';
+    prevButton.className = 'btn btn-prev';
+    // prevButton.textContent = 'Previous';
+    prevButton.innerHTML = `<i class="bi bi-caret-left-fill"></i> Previous`;
     prevButton.onclick = previousStep;
     leftNav.appendChild(prevButton);
   }
 
   const nextButton = document.createElement('button');
   nextButton.type = isLastStep ? 'submit' : 'button';
-  nextButton.className = 'btn btn-primary rounded';
+  nextButton.className = 'btn btn-next';
 
   if (isLastStep) {
-    nextButton.textContent = 'Submit Application';
+    // nextButton.textContent = 'Submit Application';
+    nextButton.innerHTML = `Submit Application <i class="bi bi-caret-right-fill"></i>`;
     nextButton.onclick = () => {
       if (validateStep(currentStepNumber)) {
         submitForm();
       }
     };
   } else {
-    nextButton.textContent = 'Next';
+    // nextButton.textContent = 'Next';
+    nextButton.innerHTML = `Next <i class="bi bi-caret-right-fill"></i>`;
     nextButton.onclick = () => nextStep(currentStepNumber);
   }
   rightNav.appendChild(nextButton);
@@ -254,7 +257,7 @@ function nextStep(currentStepNumber) {
       nextStep.classList.add('active');
 
       const progress = document.querySelector('.progress-bar');
-      progress.style.width = `${(currentStepNumber) * 25}%`;
+      progress.style.width = `${(currentStepNumber) * 33.3333}%`;
 
       updateBreadcrumb(currentStepNumber + 1);
       // manageFieldDisabling();
@@ -277,7 +280,7 @@ function previousStep() {
     previousStep.classList.add('active');
 
     const progress = document.querySelector('.progress-bar');
-    progress.style.width = `${(stepNumber - 2) * 25}%`;
+    progress.style.width = `${(stepNumber - 2) * 33.3333}%`;
 
     updateBreadcrumb(stepNumber - 1);
     // manageFieldDisabling();
@@ -594,11 +597,13 @@ function updateLabeldyna(checkedId, uncheckedId) {
             platenumInput.placeholder = "Enter conduction sticker";
             $(platenumInput).mask('AAAAAA');
             platenumInput.value = "";
-            var_csticker.value = 1
+            var_csticker.value = 1;
+            checkedCheckbox.parentElement.classList.add("cbox-yes");
+            uncheckedCheckbox.parentElement.classList.remove("cbox-no");
 
           } else {
-            platenumLabel.textContent = "Plate No";
-            platenumInput.placeholder = "Enter plate no";
+            platenumLabel.textContent = "Plate Number";
+            platenumInput.placeholder = "Enter plate no.";
             $(platenumInput).mask('AAAAAAAA', {
               translation: {
                 'A': {
@@ -615,7 +620,9 @@ function updateLabeldyna(checkedId, uncheckedId) {
               },
             });
             platenumInput.value = "";
-            var_csticker.value = 0
+            var_csticker.value = 0;
+            checkedCheckbox.parentElement.classList.add("cbox-no");
+            uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
           }
         } else {
           const radioButtons = document.querySelectorAll(
@@ -629,10 +636,12 @@ function updateLabeldyna(checkedId, uncheckedId) {
             platenumInput.placeholder = "Enter conduction sticker";
             $(platenumInput).mask('AAAAAA');
             platenumInput.value = "";
-            var_csticker.value = 1
+            var_csticker.value = 1;
+            checkedCheckbox.parentElement.classList.add("cbox-yes");
+            uncheckedCheckbox.parentElement.classList.remove("cbox-no");
           } else {
-            platenumLabel.textContent = "Plate No";
-            platenumInput.placeholder = "Enter plate no";
+            platenumLabel.textContent = "Plate Number";
+            platenumInput.placeholder = "Enter plate no.";
             $(platenumInput).mask('AAAAAAAA', {
               translation: {
                 'A': {
@@ -649,7 +658,9 @@ function updateLabeldyna(checkedId, uncheckedId) {
               },
             });
             platenumInput.value = "";
-            var_csticker.value = 0
+            var_csticker.value = 0;
+            checkedCheckbox.parentElement.classList.add("cbox-no");
+            uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
           }
         }
       }
