@@ -37,11 +37,20 @@ class PidpRequest extends FormRequest
             'dlcodearray' => [
                 'nullable',
                 'string',
-                'json',
+                'regex:/^(\d+,\s*)*\d+$/',
                 function ($attribute, $value, $fail) {
-                    $decoded = json_decode($value, true);
-                    if (!is_array($decoded)) {
-                        $fail('The dlcode must be a valid .');
+                    $numbers = array_map('trim', explode(',', $value));
+
+                    // Optional: Ensure no duplicate numbers
+                    if (count($numbers) !== count(array_unique($numbers))) {
+                        $fail('Duplicate numbers are not allowed.');
+                    }
+
+                    // Optional: Validate specific range (e.g., 1-8)
+                    foreach ($numbers as $number) {
+                        if (!is_numeric($number) || $number < 1 || $number > 8) {
+                            $fail('All numbers must be between 1 and 8.');
+                        }
                     }
                 }
             ],
@@ -162,73 +171,82 @@ class PidpRequest extends FormRequest
             "personal_info.tele_num" => "nullable|max:20|regex:/^\d-\d{3}-\d{4}$/",
 
             // VEHICLE DETAILS
+            "with_vehicle"                          => "nullable|in:yes,no",
+            
             'is_cs.*' => [
-                'required',
-                'string',
+                'nullable',
+                'string',  
                 'in:0,1,true,false'
             ],
 
             'vehicle_plate.*' => [
-                'required',
-                'string',
+                'nullable',
+                'string',  
                 'max:10',
             ],
 
+            'is_diplomat.*' => [
+                'nullable',
+                'string',  
+                'in:0,1,true,false'
+            ],
+
             'vehicle_make.*' => [
-                'required',
+                'nullable',
                 'string',
                 'regex:/^[a-zA-Z0-9\s]+$/',
                 'max:50'
             ],
 
             'vehicle_model.*' => [
-                'required',
+                'nullable',
                 'string',
                 'regex:/^[a-zA-Z0-9\s]+$/',
             ],
 
             'vehicle_type.*' => [
-                'required',
+                'nullable',
                 'string',
                 'regex:/^[a-zA-Z0-9\s]+$/',
             ],
 
             'vehicle_year.*' => [
-                'required',
+                'nullable',
                 'integer',
                 'min:1900',
                 'max:' . (date('Y'))
             ],
 
             'submodel.*' => [
+                'nullable',
                 'string',
             ],
 
             'vehicle_color.*' => [
-                'required',
+                'nullable',
                 'string',
             ],
 
             'vehicle_fuel.*' => [
-                'required',
+                'nullable',
                 'string',
                 'in:GAS,DIESEL,ELECTRIC',
             ],
 
             'vehicle_transmission.*' => [
-                'required',
+                'nullable',
                 'string',
                 'in:AUTOMATIC,MANUAL',
             ],
             'or_image.*' => [
-                'required',
+                'nullable',
                 'image',
                 'mimes:jpeg,png,bmp,gif,svg,webp',
                 'max:1024', // 1MB
                 // 'dimensions:min_width=100,min_height=200',
             ],
             'cr_image.*' => [
-                'required',
+                'nullable',
                 'image',
                 'mimes:jpeg,png,bmp,gif,svg,webp',
                 'max:1024', // 1MB

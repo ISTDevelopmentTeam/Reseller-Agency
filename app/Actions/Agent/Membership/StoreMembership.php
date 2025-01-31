@@ -35,13 +35,14 @@ class StoreMembership
 
         $request_array = $request->personal_info;
 
-        $request_array["typesofapplication"] = 'NEW';
-        $request_array["platform"]           = 'Reseller Platform';
-        $request_array["category"]           = 'Reseller';
-        $request_array["status"]             = 'PENDING';
-        $request_array["application_date"]   = date("Y-m-d");
-        $request_array['option']             = 'Authorized';
-        $request_array['representative_name'] = $authorized_name;
+        $request_array["typesofapplication"]  = 'NEW';
+        $request_array["platform"]            = 'Reseller Platform';
+        $request_array["category"]            = 'Reseller';
+        $request_array["status"]              = 'PENDING';
+        $request_array["application_date"]    = date("Y-m-d");
+        $request_array['option']              = 'Authorized';
+        $request_array['representative_name'] = $user->name;
+        $request_array['agent']               = $user->id;
 
         if ($request->hasFile('idpicture')) {
             $idImageFile = $request->file('idpicture');

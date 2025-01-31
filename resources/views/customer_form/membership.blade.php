@@ -28,7 +28,7 @@
                     <img class="img-fluid" src="{{ asset('images/aap_logo.png') }}" alt="Logo" class="logo">
                 </div>
                 <!-- Title -->
-                <h3>Customer Fillout Form</h3>
+                <h3>Membership</h3>
             </div>
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
@@ -156,7 +156,7 @@
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-3 mb-4">
                                 <label for="firstName" class="form-label">First Name</label>
                                 <input type="text" class="form-control letters_only_fname" id="firstName"
                                     name="personal_info[members_firstname]"
@@ -166,7 +166,7 @@
                                 @enderror
                                 <div class="validation-message_fname" style="color: red;"></div>
                             </div>
-                            <div class="col-md-2 mb-4">
+                            <div class="col-md-3 mb-4">
                                 <label for="middleName" class="form-label">Middle Name</label>
                                 <input type="text" class="form-control letters_only_mname" id="middleName"
                                     name="personal_info[members_middlename]"
@@ -311,7 +311,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-3 mb-4">
+                                        <div class="col-md-6 mb-4">
                                             <label for="town" class="form-label">Barangay / Towns</label>
                                             <input type="text" class="form-control" name="personal_info[members_haddress2]"
                                                 id="town" value="{{ old('personal_info.members_haddress2') }}" required>
@@ -319,6 +319,8 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-3 mb-4">
                                             <label for="city" class="form-label">City/Municipality</label>
                                             <input type="text" class="form-control" name="personal_info[members_housecity]"
@@ -327,9 +329,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-5 mb-4">
+                                        <div class="col-md-3 mb-4">
                                             <label for="province" class="form-label">Province</label>
                                             <input type="text" class="form-control"
                                                 name="personal_info[members_housedistrict]" id="province"
@@ -338,7 +338,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-3 mb-4">
+                                        <div class="col-md-2 mb-4">
                                             <label for="zcode" class="form-label">Zip</label>
                                             <input type="text" class="form-control number_only" maxlength="4"
                                                 name="personal_info[members_housezipcode]" id="zcode"

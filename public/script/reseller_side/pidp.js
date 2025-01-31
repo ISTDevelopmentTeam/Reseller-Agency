@@ -49,46 +49,47 @@ $('.letters_only_fname').on('input', function (event) {
   // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
   // Form validation and submission handling
   document.addEventListener('DOMContentLoaded', function() {
-    const resellerForm = document.getElementById('resellerForm');
-    const submitBtn = document.getElementById('submit_btn');
-    const mobileInput = document.getElementById('mobileNumber');
-    const errorMsg = document.getElementById('error-msg-1');
-    const chooseLabel = document.getElementById('choose');
-    const radioInputs = document.querySelectorAll('input[name="selection"]');
-    const checkboxInputs = document.querySelectorAll('.dl_restric');
-    const dlCodesLabel = document.querySelector('#dlcodes label.d-flex');
-    const restrictionLabel = document.getElementById('restrictionLabel');
+    const resellerForm          = document.getElementById('resellerForm');
+    const submitBtn             = document.getElementById('submit_btn');
+    const mobileInput           = document.getElementById('mobileNumber');
+    const errorMsg              = document.getElementById('error-msg-1');
+    const chooseLabel           = document.getElementById('choose');
+    const radioInputs           = document.querySelectorAll('input[name="selection"]');
+    const checkboxInputs        = document.querySelectorAll('.dl_restric');
+    const dlCodesLabel          = document.querySelector('#dlcodes label.d-flex');
+    const restrictionLabel      = document.getElementById('restrictionLabel');
     const restrictionCheckboxes = document.querySelectorAll('.restriction1');
 
     // Japan option elements
-    const yesradio = document.getElementById('yesRadio');
-    const noradio = document.getElementById('noRadio');
-    const option_border = document.getElementById('japanoption');
-    const yesDropdown = document.getElementById('yesDropdown');
-    const noDropdown = document.getElementById('noDropdown');
-    const members_purposetravel = document.getElementById('members_purposetravel');
+    const yesradio               = document.getElementById('yesRadio');
+    const noradio                = document.getElementById('noRadio');
+    const option_border          = document.getElementById('japanoption');
+    const yesDropdown            = document.getElementById('yesDropdown');
+    const noDropdown             = document.getElementById('noDropdown');
+    const members_purposetravel  = document.getElementById('members_purposetravel');
     const members_purposetravel1 = document.getElementById('members_purposetravel1');
-    const japan_border = document.getElementById('bordered1');
-    const ofw_yes = document.getElementById('ofw_yes');
-    const ofw_no = document.getElementById('ofw_no');
-    const ofww = document.getElementById('op_ofw');
-    const ofw_yes1 = document.getElementById('ofw_yes1');
-    const ofw_no1 = document.getElementById('ofw_no1');
-    const ofww1 = document.getElementById('op_ofw1');
+    const japan_border           = document.getElementById('bordered1');
+    const ofw_yes                = document.getElementById('ofw_yes');
+    const ofw_no                 = document.getElementById('ofw_no');
+    const ofww                   = document.getElementById('op_ofw');
+    const ofw_yes1               = document.getElementById('ofw_yes1');
+    const ofw_no1                = document.getElementById('ofw_no1');
+    const ofww1                  = document.getElementById('op_ofw1');
 
     // Additional checkboxes
     const checkbox21 = document.getElementById('checkbox21');
     const checkbox22 = document.getElementById('checkbox22');
-    const checkbox1 = document.getElementById('checkbox1');
+    const checkbox1  = document.getElementById('checkbox1');
+    const checkbox0  = document.getElementById('checkbox');
 
     // Additional checkbox containers
-    const noJapanDiv = document.getElementById('no_japan');
-    const dropDownYesDiv = document.getElementById('japan_other_country');
+    const noJapanDiv      = document.getElementById('no_japan');
+    const dropDownYesDiv  = document.getElementById('japan_other_country');
     const dropDownYesDiv1 = document.getElementById('japan_other_country1');
-    const dropDownNoDiv = document.getElementById('japan_only');
+    const dropDownNoDiv   = document.getElementById('japan_only');
 
     // Plan type and license expiration date elements
-    const planTypeSelect = document.getElementById('plantype');
+    const planTypeSelect  = document.getElementById('plantype');
     const expirationInput = document.getElementById('expiration');
 
     // Add event listener to each radio button for real-time validation
@@ -126,7 +127,7 @@ $('.letters_only_fname').on('input', function (event) {
     });
 
     // Add event listeners to additional checkboxes for real-time validation
-    [checkbox21, checkbox22, checkbox1].forEach(checkbox => {
+    [checkbox21, checkbox22, checkbox1, checkbox0].forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             validateAdditionalCheckboxes();
         });
@@ -150,26 +151,26 @@ $('.letters_only_fname').on('input', function (event) {
     // Function to validate clutch radio buttons
     function validateClutchRadioButtons() {
         var restrictionCheckbox1 = document.getElementById('restrictionCheckbox1');
-        var clutchRadio1_1 = document.getElementById('clutchRadio1_1');
-        var labelclutchRadio1_1 = document.getElementById('clutch1_1');
+        var clutchRadio1_1       = document.getElementById('clutchRadio1_1');
+        var labelclutchRadio1_1  = document.getElementById('clutch1_1');
         var restrictionCheckbox2 = document.getElementById('restrictionCheckbox2');
-        var clutchRadio2_1 = document.getElementById('clutchRadio2_1');
-        var clutchRadio2_2 = document.getElementById('clutchRadio2_2');
-        var labelclutchRadio2_1 = document.getElementById('clutch2_1');
-        var labelclutchRadio2_2 = document.getElementById('clutch2_2');
+        var clutchRadio2_1       = document.getElementById('clutchRadio2_1');
+        var clutchRadio2_2       = document.getElementById('clutchRadio2_2');
+        var labelclutchRadio2_1  = document.getElementById('clutch2_1');
+        var labelclutchRadio2_2  = document.getElementById('clutch2_2');
         var restrictionCheckbox3 = document.getElementById('restrictionCheckbox3');
-        var clutchRadio3_1 = document.getElementById('clutchRadio3_1');
-        var clutchRadio3_2 = document.getElementById('clutchRadio3_2');
-        var labelclutchRadio3_1 = document.getElementById('clutch3_1');
-        var labelclutchRadio3_2 = document.getElementById('clutch3_2');
+        var clutchRadio3_1       = document.getElementById('clutchRadio3_1');
+        var clutchRadio3_2       = document.getElementById('clutchRadio3_2');
+        var labelclutchRadio3_1  = document.getElementById('clutch3_1');
+        var labelclutchRadio3_2  = document.getElementById('clutch3_2');
         var restrictionCheckbox4 = document.getElementById('restrictionCheckbox4');
-        var clutchRadio4_1 = document.getElementById('clutchRadio4_1');
-        var clutchRadio4_2 = document.getElementById('clutchRadio4_2');
-        var labelclutchRadio4_1 = document.getElementById('clutch4_1');
-        var labelclutchRadio4_2 = document.getElementById('clutch4_2');
+        var clutchRadio4_1       = document.getElementById('clutchRadio4_1');
+        var clutchRadio4_2       = document.getElementById('clutchRadio4_2');
+        var labelclutchRadio4_1  = document.getElementById('clutch4_1');
+        var labelclutchRadio4_2  = document.getElementById('clutch4_2');
         var restrictionCheckbox5 = document.getElementById('restrictionCheckbox5');
-        var clutchRadio5_1 = document.getElementById('clutchRadio5_1');
-        var labelclutchRadio5_1 = document.getElementById('clutch5_1');
+        var clutchRadio5_1       = document.getElementById('clutchRadio5_1');
+        var labelclutchRadio5_1  = document.getElementById('clutch5_1');
 
         if (restrictionCheckbox1.checked) {
             if (!clutchRadio1_1.checked) {
@@ -263,9 +264,7 @@ $('.letters_only_fname').on('input', function (event) {
         }
 
         if (dropDownYesDiv.style.display !== 'none') {
-            if (checkbox.required && !checkbox.checked) {
-                dropDownYesDiv.style.border = "2px solid red";
-            } else if (checkbox22.required && !checkbox22.checked) {
+            if (checkbox22.required && !checkbox22.checked) {
                 dropDownYesDiv.style.border = "2px solid red";
             } else {
                 dropDownYesDiv.style.border = "";
@@ -273,9 +272,7 @@ $('.letters_only_fname').on('input', function (event) {
         }
 
         if (dropDownYesDiv1.style.display !== 'none') {
-            if (checkbox.required && !checkbox.checked) {
-                dropDownYesDiv1.style.border = "2px solid red";
-            } else if (checkbox22.required && !checkbox22.checked) {
+            if (checkbox0.required && !checkbox0.checked) {
                 dropDownYesDiv1.style.border = "2px solid red";
             } else {
                 dropDownYesDiv1.style.border = "";
@@ -303,105 +300,166 @@ $('.letters_only_fname').on('input', function (event) {
         return !(yesradio.checked && (selectedPlanId === 9 || selectedPlanId === 10));
     }
 
-    // Function to check if all required fields are filled and valid
     function isFormValid() {
-        // Check required fields
-        const requiredElements = resellerForm.querySelectorAll('[required]');
-        for (const element of requiredElements) {
-            if (!element.value.trim()) {
+        // 1. Check vehicle ownership selection
+    const vehicleOwnershipYes = document.getElementById('vehicleOwnershipYes');
+    const vehicleOwnershipNo = document.getElementById('vehicleOwnershipNo');
+    const vehicleFields = document.getElementById('vehicleFields');
+
+    if (!vehicleOwnershipYes || !vehicleOwnershipNo) {
+        return {
+            valid: false,
+            title: 'Form Error',
+            message: 'Vehicle ownership elements not found'
+        };
+    }
+
+    if (!vehicleOwnershipYes.checked && !vehicleOwnershipNo.checked) {
+        return {
+            valid: false,
+            title: 'Vehicle Ownership',
+            message: 'Please select whether you have a vehicle or not'
+        };
+    }
+
+    // 2. Validate vehicle fields if "Yes" is selected
+    if (vehicleOwnershipYes.checked && vehicleFields) {
+        const requiredVehicleFields = vehicleFields.querySelectorAll('[required]');
+        for (const element of requiredVehicleFields) {
+            // Skip if element is not visible
+            if (!element || element.offsetParent === null) continue;
+
+            if (element.type === 'file') {
+                if (!element.files || !element.files.length) {
+                    return {
+                        valid: false,
+                        title: 'Vehicle Documents',
+                        message: 'Please upload all required vehicle documents'
+                    };
+                }
+            } else if (element.tagName === 'SELECT') {
+                if (!element.value) {
+                    const label = element.previousElementSibling?.textContent || 'vehicle option';
+                    return {
+                        valid: false,
+                        title: 'Vehicle Details',
+                        message: `Please select a ${label}`
+                    };
+                }
+            } else if (element.value !== undefined) {
+                const value = element.value.toString();
+                if (!value || !value.trim()) {
+                    const label = element.previousElementSibling?.textContent || 'field';
+                    return {
+                        valid: false,
+                        title: 'Vehicle Details',
+                        message: `Please fill in the ${label}`
+                    };
+                }
+            }
+        }
+    }
+
+    // 3. Validate non-vehicle required fields
+    const requiredElements = document.querySelectorAll('[required]:not([id^="vehicle"])');
+    for (const element of requiredElements) {
+        // Skip if element is not visible or undefined
+        if (!element || element.offsetParent === null) continue;
+
+        if (element.type === 'file') {
+            if (!element.files || !element.files.length) {
+                const label = element.previousElementSibling?.textContent || 'document';
                 return {
                     valid: false,
-                    title: 'Missing Required Fields',
-                    message: 'Please fill in all required fields'
+                    title: 'Required Documents',
+                    message: `Please upload the ${label}`
                 };
             }
-
-            // Special check for file inputs
-            if (element.type === 'file' && !element.files.length) {
+        } else if (element.tagName === 'SELECT') {
+            if (!element.value) {
+                const label = element.previousElementSibling?.textContent || 'option';
                 return {
                     valid: false,
-                    title: 'Missing Required Files',
-                    message: 'Please upload all required files'
+                    title: 'Required Selection',
+                    message: `Please select a ${label}`
                 };
             }
-
-            // Special check for select elements
-            if (element.tagName === 'SELECT' && element.value === '') {
+        } else if (element.value !== undefined) {
+            const value = element.value.toString();
+            if (!value || !value.trim()) {
+                const label = element.previousElementSibling?.textContent || 'field';
                 return {
                     valid: false,
-                    title: 'Missing Required Options',
-                    message: 'Please select all required options'
+                    title: 'Required Fields',
+                    message: `Please fill in the ${label}`
                 };
             }
         }
+    }
 
-        // Check radio buttons
+        // 4. Validate DL Codes/Restriction selection
         const isAnyRadioChecked = Array.from(radioInputs).some(radio => radio.checked);
         if (!isAnyRadioChecked) {
             chooseLabel.style.color = 'red';
             return {
                 valid: false,
-                title: 'Select DL Codes or Restriction',
+                title: 'DL Selection Required',
                 message: 'Please select either DL Codes or Restriction'
             };
-        } else {
-            chooseLabel.style.color = ''; // Reset the color if valid
         }
+        chooseLabel.style.color = '';
 
-        // Check which radio button is selected
+        // 5. Validate based on selected option (DL Code or Restriction)
         const selectedOption = Array.from(radioInputs).find(radio => radio.checked);
-
         if (selectedOption.value === 'dlcode') {
-            // Validate DL Codes
+            // Check if any DL Code is selected
             const isAnyCheckboxChecked = Array.from(checkboxInputs).some(checkbox => checkbox.checked);
             if (!isAnyCheckboxChecked) {
                 dlCodesLabel.style.color = 'red';
                 return {
                     valid: false,
-                    title: 'Select DL Code',
+                    title: 'DL Code Required',
                     message: 'Please select at least one DL Code'
                 };
-            } else {
-                dlCodesLabel.style.color = ''; // Reset the color if valid
             }
+            dlCodesLabel.style.color = '';
 
-            // Validate clutch radio buttons
+            // Validate clutch options
             validateClutchRadioButtons();
             const clutchLabels = document.querySelectorAll('.custom-control-label');
             for (const label of clutchLabels) {
                 if (label.style.color === 'red') {
                     return {
                         valid: false,
-                        title: 'Select Valid Clutch Option',
-                        message: 'Please select a valid clutch option for the selected DL Codes'
+                        title: 'Clutch Option Required',
+                        message: 'Please select clutch options for all selected DL Codes'
                     };
                 }
             }
         } else if (selectedOption.value === 'restriction') {
-            // Validate Restriction
+            // Check if any restriction is selected
             const isAnyRestrictionChecked = Array.from(restrictionCheckboxes).some(checkbox => checkbox.checked);
             if (!isAnyRestrictionChecked) {
                 restrictionLabel.style.color = 'red';
                 return {
                     valid: false,
-                    title: 'Select Restriction',
+                    title: 'Restriction Required',
                     message: 'Please select at least one restriction'
                 };
-            } else {
-                restrictionLabel.style.color = ''; // Reset the color if valid
             }
+            restrictionLabel.style.color = '';
         }
 
-        // Validate Japan options
+        // 6. Validate Japan options
         if (!validateJapanOptions()) {
             return {
                 valid: false,
-                title: 'Select Valid Japan Option',
-                message: 'Please select a valid Japan option'
+                title: 'Japan Options',
+                message: 'Please complete all required Japan-related selections'
             };
         }
 
-        // Check if mobile number has error message displayed
+        // 7. Validate mobile number
         if (!errorMsg.classList.contains('hide')) {
             return {
                 valid: false,
@@ -410,41 +468,43 @@ $('.letters_only_fname').on('input', function (event) {
             };
         }
 
-        // Validate additional checkboxes
+        // 8. Validate checkboxes for Japan sections
         validateAdditionalCheckboxes();
-        if (noJapanDiv.style.border === "2px solid red" || dropDownYesDiv.style.border === "2px solid red" || dropDownYesDiv1.style.border === "2px solid red" || dropDownNoDiv.style.border === "2px solid red") {
+        const hasRedBorder = [noJapanDiv, dropDownYesDiv, dropDownYesDiv1, dropDownNoDiv]
+            .some(div => div.style.border === "2px solid red");
+        if (hasRedBorder) {
             return {
                 valid: false,
-                title: 'Check Required Checkboxes',
-                message: 'Please check the required checkboxes'
+                title: 'Required Agreements',
+                message: 'Please check all required agreement boxes'
             };
         }
 
-        // Validate plan type and license expiration date
+        // 9. Validate license expiration and plan type
         const selectedPlanId = parseInt(planTypeSelect.value);
         if ((selectedPlanId === 9 || selectedPlanId === 10) && isLicenseExpirationLessThanAYear()) {
             return {
                 valid: false,
-                title: 'License Exiperation',
-                message: 'Your current license period is less than one year. TWO YEARS (PIDP) or More than Two Years are not available. Only Annual (1-year) available, Please Choose Annual Year (PIDP).'
+                title: 'License Expiration Issue',
+                message: 'Your current license period is less than one year. Only Annual (1-year) PIDP is available.'
             };
         }
 
-        // Validate plan type for Japan
+        // 10. Validate plan type for Japan
         if (!isPlanTypeValidForJapan()) {
             return {
                 valid: false,
-                title: 'Plan Type Issue for Japan',
-                message: 'Japan only offers an annual plan. Please change your plan type selection to an annual type.'
+                title: 'Plan Type Issue',
+                message: 'Japan only offers an annual plan. Please select an annual plan type.'
             };
         }
 
+        // If all validations pass
         return {
             valid: true,
             message: ''
         };
     }
-
     // Handle form submission
     resellerForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1540,6 +1600,93 @@ var closeBtn         = document.getElementsByClassName("closeBtn")[0];
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
   
+// THIS FOR HIDE AND SHOW FOR VEHICLE
+
+function toggleVehicleDetails(element) {
+
+    const vehicleFields    = document.getElementById('vehicleFields');
+    const withVehicleInput = document.getElementById('with_vehicle');
+    
+    // Get all required fields
+    const requiredFields = vehicleFields.querySelectorAll('input[type="text"], input[type="file"], select');
+    
+    if (element.value === 'yes') {
+        vehicleFields.style.display = 'block';
+        // Update hidden input
+        withVehicleInput.value = 'yes';
+        
+        // Add required attribute to all fields
+        requiredFields.forEach(field => {
+            if (!field.classList.contains('optional')) {
+                field.setAttribute('required', '');
+            }
+        });
+        
+        // Specifically handle select2 fields if they exist
+        const select2Fields = vehicleFields.querySelectorAll('.select2');
+        select2Fields.forEach(field => {
+            if (!field.classList.contains('optional')) {
+                field.setAttribute('required', '');
+            }
+        });
+        
+    } else {
+        // Hide the vehicle fields
+        vehicleFields.style.display = 'none';
+        // Update hidden input
+        withVehicleInput.value = 'no';
+        
+        // Remove required attribute from all fields
+        requiredFields.forEach(field => {
+            field.removeAttribute('required');
+            if (field.tagName === 'SELECT') {
+                field.selectedIndex = 0;
+                // If using select2, update it
+                if (field.classList.contains('select2')) {
+                    try {
+                        $(field).val('').trigger('change');
+                    } catch (e) {
+                        console.warn('Select2 not initialized');
+                    }
+                }
+            } else {
+                field.value = '';
+            }
+        });
+        
+        // Clear file upload previews
+        const previewImages = vehicleFields.querySelectorAll('img[id="or"], img[id="cr"]');
+        previewImages.forEach(img => {
+            img.style.display = 'none';
+            img.src = '';
+        });
+        
+        // Clear error messages
+        const errorMessages = vehicleFields.querySelectorAll('.invalid-feedback, .text-danger');
+        errorMessages.forEach(error => {
+            error.style.display = 'none';
+        });
+    }
+}
+
+// Initialize the form state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const vehicleOwnershipNo = document.getElementById('vehicleOwnershipNo');
+    const vehicleOwnershipYes = document.getElementById('vehicleOwnershipYes');
+    
+    // Check if there's any existing value
+    const withVehicleValue = document.getElementById('with_vehicle').value;
+    
+    if (withVehicleValue === 'yes') {
+        vehicleOwnershipYes.checked = true;
+        toggleVehicleDetails(vehicleOwnershipYes);
+    } else {
+        vehicleOwnershipNo.checked = true;
+        toggleVehicleDetails(vehicleOwnershipNo);
+    }
+});
+
+
    // vehicleFileUpload function to work with dynamic IDs
    function handleVehicleFileUpload(input, imageId, feedbackId) {
     const file = input.files && input.files[0];
