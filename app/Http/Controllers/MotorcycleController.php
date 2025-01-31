@@ -4,191 +4,94 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\MotorcycleRequest;
-use App\Models\Town;
-use App\Models\City;
-use App\Models\Membership;
-use App\Models\PlanType;
-use App\Models\Vehicle;
-use App\Traits\Insurance\Get_carmake;
-use Illuminate\Support\Facades\Auth;
+use App\Actions\Agent\Motorcycle\FetchMotorcycle;
+use App\Actions\Agent\Motorcycle\StoreMotorcycle;
+use App\Actions\Customer\Motorcycle\CustomerMotorcycle;
+use App\Actions\Customer\Motorcycle\StoringMotorcycle;
+use Illuminate\Support\Facades\DB;
+use App\Models\TokenModel;
 
 
 class MotorcycleController extends Controller
 {
-    use Get_carmake;
+    protected $fetchMotorcycle;
+    protected $storeMotorcycle;
+    protected $customerMotorcycle;
+    protected $storingMotorcycle;
 
-    protected $token;
-    private $encryption_key;
-    private $encryption_iv;
-    public function __construct()
+    public function __construct(
+        FetchMotorcycle $fetchMotorcycle,
+        StoreMotorcycle $storeMotorcycle,
+        CustomerMotorcycle $customerMotorcycle,
+        StoringMotorcycle $storingMotorcycle
+    ) {
+        $this->fetchMotorcycle = $fetchMotorcycle;
+        $this->storeMotorcycle = $storeMotorcycle;
+        $this->customerMotorcycle = $customerMotorcycle;
+        $this->storingMotorcycle = $storingMotorcycle;
+    }
+
+    public function index(Request $request, $planId)
     {
-        $this->encryption_key = base64_decode(env('ENCRYPTION_KEY'));
-        $this->encryption_iv = base64_decode(env('ENCRYPTION_IV'));
+        $data = $this->fetchMotorcycle->handle($request, $planId);
+        return view('reseller_form/motorcycle')->with($data);
     }
 
-    
-    public function encrypt($data) {
-        $encrypted = openssl_encrypt($data, 'AES-256-CBC',$this->encryption_key  , OPENSSL_RAW_DATA, $this->encryption_iv);
-        return base64_encode($encrypted);
-    }
-
-    public function decrypt($data) {
-        $decrypted = openssl_decrypt(base64_decode($data), 'AES-256-CBC',$this->encryption_key  , OPENSSL_RAW_DATA, $this->encryption_iv);
-        return $decrypted;
-    }
-    public function index(Request $request, $planId = null){
-        $searchTerm = $request->input('town');
-    
-        $towns = Town::select('a.*', 'c.*', 'd.*')
-            ->from('aap_zipcode as a')
-            ->leftJoin('address_city as c', 'a.az_city', '=', 'c.city_id')
-            ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
-            ->where('az_barangay', 'like', '%' . $searchTerm . '%')
-            ->get();
-    
-        $city = $request->input('city');
-    
-        $citys = City::select('a.az_zipcode', 'c.city_name', 'c.city_id', 'd.*')
-            ->from('address_city as c')
-            ->leftJoin('aap_zipcode as a', 'c.city_id', '=', 'a.az_city')
-            ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
-            ->where('c.city_name', 'like', '%' . $city . '%')
-            ->where('a.az_barangay', '')
-            ->get();
-    
-        $carMake = json_decode($this->get_carmake(), true);
-        
-        // Get all plan types
-        $planTypes = PlanType::all();
-    
-        // If a specific plan ID is passed, find that plan
-        $selectedPlan = $planId ? PlanType::where('plan_id', $planId)->first() : null;
-    
-        return view('reseller_form/motorcycle')->with([
-            'towns'   => $towns,
-            'citys'   => $citys,
-            'carMake' => $carMake,
-            'planTypes' => $planTypes,
-            'selectedPlan' => $selectedPlan
-        ]);
-    }
-
-    public function store(MotorcycleRequest $request){
-                // Additional token validation
-                if (!$request->session()->token() === $request->input('_token')) {
-                    abort(403, 'CSRF token mismatch');
-                }
-        
-                $user = Auth::user();
-                $authorized_name = $user->name;
-                // dd($authorized_name);
-        
-                $request_array = $request->personal_info;
-        
-                $request_array["typesofapplication"]  = 'NEW';
-                $request_array["platform"]            = 'Reseller Platform';
-                $request_array["category"]            = 'Reseller';
-                $request_array["status"]              = 'PENDING';
-                $request_array["application_date"]    = date("Y-m-d");
-                $request_array["membership_type"]             = 'MOTORCYCLE MEMBERSHIP PLUS';
-                $request_array['option']              = 'Authorized';
-                $request_array['representative_name'] = $authorized_name;
-        
-                if ($request->hasFile('idpicture')) {
-                    $idImageFile = $request->file('idpicture');
-                    $idImageName = 'idpicture_' . uniqid() . '.' . $idImageFile->getClientOriginalExtension();
-                    $idImagePath = $idImageFile->storeAs('img', $idImageName, 'public');
-                    $request_array['idpicture'] = $this->encrypt($idImagePath);
-                }
-
-                $encrypt_field = [
-                    'members_title'                  => false,
-                    'members_lastname'               => false,
-                    'members_birthdate'              => false,
-                    'members_emailaddress'           => false,
-                    'members_alternate_emailaddress' => true,
-                    'alt_email'                      => true,
-                    'occupation_name'                => false,
-                    'members_mobileno'               => false,
-                    'members_alternate_tel'          => true,
-                    'members_alternate_mobileno'     => true,
-                    'tele_num'                       => true,
-                    'members_haddress1'              => false,
-                    'members_oaddress1'              => true,
-                    'representative_name'            => true,
-                    'representative_contactno'       => true,
-                    'representative_address'         => true,
-                    'members_gender'                 => false,
-                    'members_civilstatus'            => false,
-                    'citizenship'                    => false,
-                    'members_birthplace'             => false,
-                    'nationality'   => true,
-                    'insured1'      => false,
-                    'beneficiary1'  => false,
-                    'relation1'     => false,
-                    'bday_insured1' => false,
-                    'insured2'      => true,
-                    'beneficiary2'  => true,
-                    'relation2'     => true,
-                    'bday_insured2' => true,
-                    'insured3'      => true,
-                    'beneficiary3'  => true,
-                    'relation3'     => true,
-                    'bday_insured3' => true
-                ];
-        
-                foreach($encrypt_field as $field => $is_representative){
-                    if ($is_representative) {
-                          // If representative and alt mobile/email field are not empty.
-                        if (!empty($request_array[$field])) {
-                            $request_array[$field] = $this->encrypt(strip_tags($request_array[$field]));
-                        }
-                    } else {
-                        $request_array[$field] = $this->encrypt(strip_tags($request_array[$field]));
-                    }
-                }
-
-        $page = Membership::create($request_array);
-
-        $details = [];
-       
-        foreach ($request->input('vehicle_plate') as $key => $value) {
-            $details[] = [
-                'is_cs'        => !empty($request->input('is_cs')[$key]) ? $request->input('is_cs')[$key] : 0,
-                'plate'        => !empty($request->input('vehicle_plate')[$key])  ? $this->encrypt($request->input('vehicle_plate')[$key]) : null,
-                'make'         => !empty($request->input('vehicle_make')[$key]) ? $request->input('vehicle_make')[$key] : null,
-                'model'        => !empty($request->input('vehicle_model')[$key]) ? $request->input('vehicle_model')[$key] : null,
-                'year'         => !empty($request->input('vehicle_year')[$key]) ? $request->input('vehicle_year')[$key] : null,
-                'color'        => !empty($request->input('vehicle_color')[$key]) ? $request->input('vehicle_color')[$key] : null,
-                'fuel'         => !empty($request->input('vehicle_fuel')[$key]) ? $request->input('vehicle_fuel')[$key] : null,
-                'transmission' => !empty($request->input('vehicle_transmission')[$key]) ? $request->input('vehicle_transmission')[$key] : null,
-                // Handle OR image upload
-                'or_image' => $request->hasFile("or_image.{$key}") ?
-                $this->encrypt($request->file("or_image.{$key}")->storeAs(
-                        'img',
-                        'or_' . uniqid() . '.' . $request->file("or_image.{$key}")->getClientOriginalExtension(),
-                        'public'
-                    )) : null,
-
-                // Handle CR image upload
-                'cr_image' => $request->hasFile("cr_image.{$key}") ?
-                $this->encrypt($request->file("cr_image.{$key}")->storeAs(
-                        'img',
-                        'cr_' . uniqid() . '.' . $request->file("cr_image.{$key}")->getClientOriginalExtension(),
-                        'public'
-                    )) : null,
-
-                'vehicle_type' => !empty($request->input('vehicle_type')[$key]) ? $request->input('vehicle_type')[$key] : null,
-                'submodel' => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
-                'is_active' => 1,
-                'is_diplomat' => !empty($request->input('is_diplomat')[$key]) ? $request->input('is_diplomat')[$key] : 0,
-
-            ];
+    public function store(MotorcycleRequest $request)
+    {
+        if (!$request->session()->token() === $request->input('_token')) {
+            abort(403, 'CSRF token mismatch');
         }
 
-        $page->vehicles()->createMany($details);
-
-        
+        $this->storeMotorcycle->handle($request);
         return redirect()->route('event_dashboard');
-     }
+    }
+
+    public function fetch(Request $request, $planId, $token)
+    {
+        return DB::transaction(function () use ($request, $planId, $token) {
+            $temporaryToken = TokenModel::where('token', $token)
+                ->where('used', true)
+                ->where('form_completed', false)
+                ->whereNull('form_type')
+                ->lockForUpdate()
+                ->first();
+
+            if (!$temporaryToken || $temporaryToken->expires_at < now()) {
+                return redirect()->route('webpage_expiration_page')
+                    ->with('error', 'This link has already been used or already been submitted');
+            }
+
+            // Mark this token as being used for motorcycle form
+            $temporaryToken->form_type = 'motorcycle';
+            $temporaryToken->save();
+
+            $data = $this->customerMotorcycle->handle($request, $planId, $token);
+
+            return response()
+                ->view('customer_form/motorcycle', $data)
+                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
+        });
+    }
+
+    public function storing(MotorcycleRequest $request, $token)
+    {
+        $data = $this->storingMotorcycle->handle($request, $token);
+
+        if ($data === false) {
+            return redirect()->route('webpage_expiration_page');
+        }
+        return redirect()->route('thankyou');
+    }
+
+    public function thank()
+    {
+        return response()
+            ->view('customer_form/thankyou')
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    }
 }

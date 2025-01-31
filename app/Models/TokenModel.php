@@ -16,6 +16,9 @@ class TokenModel extends Model
     protected $fillable = [
         'token',
         'expires_at',
+        'used',
+        'form_completed',
+        'form_type' 
     ];
 
     // Optional: Indicate which fields are dates (to automatically convert to Carbon instances)

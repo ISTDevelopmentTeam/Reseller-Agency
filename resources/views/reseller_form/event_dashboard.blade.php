@@ -372,7 +372,7 @@
                                 @foreach ($results as $plan)
                                     @if ($plan->plan_id == 11)
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <a href="{{ route('new_motorcyle.index', ['planId' => $plan->plan_id]) }}"
+                                        <a href="{{ route('new_motorcycle.index', ['planId' => $plan->plan_id]) }}"
                                             class="btn btn-custom">
                                             APPLY NOW
                                         </a>

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions\Agent\Membership;
+namespace App\Actions\Renew\Renew_Membership;
 use App\Models\Membership;
 use Illuminate\Support\Facades\Auth;
 
-class StoreMembership
+class Renew_membership_store
 {
     protected $token;
     private $encryption_key;
@@ -132,7 +132,7 @@ class StoreMembership
         $page->vehicles()->createMany($details);
 
 
-        return redirect()->route('event_dashboard');
+        return redirect()->route('renew_reseller');
     }
 
 }

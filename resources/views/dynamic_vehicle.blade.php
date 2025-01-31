@@ -47,7 +47,7 @@
 
                 newVehicleDiv.innerHTML = `
                 <h6 class="mb-3">Vehicle <span class="vehicle-number">${vehicleCount}</span></h6>
-                <div class="row g-3">
+                <div class="row g-3 vehicle-entry">
                     <!-- First Row -->
                     <div class="col-md-4 centered-content">
                         <label class="label" style="font-size: medium;">
@@ -118,8 +118,15 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Year</label>
-                        <input type="text" id="year${vehicleCount}" name="vehicle_year[]" maxlength="4" class="form-control number_only"
-                            placeholder="Enter year">
+                        <input type="text" 
+                            id="year${vehicleCount}" 
+                            name="vehicle_year[]" 
+                            maxlength="4" 
+                            class="form-control number_only"
+                            placeholder="Enter year"
+                            onkeypress="return /[0-9]/i.test(event.key)"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                            pattern="[0-9]{4}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Sub model</label>
@@ -395,4 +402,75 @@
         // Initial binding for the first vehicle
         bindAjaxEvents(1);
     });
+
+    // Add this after your existing DOMContentLoaded event listener
+
+function updateVehicleSummary() {
+    const tbody = $("#myTable tbody");
+    tbody.empty();
+    
+    // Get all vehicle entries (both static and dynamic)
+    $(".vehicle-entry").each(function(index) {
+        const plate        = $(this).find('[name="vehicle_plate[]"]').val();
+        const make         = $(this).find('[name="vehicle_make[]"]').val();
+        const model        = $(this).find('[name="vehicle_model[]"]').val();
+        const year         = $(this).find('[name="vehicle_year[]"]').val();
+        const color        = $(this).find('[name="vehicle_color[]"]').val();
+        const fuel         = $(this).find('[name="vehicle_fuel[]"]').val();
+        const transmission = $(this).find('[name="vehicle_transmission[]"]').val();
+
+        if (plate) {
+            tbody.append(`
+                <tr>
+                    <td rowspan="3" style="text-align: center; vertical-align: middle;">
+                        <h3 class="text-center">${index + 1}${nthNumber(index + 1)}</h3>
+                    </td>
+                    <td colspan="1"><strong>Plate No.</strong> ${plate}</td>
+                    <td><strong>Make:</strong> ${make}</td>
+                    <td><strong>Model:</strong> ${model}</td>
+                </tr>
+                <tr>
+                    <td><strong>Year:</strong> ${year}</td>
+                    <td><strong>Color:</strong> ${color}</td>
+                    <td><strong>Fuel:</strong> ${fuel}</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><strong>Transmission: </strong>${transmission}</td>
+                </tr>
+            `);
+        }
+    });
+}
+
+// Helper function for ordinal numbers
+function nthNumber(number) {
+    if (number > 3 && number < 21) return 'th';
+    switch (number % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+    }
+}
+
+// Add these event listeners to update summary when vehicle details change
+document.addEventListener('DOMContentLoaded', function() {
+    // Update summary when any input changes
+    $(document).on('change', '.vehicle-entry input, .vehicle-entry select', function() {
+        updateVehicleSummary();
+    });
+    
+    // Update summary when a vehicle is added
+    $('#addVehicle').on('click', function() {
+        setTimeout(updateVehicleSummary, 100); // Small delay to ensure new fields are added
+    });
+    
+    // Update summary when a vehicle is removed
+    $(document).on('click', '.remove-vehicle', function() {
+        setTimeout(updateVehicleSummary, 100);
+    });
+    
+    // Initial summary update
+    updateVehicleSummary();
+});
 </script>

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Actions\Agent\Membership;
+namespace App\Actions\Customer\Membership;
 use App\Models\Membership;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TokenModel;
+use Illuminate\Support\Facades\DB;
 
-class StoreMembership
+class StoringMembership
 {
     protected $token;
     private $encryption_key;
@@ -21,34 +23,44 @@ class StoreMembership
         return base64_encode($encrypted);
     }
 
-    public function handle($request)
+    public function handle($request, $token)
     {
-     
-        // Additional token validation
-        if (!$request->session()->token() === $request->input('_token')) {
-            abort(403, 'CSRF token mismatch');
-        }
+        return DB::transaction(function () use ($request, $token) {
+            // Lock the token record for update and check validity
+            $temporaryToken = TokenModel::where('token', $token)
+                ->where('used', true)
+                ->where('form_completed', false)
+                ->lockForUpdate()
+                ->first();
 
-        $user = Auth::user();
-        $authorized_name = $user->name;
-        // dd($authorized_name);
+            if (!$temporaryToken || $temporaryToken->expires_at < now()) {
+                return false;
+            }
 
-        $request_array = $request->personal_info;
+            // Additional token validation
+            if (!$request->session()->token() === $request->input('_token')) {
+                abort(403, 'CSRF token mismatch');
+            }
 
-        $request_array["typesofapplication"] = 'NEW';
-        $request_array["platform"]           = 'Reseller Platform';
-        $request_array["category"]           = 'Reseller';
-        $request_array["status"]             = 'PENDING';
-        $request_array["application_date"]   = date("Y-m-d");
-        $request_array['option']             = 'Authorized';
-        $request_array['representative_name'] = $authorized_name;
+            $user = Auth::user();
+            $agent = $user->id;
 
-        if ($request->hasFile('idpicture')) {
-            $idImageFile = $request->file('idpicture');
-            $idImageName = 'idpicture_' . uniqid() . '.' . $idImageFile->getClientOriginalExtension();
-            $idImagePath = $idImageFile->storeAs('img', $idImageName, 'public');
-            $request_array['idpicture'] = $this->encrypt($idImagePath);
-        }
+            $request_array = $request->personal_info;
+
+            $request_array["typesofapplication"] = 'NEW';
+            $request_array["platform"]           = 'Reseller Platform';
+            $request_array["category"]           = 'Reseller';
+            $request_array["status"]             = 'PENDING';
+            $request_array["application_date"]   = date("Y-m-d");
+            $request_array['option']             = 'Personal';
+            $request_array['agent']              = $user->id;
+
+            if ($request->hasFile('idpicture')) {
+                $idImageFile = $request->file('idpicture');
+                $idImageName = 'idpicture_' . uniqid() . '.' . $idImageFile->getClientOriginalExtension();
+                $idImagePath = $idImageFile->storeAs('img', $idImageName, 'public');
+                $request_array['idpicture'] = $this->encrypt($idImagePath);
+            }
 
 
         $encrypt_field = [
@@ -93,21 +105,22 @@ class StoreMembership
         // dd($request_array);
         $page = Membership::create($request_array);
 
+        // Process vehicle details
         $details = [];
-
         foreach ($request->input('vehicle_plate') as $key => $value) {
             $details[] = [
                 'is_cs'        => !empty($request->input('is_cs')[$key]) ? $request->input('is_cs')[$key] : 0,
-                'plate'        => !empty($request->input('vehicle_plate')[$key])  ? $this->encrypt($request->input('vehicle_plate')[$key]) : null,
+                'plate'        => !empty($request->input('vehicle_plate')[$key]) ? $this->encrypt($request->input('vehicle_plate')[$key]) : null,
                 'make'         => !empty($request->input('vehicle_make')[$key]) ? $request->input('vehicle_make')[$key] : null,
                 'model'        => !empty($request->input('vehicle_model')[$key]) ? $request->input('vehicle_model')[$key] : null,
                 'year'         => !empty($request->input('vehicle_year')[$key]) ? $request->input('vehicle_year')[$key] : null,
                 'color'        => !empty($request->input('vehicle_color')[$key]) ? $request->input('vehicle_color')[$key] : null,
                 'fuel'         => !empty($request->input('vehicle_fuel')[$key]) ? $request->input('vehicle_fuel')[$key] : null,
                 'transmission' => !empty($request->input('vehicle_transmission')[$key]) ? $request->input('vehicle_transmission')[$key] : null,
+                
                 // Handle OR image upload
                 'or_image' => $request->hasFile("or_image.{$key}") ?
-                $this->encrypt($request->file("or_image.{$key}")->storeAs(
+                    $this->encrypt($request->file("or_image.{$key}")->storeAs(
                         'img',
                         'or_' . uniqid() . '.' . $request->file("or_image.{$key}")->getClientOriginalExtension(),
                         'public'
@@ -115,24 +128,28 @@ class StoreMembership
 
                 // Handle CR image upload
                 'cr_image' => $request->hasFile("cr_image.{$key}") ?
-                $this->encrypt($request->file("cr_image.{$key}")->storeAs(
+                    $this->encrypt($request->file("cr_image.{$key}")->storeAs(
                         'img',
                         'cr_' . uniqid() . '.' . $request->file("cr_image.{$key}")->getClientOriginalExtension(),
                         'public'
                     )) : null,
 
                 'vehicle_type' => !empty($request->input('vehicle_type')[$key]) ? $request->input('vehicle_type')[$key] : null,
-                'submodel' => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
-                'is_active' => 1,
+                'submodel'    => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
+                'is_active'   => 1,
                 'is_diplomat' => !empty($request->input('is_diplomat')[$key]) ? $request->input('is_diplomat')[$key] : 0,
-
             ];
         }
 
+        // Create vehicle records
         $page->vehicles()->createMany($details);
 
+        // Mark token as completed after successful creation
+        $temporaryToken->form_completed = true;
+        $temporaryToken->save();
 
-        return redirect()->route('event_dashboard');
+        return true;
+    });
     }
 
 }

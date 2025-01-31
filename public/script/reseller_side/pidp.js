@@ -1585,90 +1585,91 @@ var closeBtn         = document.getElementsByClassName("closeBtn")[0];
 function updateLabeldyna(checkedId, uncheckedId) {
     const checkedCheckbox = document.getElementById(checkedId);
     const uncheckedCheckbox = document.getElementById(uncheckedId);
-    
-    if (!checkedCheckbox || !uncheckedCheckbox) return;
-    
     uncheckedCheckbox.disabled = false;
     uncheckedCheckbox.checked = false;
     checkedCheckbox.disabled = true;
-
-    // Extract the vehicle number from the ID (if it exists)
-    const vehicleNum = checkedCheckbox.id.match(/\d+$/)?.[0] || '';
-    
-    // Get the corresponding plate number elements
-    const platenumLabel = document.querySelector(`label[for="platenum${vehicleNum}"]`);
-    const platenumInput = document.getElementById(`platenum${vehicleNum}`);
-    const var_csticker = document.getElementById(`csticker${vehicleNum}`);
-    
-    if (!platenumLabel || !platenumInput || !var_csticker) return;
-
-    // Clear any existing mask
+  
+    const vehicleNum = checkedId.match(/\d+$/)?.[0] || '';
+    const platenumId = vehicleNum ? `platenum${vehicleNum}` : 'platenum';
+    const cstickerId = vehicleNum ? `csticker${vehicleNum}` : 'csticker';
+  
+    const platenumInput = document.getElementById(platenumId);
+    const platenumLabel = document.querySelector(`label[for="${platenumId}"]`);
+    const var_csticker = document.getElementById(cstickerId);
+  
     $(platenumInput).unmask();
     
-    if (checkedCheckbox.value === '1') {
-        // Conduction sticker format
+    if (checkedCheckbox.value == 1) {
         platenumLabel.textContent = "Conduction Sticker";
         platenumInput.placeholder = "Enter conduction sticker";
         platenumInput.dataset.inputType = 'conduction';
         $(platenumInput).mask('AAAAAA');
-        platenumInput.value = "";
-        var_csticker.value = '1';
     } else {
-        // Plate number format
         platenumLabel.textContent = "Plate No";
         platenumInput.placeholder = "Enter plate no";
         platenumInput.dataset.inputType = 'plate';
-        applyPlateMask(platenumInput);
-        platenumInput.value = "";
-        var_csticker.value = '0';
+        $(platenumInput).mask('AAAAAAAA', {
+            translation: {
+                'A': {
+                    pattern: /[A-Za-z0-9\s-]/,
+                    transform: function(val) {
+                        let currentVal = this.el.val();
+                        if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
+                            return '';
+                        }
+                        return val;
+                    }
+                }
+            }
+        });
     }
-}
-
-// Enhanced plate number mask function
-function applyPlateMask(element) {
+    platenumInput.value = "";
+    var_csticker.value = checkedCheckbox.value;
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initial vehicle plate mask
+    const initialPlateInput = document.getElementById('platenum');
+    if (initialPlateInput) {
+        applyPlateMask(initialPlateInput);
+    }
+  
+    // Observer for dynamic vehicles
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.classList?.contains('vehicle-item')) {
+                    const plateInput = node.querySelector('.platenum');
+                    if (plateInput) {
+                        applyPlateMask(plateInput);
+                    }
+                }
+            });
+        });
+    });
+  
+    const vehicleContainer = document.getElementById('vehicleFields');
+    if (vehicleContainer) {
+        observer.observe(vehicleContainer, { childList: true, subtree: true });
+    }
+  });
+  
+  function applyPlateMask(element) {
     $(element).mask('AAAAAAAA', {
         translation: {
             'A': {
                 pattern: /[A-Za-z0-9\s-]/,
                 transform: function(val) {
-                    let currentVal = $(element).val();
+                    let currentVal = this.el.val();
                     if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
                         return '';
                     }
-                    return val.toUpperCase();
+                    return val;
                 }
             }
-        },
-        placeholder: "Enter plate no"
-    });
-}
-
-// Use event delegation for dynamically added elements
-$(document).on('focus', '.platenum', function() {
-    const inputType = this.dataset.inputType || 'plate';
-    if (inputType === 'plate') {
-        applyPlateMask(this);
-    } else if (inputType === 'conduction') {
-        $(this).mask('AAAAAA');
-    }
-});
-
-// Initialize masks for existing elements
-function initializePlateInputs() {
-    $('.platenum').each(function() {
-        const inputType = this.dataset.inputType || 'plate';
-        if (inputType === 'plate') {
-            applyPlateMask(this);
-        } else if (inputType === 'conduction') {
-            $(this).mask('AAAA-AAAAAAAA');
         }
     });
-}
-
-// Call initialization when document is ready
-$(document).ready(function() {
-    initializePlateInputs();
-});
+  }
   
   // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
   function summary_fetch() {

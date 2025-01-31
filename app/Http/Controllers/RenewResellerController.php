@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Actions\Renew\Search_by_pin;
 use App\Actions\Renew\Regular_search;
+use App\Actions\Renew\Renew_Membership\Renew_membership_fetch;
+use App\Actions\Renew\Renew_Membership\Renew_membership_store;
 use App\Models\PlanType;
 use App\Models\MembershipType;
 use App\Models\Town;
@@ -21,16 +23,21 @@ class RenewResellerController extends Controller
     
     protected $Search_by_pin;
     protected $Regular_search;
-    protected $token;
+    protected $renew_membership_fetch;
+    protected $renew_membership_store;
+    public $Result_record;
 
-    public function __construct(Search_by_pin $Search_by_pin, Regular_search $Regular_search)
+    public function __construct(Search_by_pin $Search_by_pin, Regular_search $Regular_search,
+    Renew_membership_fetch $renew_membership_fetch, Renew_membership_store $renew_membership_store)
     {
-        $this->Search_by_pin  = $Search_by_pin;
-        $this->Regular_search = $Regular_search;
-        $this->token = $this->get_token();
+        $this->Search_by_pin          = $Search_by_pin;
+        $this->Regular_search         = $Regular_search;
+        $this->renew_membership_fetch = $renew_membership_fetch;
+        $this->renew_membership_store = $renew_membership_store;
+        $this->Result_record = [];
     }
     public function index(){
-        return view("renew_reseller");
+        return view("renew_form/renew_reseller");
     }
 
     public function search_member(Request $request)
@@ -46,59 +53,20 @@ class RenewResellerController extends Controller
     //     return  $this->Regular_search->handle($request);      
     // }
 
-    public function reseller_form(Request $request)
+    public function membership(Request $request)
     {
-        $members  = MembershipType::where('membership_status', 'ACTIVE')->get();
-        $plantype = PlanType::all();
+        $data = $this->renew_membership_fetch->handle($request);
+        return view('renew_form/renew_membership')->with($data);
+    }
 
-        $searchTerm = $request->input('town');
+    public function store(Request $request)
+    {
+        if (!$request->session()->token() === $request->input('_token')) {
+            abort(403, 'CSRF token mismatch');
+        }
 
-        $towns = Town::select('a.*', 'c.*', 'd.*')
-            ->from('aap_zipcode as a')
-            ->leftJoin('address_city as c', 'a.az_city', '=', 'c.city_id')
-            ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
-            ->where('az_barangay', 'like', '%' . $searchTerm . '%')
-            ->get();
-
-        $city = $request->input('city');
-
-        $citys = City::select('a.az_zipcode', 'c.city_name', 'c.city_id', 'd.*')
-            ->from('address_city as c')
-            ->leftJoin('aap_zipcode as a', 'c.city_id', '=', 'a.az_city')
-            ->leftJoin('address_district as d', 'c.district_id', '=', 'd.district_id')
-            ->where('c.city_name', 'like', '%' . $city . '%')
-            ->where('a.az_barangay', '')
-            ->get();
-
-        $carMake = json_decode($this->get_carmake(), true);
-
-        // Fetch records based on pincode and record number
-        $pincode   = $request->segment(2);
-        $record_no = $request->segment(3);
-        $records = $this->get_member_data($pincode, $record_no);
-        
-            
-        $carMake = json_decode($this->get_carmake(), TRUE);
-
-        //  return dd($records['result_car']);
-        $data = [
-            'title'        => 'Membership Renewal Form',
-            'packages'     => ['members' => $members, 'plantype' => $plantype],
-            'towns'        => $towns,
-            'citys'        => $citys,
-            'records'      => $records,
-            'carMake'      => $carMake,
-        ];
-
-        return view('renew_reseller/renew_form', $data);
- 
-        
-        // return view('renew_reseller/renew_form')->with([
-        //     'packages' => ['members' => $members, 'plantype' => $plantype],
-        //     'towns'    => $towns,
-        //     'citys'     => $citys,
-        //     'carMake'=>$carMake
-        // ]);
+        $this->renew_membership_store->handle($request);
+        return redirect()->route('event_dashboard');
     }
 
 }

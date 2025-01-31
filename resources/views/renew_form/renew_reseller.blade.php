@@ -129,8 +129,6 @@
                                         @foreach ($membership_info as $member)
                                         <tr>
                                             <td>{{ $member['vehicleinfohead_order'] }}</td>
-                                            {{-- <td>{!! (implode("\n", $member['car_details'])) !!}</td> --}}
-                                            {{-- <td>{{ implode('\n', $member['car_details']) }}</td> --}}
                                             <td>
                                                 @foreach($member['car_details'] as $index => $detail)
                                                     {{ $detail }}
@@ -144,9 +142,21 @@
                                             <td>{{ $member['members_firstname'] }}</td>
                                             <td>{{ $member['vehicleinfohead_activedate'] }}</td>
                                             <td>{{ $member['vehicleinfohead_expiredate'] }}</td>
-                                            <td style="color: {{ strtoupper($member['vehicleinfohead_status']) === 'ACTIVE' ? 'green' : 'red' }}">{{ $member['vehicleinfohead_status'] }}</td>
+                                            <td style="color: {{ strtoupper($member['vehicleinfohead_status']) === 'ACTIVE' ? 'green' : 'red' }}">
+                                                {{ $member['vehicleinfohead_status'] }}
+                                            </td>
                                             <td>
-                                                <a href="{{ route('reseller_form', ['id' => $member['members_id'], 'vehicle' => $member['vehicleinfohead_id']]) }}" class="btn btn-primary">Renew</a>
+                                                @php
+                                                    $routeName = match(strtoupper($member['sponsor_name'])) {
+                                                        'PIDP' => 'renew_pidp',
+                                                        'MOTORCYCLE' => 'renew_motorcycle',
+                                                        default => 'renew_membership'
+                                                    };
+                                                @endphp
+                                                <a href="{{ route($routeName, ['id' => $member['members_id'], 'vehicle' => $member['vehicleinfohead_id']]) }}" 
+                                                   class="btn btn-primary">
+                                                    Renew
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach

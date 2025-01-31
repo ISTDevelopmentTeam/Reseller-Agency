@@ -33,22 +33,39 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 // NEW
 Route::get('/event_dashboard', [EventDashboardController::class, 'event_dashboard'])->name('event_dashboard');
+
 // MEMBERSHIP (reseller side)
 Route::get('/new_membership/{membershipId?}/{planId?}', [MembershipController::class, 'index'])->name('new_membership.index');
 Route::post('/new_membership', [MembershipController::class, 'store'])->name('new_membership.store');
-// Customer Side
+// MEMBERSHIP (customer side)
 Route::get('/membership/{membershipId?}/{planId?}/{token}', [MembershipController::class, 'fetch'])->name('membership.fetch');
-// PIDP
+Route::post('/membership/{token}', [MembershipController::class, 'storing'])->name('membership.storing');
+Route::get('/thankyou', [MembershipController::class, 'thank'])->name('thankyou');
+
+
+// PIDP (reseller side)
 Route::get('/new_pidp/{membershipId?}/{planId?}', [PidpController::class, 'index'])->name('new_pidp.index');
 Route::post('/new_pidp', [PidpController::class, 'store'])->name('new_pidp.store');
-// MOTORCYLE
-Route::get('/new_motorcyle/{planId?}', [MotorcycleController::class, 'index'])->name('new_motorcyle.index');
-Route::post('/new_motorcyle', [MotorcycleController::class, 'store'])->name('new_motorcyle.store');
-// Route::get('/GetVehicle', [NewResellerController::class, 'GetVehicle'])->name('GetVehicle');
+// PIDP (reseller side)
+Route::get('/pidp/{membershipId?}/{planId?}/{token}', [PidpController::class, 'fetch'])->name('pidp.fetch');
+Route::post('/pidp/{token}', [PidpController::class, 'storing'])->name('pidp.storing');
+Route::get('/thankyou', [PidpController::class, 'thank'])->name('thankyou');
+
+// MOTORCYLE (reseller side)
+Route::get('/new_motorcycle/{planId?}', [MotorcycleController::class, 'index'])->name('new_motorcycle.index');
+Route::post('/new_motorcycle', [MotorcycleController::class, 'store'])->name('new_motorcycle.store');
+// MOTORCYLE (customer side)
+Route::get('/motorcycle/{planId?}/{token}', [MotorcycleController::class, 'fetch'])->name('motorcycle.fetch');
+Route::post('/motorcycle/{token}', [MotorcycleController::class, 'storing'])->name('motorcycle.storing');
+Route::get('/thankyou', [MotorcycleController::class, 'thank'])->name('thankyou');
+
+
 // RENEW
 Route::get('/renew_reseller', [RenewResellerController::class, 'index'])->name('renew_reseller');
 Route::post('/search_member', [RenewResellerController::class, 'search_member'])->name('search_member');
-Route::get('/reseller_form/{id}/{vehicle}', [RenewResellerController::class, 'reseller_form'])->name('reseller_form');
+Route::get('/renew_membership/{id}/{vehicle}', [RenewResellerController::class, 'membership'])->name('renew_membership');
+Route::get('/renew_pidp/{id}/{vehicle}', [RenewResellerController::class, 'pidp'])->name('renew_pidp');
+Route::get('/renew_motorcycle/{id}/{vehicle}', [RenewResellerController::class, 'motorcycle'])->name('renew_motorcycle');
 
 // CUSTOMER
 Route::get('/customer_qr', [QRCustomerController::class, 'index'])->name('customer_qr');
@@ -102,7 +119,7 @@ return view('webpage_expiration_page');
 
 
 // In routes/web.php
-Route::post('/submit', [CustomerFormSubmitController::class, 'store'])->name('insert-data');
+// Route::post('/submit', [CustomerFormSubmitController::class, 'store'])->name('insert-data');
 
 
 

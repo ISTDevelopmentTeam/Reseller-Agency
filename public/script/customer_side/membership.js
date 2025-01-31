@@ -32,236 +32,147 @@ $('.letters_only_lname').on('input', function (event) {
     $('.validation-message_lname').text("");
   }
 });
+
+// this for number-only and letters will not work.
+$('.number_only').on('keypress', function(event) {
+  var charCode = event.which || event.keyCode;
+  var charStr = String.fromCharCode(charCode);
+
+  var numberRegex = /^[0-9]+$/;
+
+  if (!numberRegex.test(charStr)) {
+      event.preventDefault();
+  } 
+});
 // END FOR VALIDATION INPUT
 
 // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
-// Function to handle validation for each step
-// function validateStep(stepNumber) {
-//   const currentStep = document.querySelector(`#step${stepNumber}`);
-//   let isValid = true;
-
-//   // Special handling for step 2
-//   if (stepNumber === 2) {
-//     toggleRequiredAttributes();
-//     const emailInput = document.getElementById('emailAddress');
-    
-//     if (emailInput.hasAttribute('required')) {
-//       isValid = emailInput.checkValidity();
-//       if (!isValid) {
-//         emailInput.reportValidity();
-//       }
-//     }
-    
-//     // Check existing error messages
-//     if ($('.error-msg').text().trim() !== "" || $('.validation-message_email').text().trim() !== "") {
-//       isValid = false;
-//     }
-//   }
-
-//   // Special handling for vehicle step
-//   if (stepNumber === 3) {
-//     const vehicles = currentStep.querySelectorAll('.vehicle-item');
-    
-//     // Ensure at least one vehicle is present
-//     if (vehicles.length === 0) {
-//       isValid = false;
-//       alert('At least one vehicle is required.');
-//       return false;
-//     }
-
-//     // Validate each vehicle
-//     vehicles.forEach((vehicle) => {
-//       const requiredFields = vehicle.querySelectorAll('input[required], select[required]');
-//       requiredFields.forEach(field => {
-//         const isFieldValid = field.checkValidity();
-//         if (!isFieldValid) {
-//           isValid = false;
-//           field.reportValidity();
-//         }
-//       });
-//     });
-
-//     return isValid;
-//   }
-
-//   // Standard validation for other steps
-//   const requiredFields = currentStep.querySelectorAll('[required]');
-//   requiredFields.forEach(field => {
-//     const isFieldValid = field.checkValidity();
-//     if (!isFieldValid) {
-//       isValid = false;
-//       field.reportValidity();
-//     }
-//   });
-
-//   return isValid;
-// }
-
 function validateStep(stepNumber) {
   const currentStep = document.querySelector(`#step${stepNumber}`);
   let isValid = true;
 
-  // Prevent form submission which would trigger default browser validation
-  const form = currentStep.closest('form');
-  if (form) {
-      form.addEventListener('submit', (e) => e.preventDefault());
+    // Special validation for citizenship/nationality
+    if (stepNumber === 1) {
+      const citizenship = currentStep.querySelector('#citizenship');
+      const nationality = currentStep.querySelector('#nationality');
+      if (citizenship?.value === 'foreigner' && nationality && !nationality.value.trim()) {
+        nationality.required = true;
+        nationality.focus();
+        nationality.reportValidity();
+        return false;
+      }
+    }
+
+    if(stepNumber === 2){
+      // Check if there are existing error messages
+      if ($('.error-msg').text().trim() !== "" ||
+      $('.validation-message_email').text().trim() !== "") {
+      isValid = false;
+    }
+    if (isValid) {
+      validateStep(stepNumber + 1);
+        } else {
+          console.log('Validation failed');
+        }
+    }
+
+
+  // Validate vehicle section for step 3
+  if (stepNumber ===3) {
+    const vehicles = currentStep.querySelectorAll('.vehicle-item');
+    if (vehicles.length === 0) {
+      alert('At least one vehicle is required.');
+      return false;
+    }
   }
 
-  // Step 2: Email validation
-  if (stepNumber === 2) {
-      toggleRequiredAttributes();
-      // const emailInput = document.getElementById('emailAddress');
-      
-      // if (emailInput && emailInput.hasAttribute('required')) {
-      //     // Trigger validation immediately
-      //     emailInput.focus();
-      //     isValid = emailInput.checkValidity();
-      //     if (!isValid) {
-      //         emailInput.reportValidity();
-      //         return false;
-      //     }
-      // }
-      
-      if ($('.error-msg').text().trim() !== "" || $('.validation-message_email').text().trim() !== "") {
-          isValid = false;
-      }
+  // Use native form validation for required fields
+  const requiredFields = currentStep.querySelectorAll('[required]:invalid');
+  if (requiredFields.length > 0) {
+    requiredFields[0].focus();
+    requiredFields[0].reportValidity();
+    return false;
   }
 
-  // Step 3: Vehicle validation
-  if (stepNumber === 3) {
-      const vehicles = currentStep.querySelectorAll('.vehicle-item');
-      
-      if (vehicles.length === 0) {
-          isValid = false;
-          alert('At least one vehicle is required.');
-          return false;
-      }
-
-      // Validate each vehicle's required fields
-      for (const vehicle of vehicles) {
-          const requiredFields = vehicle.querySelectorAll('input[required], select[required]');
-          for (const field of requiredFields) {
-              field.focus(); // Focus each field to trigger validation
-              if (!field.checkValidity()) {
-                  field.reportValidity();
-                  isValid = false;
-                  return false; // Stop at first invalid field
-              }
-          }
-      }
-
-      return isValid;
-  }
-
-  // Standard validation for all other steps
-  const requiredFields = currentStep.querySelectorAll('[required]');
-  for (const field of requiredFields) {
-      // Focus each field to trigger immediate validation
-      field.focus();
-      if (!field.checkValidity()) {
-          field.reportValidity();
-          isValid = false;
-          return false; // Stop at first invalid field
-      }
-  }
+  gatherInputValues();
 
   return isValid;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Add real-time validation as user types
-  const form = document.querySelector('form');
-  if (form) {
-      const inputs = form.querySelectorAll('input, select, textarea');
-      
-      inputs.forEach(input => {
-          // Validate on input change
-          input.addEventListener('input', function() {
-              if (this.hasAttribute('required')) {
-                  this.checkValidity();
-              }
-          });
-
-          // Validate immediately when field loses focus
-          input.addEventListener('blur', function() {
-              if (this.hasAttribute('required')) {
-                  this.reportValidity();
-              }
-          });
-      });
-  }
-});
-
 function updateNavigationButtons() {
-  const steps = document.querySelectorAll('.form-step');
-  const currentStep = document.querySelector('.form-step.active');
+  const steps             = document.querySelectorAll('.form-step');
+  const currentStep       = document.querySelector('.form-step.active');
   const currentStepNumber = parseInt(currentStep.id.replace('step', ''));
-  const isLastStep = currentStepNumber === steps.length;
-  const isFirstStep = currentStepNumber === 1;
+  const isLastStep        = currentStepNumber === steps.length;
+  const isFirstStep       = currentStepNumber === 1;
 
   const existingNavArea = currentStep.querySelector('.nav-area');
   if (existingNavArea) {
     existingNavArea.remove();
   }
 
-  const navArea = document.createElement('div');
-  navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
+  const navArea           = document.createElement('div');
+        navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
   currentStep.appendChild(navArea);
 
-  const leftNav = document.createElement('div');
-  leftNav.className = 'previous';
+  const leftNav            = document.createElement('div');
+  const rightNav           = document.createElement('div');
+        leftNav.className  = 'previous';
+        rightNav.className = 'next';
   navArea.appendChild(leftNav);
-
-  const rightNav = document.createElement('div');
-  rightNav.className = 'next';
   navArea.appendChild(rightNav);
 
   if (!isFirstStep) {
-    const prevButton = document.createElement('button');
-    prevButton.type = 'button';
-    prevButton.className = 'btn btn-secondary rounded';
-    prevButton.textContent = 'Previous';
-    prevButton.onclick = previousStep;
+    const prevButton             = document.createElement('button');
+          prevButton.type        = 'button';
+          prevButton.className   = 'btn btn-secondary rounded';
+          prevButton.textContent = 'Previous';
+          prevButton.onclick     = previousStep;
     leftNav.appendChild(prevButton);
   }
 
-  const nextButton = document.createElement('button');
-  nextButton.type = isLastStep ? 'submit' : 'button';
-  nextButton.className = 'btn btn-primary rounded';
-
-  if (isLastStep) {
-    nextButton.textContent = 'Submit Application';
-    nextButton.onclick = () => {
+  const nextButton             = document.createElement('button');
+        nextButton.type        = 'button';                          // Changed to always be 'button' type
+        nextButton.className   = 'btn btn-primary rounded';
+        nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+        nextButton.onclick     = isLastStep ?
+    () => {
       if (validateStep(currentStepNumber)) {
-        submitForm();
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Once submitted, you won't be able to edit the form.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, submit it!",
+          cancelButtonText: "No, keep editing"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.querySelector('form').submit(); // Submits the actual form
+          }
+        });
       }
-    };
-  } else {
-    nextButton.textContent = 'Next';
-    nextButton.onclick = () => nextStep(currentStepNumber);
-  }
+    } : 
+    () => nextStep(currentStepNumber);
   rightNav.appendChild(nextButton);
 }
-
 
 function nextStep(currentStepNumber) {
   if (validateStep(currentStepNumber)) {
     const currentStep = document.querySelector(`#step${currentStepNumber}`);
-    const nextStep = document.querySelector(`#step${currentStepNumber + 1}`);
+    const nextStep    = document.querySelector(`#step${currentStepNumber + 1}`);
 
     if (currentStep && nextStep) {
       currentStep.classList.remove('active');
       nextStep.classList.add('active');
 
-      const progress = document.querySelector('.progress-bar');
-      progress.style.width = `${(currentStepNumber) * 25}%`;
+      const progress             = document.querySelector('.progress-bar');
+            progress.style.width = `${currentStepNumber * 25}%`;
 
       updateBreadcrumb(currentStepNumber + 1);
-      // manageFieldDisabling();
       updateNavigationButtons();
 
       if (currentStepNumber + 1 === 5) {
-        summary_fetch();
+        gatherInputValues();
       }
     }
   }
@@ -269,47 +180,54 @@ function nextStep(currentStepNumber) {
 
 function previousStep() {
   const currentStep = document.querySelector('.form-step.active');
-  const stepNumber = parseInt(currentStep.id.replace('step', ''));
+  const stepNumber  = parseInt(currentStep.id.replace('step', ''));
 
   if (stepNumber > 1) {
     currentStep.classList.remove('active');
     const previousStep = document.querySelector(`#step${stepNumber - 1}`);
     previousStep.classList.add('active');
 
-    const progress = document.querySelector('.progress-bar');
-    progress.style.width = `${(stepNumber - 2) * 25}%`;
+    const progress             = document.querySelector('.progress-bar');
+          progress.style.width = `${(stepNumber - 2) * 25}%`;
 
     updateBreadcrumb(stepNumber - 1);
-    // manageFieldDisabling();
     updateNavigationButtons();
   }
 }
 
 function updateBreadcrumb(stepNumber) {
   const steps = document.getElementsByClassName('breadcrumb-item');
-  for (let i = 0; i < steps.length; i++) {
-    steps[i].classList.remove("active");
-  }
-  steps[stepNumber - 1].classList.add("active");
+  Array.from(steps).forEach((step, index) => {
+    step.classList.toggle('active', index === stepNumber - 1);
+  });
 }
 
-// Handle input changes
-// document.addEventListener('input', function (e) {
-//   if (e.target.hasAttribute('required')) {
-//     e.target.classList.remove('is-invalid');
-//     const errorMessage = e.target.parentNode.querySelector('.error-message');
-//     if (errorMessage) {
-//       errorMessage.remove();
-//     }
-//   }
-// });
+// Initialize form
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', (e) => e.preventDefault());
 
-
-document.addEventListener('DOMContentLoaded', function () {
-  // manageFieldDisabling();
+    // Handle nationality field visibility
+    const citizenship = document.querySelector('#citizenship');
+    const nationalityContainer = document.querySelector('#add_info');
+    const nationality = document.querySelector('#nationality');
+    
+    if (citizenship && nationalityContainer) {
+      citizenship.addEventListener('change', function() {
+        nationalityContainer.style.display = this.value === 'foreigner' ? '' : 'none';
+        if (nationality) {
+          nationality.required = this.value === 'foreigner';
+          if (!this.value === 'foreigner') {
+            nationality.value = '';
+          }
+        }
+      });
+    }
+  }
+  
   updateNavigationButtons();
-  // VehicleHandling();
-  FileUploads();
+  toggleRequiredAttributes();
 });
 // ----------------------------------------------------------Validation for TAB/STEP-----------------------------------------------------------------//
 
@@ -331,18 +249,16 @@ function FileUploads() {
 }
 
 
-function handleFileUpload(input, imageId, feedbackId) {
+function handleGeneralFileUpload(input, imageId, feedbackId) {
   const file = input.files && input.files[0];
   if (!file) {
-    return; // No file selected, exit the function
+      return;
   }
 
   const feedback = document.getElementById(feedbackId);
   const imagePreview = document.getElementById(imageId);
 
   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-
-  // Maximum file size (8MB)
   const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
 
   // Reset previous feedback and preview
@@ -352,50 +268,50 @@ function handleFileUpload(input, imageId, feedbackId) {
 
   // Validate file type
   if (!allowedTypes.includes(file.type)) {
-    feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
-    input.value = ''; // Clear the input
-    return;
+      feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
+      input.value = '';
+      return;
   }
 
   // Validate file size
   if (file.size > maxSizeInBytes) {
-    feedback.textContent = 'File size exceeds 8MB limit.';
-    input.value = ''; // Clear the input
-    return;
+      feedback.textContent = 'File size exceeds 8MB limit.';
+      input.value = '';
+      return;
   }
 
-  // If file passes validation, create preview
+  // Create preview
   const reader = new FileReader();
   reader.onload = function (e) {
-    imagePreview.src = e.target.result;
-    imagePreview.style.display = 'block';
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = 'block';
   };
   reader.readAsDataURL(file);
 }
 // END FILE UPLOAD
 
 // Start Title Gender-----------------
-// document.getElementById('title').addEventListener('change', function() {
-//     const title = this.value;
-//     const genderSelect = document.getElementById('gender');
+document.getElementById('title').addEventListener('change', function() {
+    const title = this.value;
+    const genderSelect = document.getElementById('gender');
 
-//     switch (title) {
-//         case 'MR':
-//             genderSelect.value = 'MALE';
-//             break;
-//         case 'MS':
-//         case 'MRS':
-//             genderSelect.value = 'FEMALE';
-//             break;
-//         case 'ATTY':
-//         case 'DR':
-//         case 'ENGR':
-//             genderSelect.value = '';
-//             break;
-//         default:
-//             genderSelect.value = '';
-//     }
-// });
+    switch (title) {
+        case 'MR':
+            genderSelect.value = 'MALE';
+            break;
+        case 'MS':
+        case 'MRS':
+            genderSelect.value = 'FEMALE';
+            break;
+        case 'ATTY':
+        case 'DR':
+        case 'ENGR':
+            genderSelect.value = '';
+            break;
+        default:
+            genderSelect.value = '';
+    }
+});
 
 // Start Citizenship Dropdown-------------------
 document.addEventListener('DOMContentLoaded', function () {
@@ -428,66 +344,55 @@ document.addEventListener("DOMContentLoaded", function () {
   let datePicker;
   let lastValue = "";
 
-  // Calculate the maximum allowed date (18 years ago from today)
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
 
-  // Initialize Flatpickr
   datePicker = flatpickr("#birthdate", {
     dateFormat: "m/d/Y",
     allowInput: true,
-    maxDate: maxDate, // Set the maximum allowed date
+    maxDate: maxDate,
+    formatDate: (date) => {
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${month}/${day}/${date.getFullYear()}`;
+    },
     onChange: function (selectedDates, dateStr, instance) {
       if (selectedDates.length > 0) {
-        input.value = dateStr;
-        lastValue = dateStr;
+        const formattedDate = instance.formatDate(selectedDates[0], "m/d/Y");
+        input.value = formattedDate;
+        lastValue = formattedDate;
       }
     }
   });
 
-  // Add input event listener for manual typing
   input.addEventListener('input', function (e) {
     let v = this.value;
 
-    // Handle backspace/delete - allow normal deletion
     if (v.length < lastValue.length) {
       lastValue = v;
-      if (v.length === 0) {
-        datePicker.clear();
-      }
+      if (v.length === 0) datePicker.clear();
       return;
     }
 
-    // Only proceed with formatting if we're adding characters
     if (v.length > lastValue.length) {
-      // Handle MM/ format
       if (v.match(/^\d{2}$/) !== null) {
         let month = parseInt(v);
-        v = (month > 12 ? 12 : month) + '/';
+        v = v.padStart(2, '0');
+        v = (month > 12 ? '12' : v) + '/';
       }
-      // Handle MM/DD/ format
       else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-        let parts = v.split('/');
-        let month = parseInt(parts[0]);
-        let day = parseInt(parts[1]);
-        v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
+        let [month, day] = v.split('/').map(num => parseInt(num));
+        v = month.toString().padStart(2, '0') + '/' + 
+            (day > 31 ? '31' : day.toString().padStart(2, '0')) + '/';
       }
-      // Handle complete date format MM/DD/YYYY
       else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
-        let parts = v.split('/');
-        let month = parseInt(parts[0]);
-        let day = parseInt(parts[1]);
-        let year = parseInt(parts[2]);
-
-        // Create a date object and update the calendar
-        let dateStr = `${month}/${day}/${year}`;
+        let [month, day, year] = v.split('/').map(num => parseInt(num));
+        let dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
         let date = new Date(dateStr);
 
-        // Only update if it's a valid date and at least 18 years ago
         if (!isNaN(date.getTime()) && date <= maxDate) {
           datePicker.setDate(date, true);
         } else {
-          // If the date is not valid or not at least 18 years ago, clear the input
           this.value = lastValue;
           return;
         }
@@ -498,17 +403,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Add keydown listener for better backspace handling
   input.addEventListener('keydown', function (e) {
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      if (this.value.length === 0) {
-        datePicker.clear();
-      }
+    if ((e.key === 'Backspace' || e.key === 'Delete') && this.value.length === 0) {
+      datePicker.clear();
     }
   });
 });
-// END OF FLAT PICKER
-
 // ---------------------------------------------------END FUNCTION FOR PERSONAL INFORMATION------------------------------------------------ //
 
 
@@ -534,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   mailingAddressDropdown.addEventListener('change', function () {
-    if (mailingAddressDropdown.value === 'OFFICE') {
+    if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
       officeAddressSection.style.display = 'block';
       updateRequiredFields(true);
     } else {
@@ -554,10 +454,7 @@ function toggleRequiredAttributes() {
   const phoneInput = document.getElementById('mobileNumber');
   const emailInput = document.getElementById('emailAddress');
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  const isEmailValid = emailRegex.test(emailInput.value.trim());
-
+  // Add listener for phone input
   phoneInput.addEventListener('input', function() {
     if (this.value.trim() !== '') {
       emailInput.removeAttribute('required');
@@ -566,171 +463,216 @@ function toggleRequiredAttributes() {
     }
   });
 
-  if (isEmailValid) {
-    phoneInput.removeAttribute('required');
-  } else {
-    phoneInput.setAttribute('required', 'required');
-  }
+  // Add listener for email input
+  emailInput.addEventListener('input', function() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(this.value.trim());
+    
+    if (isEmailValid) {
+      phoneInput.removeAttribute('required');
+    } else {
+      phoneInput.setAttribute('required', 'required');
+    }
+  });
+}
+
+function maskTelNo(id) {
+  $("#" + id).mask("9-999-9999");
 }
 
 // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
+// vehicleFileUpload function to work with dynamic IDs
+function handleVehicleFileUpload(input, imageId, feedbackId) {
+  const file = input.files && input.files[0];
+  if (!file) {
+      return;
+  }
+
+  const feedback = document.getElementById(feedbackId);
+  const imagePreview = document.getElementById(imageId);
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+  const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
+
+  // Reset previous feedback and preview
+  feedback.textContent = '';
+  imagePreview.style.display = 'none';
+  imagePreview.src = '';
+
+  // Validate file type
+  if (!allowedTypes.includes(file.type)) {
+      feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
+      input.value = '';
+      return;
+  }
+
+  // Validate file size
+  if (file.size > maxSizeInBytes) {
+      feedback.textContent = 'File size exceeds 8MB limit.';
+      input.value = '';
+      return;
+  }
+
+  // Create preview
+  const reader = new FileReader();
+  reader.onload = function (e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
 
 function updateLabeldyna(checkedId, uncheckedId) {
+  const checkedCheckbox = document.getElementById(checkedId);
+  const uncheckedCheckbox = document.getElementById(uncheckedId);
+  uncheckedCheckbox.disabled = false;
+  uncheckedCheckbox.checked = false;
+  checkedCheckbox.disabled = true;
 
-        const checkedCheckbox = document.getElementById(checkedId);
-        const uncheckedCheckbox = document.getElementById(uncheckedId);
-        uncheckedCheckbox.disabled = false;
-        uncheckedCheckbox.checked = false;
-        checkedCheckbox.disabled = true;
+  const vehicleNum = checkedId.match(/\d+$/)?.[0] || '';
+  const platenumId = vehicleNum ? `platenum${vehicleNum}` : 'platenum';
+  const cstickerId = vehicleNum ? `csticker${vehicleNum}` : 'csticker';
 
-        if (checkedCheckbox.id == 'csticker_yes' || checkedCheckbox.id == 'csticker_no') {
+  const platenumInput = document.getElementById(platenumId);
+  const platenumLabel = document.querySelector(`label[for="${platenumId}"]`);
+  const var_csticker = document.getElementById(cstickerId);
 
-          var platenumLabel = document.querySelector('label[for="platenum"]');
-          var platenumInput = document.getElementById("platenum");
-          var var_csticker = document.getElementById("csticker");
-
-          if (checkedCheckbox.value == 1) {
-            platenumLabel.textContent = "Conduction Sticker";
-            platenumInput.placeholder = "Enter conduction sticker";
-            $(platenumInput).mask('AAAAAA');
-            platenumInput.value = "";
-            var_csticker.value = 1
-
-          } else {
-            platenumLabel.textContent = "Plate No";
-            platenumInput.placeholder = "Enter plate no";
-            $(platenumInput).mask('AAAAAAAA', {
-              translation: {
-                'A': {
+  $(platenumInput).unmask();
+  
+  if (checkedCheckbox.value == 1) {
+      platenumLabel.textContent = "Conduction Sticker";
+      platenumInput.placeholder = "Enter conduction sticker";
+      platenumInput.dataset.inputType = 'conduction';
+      $(platenumInput).mask('AAAAAA');
+  } else {
+      platenumLabel.textContent = "Plate No";
+      platenumInput.placeholder = "Enter plate no";
+      platenumInput.dataset.inputType = 'plate';
+      $(platenumInput).mask('AAAAAAAA', {
+          translation: {
+              'A': {
                   pattern: /[A-Za-z0-9\s-]/,
-                  transform: function (val) {
-                    let currentVal = this.el.val();
-                    // Only allow 7 alphanumeric characters plus one separator (dash or space)
-                    if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                      return '';
-                    }
-                    return val;
+                  transform: function(val) {
+                      let currentVal = this.el.val();
+                      if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
+                          return '';
+                      }
+                      return val;
                   }
-                }
-              },
-            });
-            platenumInput.value = "";
-            var_csticker.value = 0
+              }
           }
-        } else {
-          const radioButtons = document.querySelectorAll(
-            `input[name="is_cs[]"][id^="csticker${checkedCheckbox.id.slice(-1)}"]`);
-          var platenumLabel = document.querySelector('label[for="platenum' + checkedCheckbox.id.slice(-1) + '"]');
-          var platenumInput = document.getElementById("platenum" + checkedCheckbox.id.slice(-1));
-          var var_csticker = document.getElementById("csticker" + checkedCheckbox.id.slice(-1));
+      });
+  }
+  platenumInput.value = "";
+  var_csticker.value = checkedCheckbox.value;
+}
 
-          if (checkedCheckbox.value == 1) {
-            platenumLabel.textContent = "Conduction Sticker";
-            platenumInput.placeholder = "Enter conduction sticker";
-            $(platenumInput).mask('AAAAAA');
-            platenumInput.value = "";
-            var_csticker.value = 1
-          } else {
-            platenumLabel.textContent = "Plate No";
-            platenumInput.placeholder = "Enter plate no";
-            $(platenumInput).mask('AAAAAAAA', {
-              translation: {
-                'A': {
-                  pattern: /[A-Za-z0-9\s-]/,
-                  transform: function (val) {
-                    let currentVal = this.el.val();
-                    // Only allow 7 alphanumeric characters plus one separator (dash or space)
-                    if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                      return '';
-                    }
-                    return val;
+document.addEventListener('DOMContentLoaded', function() {
+  // Initial vehicle plate mask
+  const initialPlateInput = document.getElementById('platenum');
+  if (initialPlateInput) {
+      applyPlateMask(initialPlateInput);
+  }
+
+  // Observer for dynamic vehicles
+  const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+          mutation.addedNodes.forEach(function(node) {
+              if (node.classList?.contains('vehicle-item')) {
+                  const plateInput = node.querySelector('.platenum');
+                  if (plateInput) {
+                      applyPlateMask(plateInput);
                   }
-                }
-              },
-            });
-            platenumInput.value = "";
-            var_csticker.value = 0
+              }
+          });
+      });
+  });
+
+  const vehicleContainer = document.getElementById('vehicleFields');
+  if (vehicleContainer) {
+      observer.observe(vehicleContainer, { childList: true, subtree: true });
+  }
+});
+
+function applyPlateMask(element) {
+  $(element).mask('AAAAAAAA', {
+      translation: {
+          'A': {
+              pattern: /[A-Za-z0-9\s-]/,
+              transform: function(val) {
+                  let currentVal = this.el.val();
+                  if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
+                      return '';
+                  }
+                  return val;
+              }
           }
-        }
       }
-
+  });
+}
 // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
-function summary_fetch() {
+// GET INPUTS VALUE -------------------------------------------------------
+function gatherInputValues() {
 
-    // Step 1 Values
-  var membershipType  = $('#membership_type').val();
-  var plan_type       = $('#plan_type').val();
-  var pin_code        = $('#pinCode').val();
-  var paInsurance     = $('#paInsurance').val();
-  var activationDate  = $('#activationDate').val();
-  var applicationType = $('#applicationType').val();
-
-
-    // Step 2 Values
-  var title       = $('#title').val();
-  var first_name  = $('#firstName').val();
-  var last_name   = $('#lastName').val();
-  var middle_name = $('#middleName').val();
-    // var full_name    = first_name+ ' ,'+ last_name;
-  var gender      = $('#gender').val();
-  var birthdate   = $('#birthdate').val();
-  var birthplace  = $('#birthplace').val();
-  var citizenship = $('#citizenship').val();
-  var nationality = $('#nationality').val();
-    // var civilStatus        = $('#civilStatus').val();
-    // var acrNo        = $('#acrNo').val();
-  var occupation   = $('#occupation').val();
-  var mobileNumber = $('#mobileNumber').val();
-  var emailAddress = $('#emailAddress').val();
-  var occupation   = $('#occupation').val();
-  var civilStatus  = $('#civilStatus').val();
+  //Personal Information
+  const title       = document.getElementById("title").value.toUpperCase();
+  const firstName   = document.getElementById("firstName").value.toUpperCase();
+  const middleName  = document.getElementById("middleName").value.toUpperCase();
+  const lastName    = document.getElementById("lastName").value.toUpperCase();
+  const birthdate   = document.getElementById("birthdate").value;
+  const birthPlace  = document.getElementById("birthplace").value.toUpperCase();
+  const gender      = document.getElementById("gender").value.toUpperCase();
+  const occupation  = document.getElementById("occupation").value.toUpperCase();
+  const status      = document.getElementById("civilStatus").value.toUpperCase();
+  const citizenship = document.getElementById("citizenship").value.toUpperCase();
+  // Additional Information
+  const nationality = document.getElementById("nationality").value || "";
 
 
+  // Contact Information
+  const mailingAddress = document.getElementById("mail").value.toUpperCase();
+  // Home Address
+  const street                = document.getElementById("street").value.toUpperCase();
+  const town                  = document.getElementById("town").value.toUpperCase();
+  const city                  = document.getElementById("city").value.toUpperCase();
+  const province              = document.getElementById("province").value.toUpperCase();
+  const zipCode               = document.getElementById("zcode").value;
+  const mobileNo              = document.getElementById("mobileNumber").value;
+  const alternateMobileNo     = document.getElementById("alternateMobile").value;
+  const emailAddress          = document.getElementById("emailAddress").value;
+  const alternateEmailAddress = document.getElementById("alternateEmail").value;
+  // Office Address
+  const street1     = document.getElementById("street1").value.toUpperCase();
+  const town1       = document.getElementById("town1").value.toUpperCase();
+  const city1       = document.getElementById("city1").value.toUpperCase();
+  const province1   = document.getElementById("province1").value.toUpperCase();
+  const zipCode1    = document.getElementById("zcode1").value;
+  const CompanyName = document.getElementById("comname").value.toUpperCase();
+  const OfficeTel   = document.getElementById("telephoneNumber").value;
 
-    // Step 3 Values
 
-    // Home Address
-  var mailing       = $('#mail').val();
-  var street        = $('#street').val();
-  var town          = $('#town').val();
-  var city          = $('#city').val();
-  var province      = $('#province').val();
-  var zcode         = $('#zcode').val();
-  var homeaddress   = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-  var availMagazine = $('#availMagazine').val();
+  // DISPLAY INPUTS VALUE ON TABLE
+  //PERSONAL
+  document.getElementById("echoTitle").innerHTML       = "<strong>Title: </strong>" + title;
+  document.getElementById("echoFirstName").innerHTML   = "<strong>First Name: </strong>" + firstName;
+  document.getElementById("echoLastName").innerHTML    = "<strong>Last Name: </strong>" + lastName;
+  document.getElementById("echoMiddleName").innerHTML  = "<strong>Middle Name: </strong>" + middleName;
+  document.getElementById("echoBirthdate").innerHTML   = "<strong>Birthdate: </strong>" + birthdate;
+  document.getElementById("echoBirthPlace").innerHTML  = "<strong>Birth Place: </strong>" + birthPlace;
+  document.getElementById("echoGender").innerHTML      = "<strong>Gender: </strong>" + gender;
+  document.getElementById("echoCitizenship").innerHTML = "<strong>Citizenship: </strong>" + citizenship;
+  document.getElementById("echoStatus").innerHTML      = "<strong>Status: </strong>" + status;
+  document.getElementById("echoOccupation").innerHTML  = "<strong>Occupation: </strong>" + occupation;
 
-    // Office Address
-  var street        = $('#street1').val();
-  var town          = $('#town1').val();
-  var city          = $('#city1').val();
-  var province      = $('#province1').val();
-  var zcode         = $('#zcode1').val();
-  var officeaddress = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-  var companyName   = $('#comname').val();
-
-
-    // Summary Fields
-  document.getElementById('summaryApplicationType').textContent = applicationType;
-  document.getElementById('summaryMembershipType').textContent  = membershipType;
-  document.getElementById('summaryPlanType').textContent        = plan_type;
-  document.getElementById('summaryActivationDate').textContent  = activationDate;
-
-  document.getElementById('summaryTitle').textContent       = title;
-  document.getElementById('summaryLastname').textContent    = last_name;
-  document.getElementById('summaryFirstname').textContent   = first_name;
-  document.getElementById('summaryMiddlename').textContent  = middle_name;
-  document.getElementById('summaryGender').textContent      = gender;
-  document.getElementById('summaryBirthdate').textContent   = birthdate;
-  document.getElementById('summaryBirthplace').textContent  = birthplace;
-  document.getElementById('summaryCivilstatus').textContent = civilStatus;
-  document.getElementById('summaryCitizenship').textContent = citizenship;
-  document.getElementById('summaryOccupation').textContent  = occupation;
-
-  document.getElementById('summaryCompanyName').textContent       = companyName;
-  document.getElementById('summaryhomeaddress').textContent       = homeaddress;
-  document.getElementById('summaryofficeaddress').textContent     = officeaddress;
-  document.getElementById('summaryMailingPreference').textContent = mailing;
-  document.getElementById('summaryMagazine').textContent          = availMagazine;
-
-} 
+  //CONTACT 
+  document.getElementById("echoHomeAddress").innerHTML        = "<strong>Home Address: </strong>" + street + " " + town + " " + city + " " + province + " " + zipCode;
+  document.getElementById("echocomname").innerHTML            = "<strong>Company Name: </strong>" + CompanyName;
+  document.getElementById("echoOfficeAddress").innerHTML      = "<strong>Company Address: </strong>" + street1 + " " + town1 + " " + city1 + " " + province1 + " " + zipCode1;
+  document.getElementById("echoOfficeMobileNo").innerHTML     = "<strong>Company Phone: </strong>" + OfficeTel;
+  document.getElementById("echoMailingPreference").innerHTML  = "<strong>Mailing Preference: </strong>" + mailingAddress;
+  document.getElementById("echomobilenum").innerHTML          = "<strong>Mobile No: </strong>" + mobileNo;
+  document.getElementById("echoalternatemobilenum").innerHTML = "<strong>Alternate Mobile No: </strong>" + alternateMobileNo;
+  document.getElementById("echoemailadd").innerHTML           = "<strong>Email Address: </strong>" + emailAddress;
+  document.getElementById("echoalternateemailadd").innerHTML  = "<strong>Alternate Email Address: </strong>" + alternateEmailAddress;
+}
 // -------------------------------------- END INFORMATION SUMMARY FUNCTION-------------------------------------------- //
