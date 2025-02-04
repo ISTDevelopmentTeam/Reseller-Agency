@@ -309,28 +309,111 @@ function validateStep(stepNumber) {
   }
 
   if (stepNumber === 4) {
-    // Get all required fields and sort by position
-    const fields = Array.from(step4.querySelectorAll('[required]'));
-    fields.sort((a, b) => {
-      const aRect = a.getBoundingClientRect();
-      const bRect = b.getBoundingClientRect();
-      return aRect.top - bRect.top;
-    });
+    // First check vehicle ownership selection
+    const vehicleOwnershipYes = document.getElementById('vehicleOwnershipYes');
+    const vehicleOwnershipNo = document.getElementById('vehicleOwnershipNo');
+    const ownVehicleLabel = document.getElementById('own_vehicle_phil');
+    
+    // Check if either Yes or No is selected
+    if (!vehicleOwnershipYes.checked && !vehicleOwnershipNo.checked) {
+      ownVehicleLabel.style.color = 'red';
+      return false;
+    } else {
+      ownVehicleLabel.style.color = ''; // Reset color if valid
+    }
 
-    // Check each field in order
-    for (const field of fields) {
-      if (!field.checkValidity()) {
-        field.reportValidity();
+    if (vehicleOwnershipYes.checked) {
+      // Create a temporary form for validation
+      const tempForm = document.createElement('form');
+      tempForm.noValidate = true;
+      document.body.appendChild(tempForm);
+
+      // Define all fields to validate in order
+      const fieldsToValidate = [
+        { 
+          field: step4.querySelector('input[name="vehicle_plate[]"]'), 
+          label: 'Plate Number' 
+        },
+        { 
+          field: step4.querySelector('select[name="vehicle_make[]"]'), 
+          label: 'Car Make' 
+        },
+        { 
+          field: step4.querySelector('select[name="vehicle_model[]"]'), 
+          label: 'Car Model' 
+        },
+        { 
+          field: step4.querySelector('select[name="vehicle_type[]"]'), 
+          label: 'Vehicle Type' 
+        },
+        { 
+          field: step4.querySelector('input[name="vehicle_year[]"]'), 
+          label: 'Year' 
+        },
+        { 
+          field: step4.querySelector('input[name="submodel[]"]'), 
+          label: 'Sub Model' 
+        },
+        { 
+          field: step4.querySelector('input[name="vehicle_color[]"]'), 
+          label: 'Color' 
+        },
+        { 
+          field: step4.querySelector('select[name="vehicle_fuel[]"]'), 
+          label: 'Fuel Type' 
+        },
+        { 
+          field: step4.querySelector('select[name="vehicle_transmission[]"]'), 
+          label: 'Transmission Type' 
+        },
+        { 
+          field: step4.querySelector('input[name="or_image[]"]'), 
+          label: 'Official Receipt' 
+        },
+        { 
+          field: step4.querySelector('input[name="cr_image[]"]'), 
+          label: 'Certificate of Registration' 
+        }
+      ];
+
+      // Validate each field
+      for (const { field, label } of fieldsToValidate) {
+        if (!field) continue; // Skip if field doesn't exist
+        if (!field.hasAttribute('required')) continue; // Skip if not required
+
+        // Clone field for validation
+        const clonedField = field.cloneNode(true);
+        tempForm.appendChild(clonedField);
+
+        // Check if field is empty
+        if (!field.value || field.value.trim() === '') {
+          field.focus();
+          
+          // For Select2 fields
+          if (field.classList.contains('select2')) {
+            $(field).select2('open');
+            tempForm.remove();
+            return false;
+          }
+          
+          // For regular fields, use browser default validation
+          field.reportValidity();
+          tempForm.remove();
+          return false;
+        }
+      }
+
+      tempForm.remove();
+
+      // Check if at least one vehicle exists
+      const vehicles = step4.querySelectorAll('.vehicle-item');
+      if (vehicles.length === 0) {
+        alert('At least one vehicle is required.');
         return false;
       }
     }
-
-    const vehicles = step4.querySelectorAll('.vehicle-item');
-    if (vehicles.length === 0) {
-      alert('At least one vehicle is required.');
-      return false;
-    }
-  }
+    return true;
+}
   gatherInputValues();
   return true;
 }
@@ -1496,6 +1579,75 @@ function maskTelNo(id) {
 }
 
 // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
+
+// THIS FOR HIDE AND SHOW FOR VEHICLE
+function toggleVehicleDetails(element) {
+
+  const vehicleFields    = document.getElementById('vehicleFields');
+  const withVehicleInput = document.getElementById('with_vehicle');
+  
+  // Get all required fields
+  const requiredFields = vehicleFields.querySelectorAll('input[type="text"], input[type="file"], select');
+  
+  if (element.value === 'yes') {
+      vehicleFields.style.display = 'block';
+      // Update hidden input
+      withVehicleInput.value = 'yes';
+      
+      // Add required attribute to all fields
+      requiredFields.forEach(field => {
+          if (!field.classList.contains('optional')) {
+              field.setAttribute('required', '');
+          }
+      });
+      
+      // Specifically handle select2 fields if they exist
+      const select2Fields = vehicleFields.querySelectorAll('.select2');
+      select2Fields.forEach(field => {
+          if (!field.classList.contains('optional')) {
+              field.setAttribute('required', '');
+          }
+      });
+      
+  } else {
+      // Hide the vehicle fields
+      vehicleFields.style.display = 'none';
+      // Update hidden input
+      withVehicleInput.value = 'no';
+      
+      // Remove required attribute from all fields
+      requiredFields.forEach(field => {
+          field.removeAttribute('required');
+          if (field.tagName === 'SELECT') {
+              field.selectedIndex = 0;
+              // If using select2, update it
+              if (field.classList.contains('select2')) {
+                  try {
+                      $(field).val('').trigger('change');
+                  } catch (e) {
+                      console.warn('Select2 not initialized');
+                  }
+              }
+          } else {
+              field.value = '';
+          }
+      });
+      
+      // Clear file upload previews
+      const previewImages = vehicleFields.querySelectorAll('img[id="or"], img[id="cr"]');
+      previewImages.forEach(img => {
+          img.style.display = 'none';
+          img.src = '';
+      });
+      
+      // Clear error messages
+      const errorMessages = vehicleFields.querySelectorAll('.invalid-feedback, .text-danger');
+      errorMessages.forEach(error => {
+          error.style.display = 'none';
+      });
+  }
+}
+
 // vehicleFileUpload function to work with dynamic IDs
 function handleVehicleFileUpload(input, imageId, feedbackId) {
   const file = input.files && input.files[0];

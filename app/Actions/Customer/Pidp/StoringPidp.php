@@ -219,47 +219,51 @@ class StoringPidp
 
             $details = [];
 
-            foreach ($request->input('vehicle_plate') as $key => $value) {
-                $details[] = [
-                    'is_cs' => !empty($request->input('is_cs')[$key]) ? $request->input('is_cs')[$key] : 0,
-                    'plate' => !empty($request->input('vehicle_plate')[$key]) ? $this->encrypt($request->input('vehicle_plate')[$key]) : null,
-                    'make' => !empty($request->input('vehicle_make')[$key]) ? $request->input('vehicle_make')[$key] : null,
-                    'model' => !empty($request->input('vehicle_model')[$key]) ? $request->input('vehicle_model')[$key] : null,
-                    'year' => !empty($request->input('vehicle_year')[$key]) ? $request->input('vehicle_year')[$key] : null,
-                    'color' => !empty($request->input('vehicle_color')[$key]) ? $request->input('vehicle_color')[$key] : null,
-                    'fuel' => !empty($request->input('vehicle_fuel')[$key]) ? $request->input('vehicle_fuel')[$key] : null,
-                    'transmission' => !empty($request->input('vehicle_transmission')[$key]) ? $request->input('vehicle_transmission')[$key] : null,
-                    // Handle OR image upload
-                    'or_image' => $request->hasFile("or_image.{$key}") ?
-                        $this->encrypt($request->file("or_image.{$key}")->storeAs(
-                            'img',
-                            'or_' . uniqid() . '.' . $request->file("or_image.{$key}")->getClientOriginalExtension(),
-                            'public'
-                        )) : null,
+            $with_vehicle = $request->input('with_vehicle') === 'yes' ? 'yes' : 'no';
+            
+            if ($with_vehicle === 'yes') {
+                foreach ($request->input('vehicle_plate') as $key => $value) {
+                    $details[] = [
+                        'is_cs' => !empty($request->input('is_cs')[$key]) ? $request->input('is_cs')[$key] : 0,
+                        'plate' => !empty($request->input('vehicle_plate')[$key]) ? $this->encrypt($request->input('vehicle_plate')[$key]) : null,
+                        'make' => !empty($request->input('vehicle_make')[$key]) ? $request->input('vehicle_make')[$key] : null,
+                        'model' => !empty($request->input('vehicle_model')[$key]) ? $request->input('vehicle_model')[$key] : null,
+                        'year' => !empty($request->input('vehicle_year')[$key]) ? $request->input('vehicle_year')[$key] : null,
+                        'color' => !empty($request->input('vehicle_color')[$key]) ? $request->input('vehicle_color')[$key] : null,
+                        'fuel' => !empty($request->input('vehicle_fuel')[$key]) ? $request->input('vehicle_fuel')[$key] : null,
+                        'transmission' => !empty($request->input('vehicle_transmission')[$key]) ? $request->input('vehicle_transmission')[$key] : null,
+                        // Handle OR image upload
+                        'or_image' => $request->hasFile("or_image.{$key}") ?
+                            $this->encrypt($request->file("or_image.{$key}")->storeAs(
+                                'img',
+                                'or_' . uniqid() . '.' . $request->file("or_image.{$key}")->getClientOriginalExtension(),
+                                'public'
+                            )) : null,
 
-                    // Handle CR image upload
-                    'cr_image' => $request->hasFile("cr_image.{$key}") ?
-                        $this->encrypt($request->file("cr_image.{$key}")->storeAs(
-                            'img',
-                            'cr_' . uniqid() . '.' . $request->file("cr_image.{$key}")->getClientOriginalExtension(),
-                            'public'
-                        )) : null,
+                        // Handle CR image upload
+                        'cr_image' => $request->hasFile("cr_image.{$key}") ?
+                            $this->encrypt($request->file("cr_image.{$key}")->storeAs(
+                                'img',
+                                'cr_' . uniqid() . '.' . $request->file("cr_image.{$key}")->getClientOriginalExtension(),
+                                'public'
+                            )) : null,
 
-                    'vehicle_type' => !empty($request->input('vehicle_type')[$key]) ? $request->input('vehicle_type')[$key] : null,
-                    'submodel' => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
-                    'is_active' => 1,
-                    'is_diplomat' => !empty($request->input('is_diplomat')[$key]) ? $request->input('is_diplomat')[$key] : 0,
+                        'vehicle_type' => !empty($request->input('vehicle_type')[$key]) ? $request->input('vehicle_type')[$key] : null,
+                        'submodel' => !empty($request->input('submodel')[$key]) ? $request->input('submodel')[$key] : null,
+                        'is_active' => 1,
+                        'is_diplomat' => !empty($request->input('is_diplomat')[$key]) ? $request->input('is_diplomat')[$key] : 0,
 
-                ];
+                    ];
+                }
+
+                // dd($details);
+                $page->vehicles()->createMany($details);
             }
+            // Mark token as completed after successful creation
+            $temporaryToken->form_completed = true;
+            $temporaryToken->save();
 
-            // dd($details);
-            $page->vehicles()->createMany($details);
-// Mark token as completed after successful creation
-$temporaryToken->form_completed = true;
-$temporaryToken->save();
-
-return true;
+            return true;
         });
     }
 

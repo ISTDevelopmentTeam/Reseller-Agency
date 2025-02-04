@@ -29,8 +29,8 @@
 
         if (addButton && vehicleFieldsContainer) {
             addButton.addEventListener('click', function () {
-                console.log('Add button clicked. Current vehicle count:', vehicleCount);
-                console.log('Max vehicles allowed:', maxVehicles);
+                // console.log('Add button clicked. Current vehicle count:', vehicleCount);
+                // console.log('Max vehicles allowed:', maxVehicles);
 
                 if (vehicleCount > maxVehicles) {
                     // Using SweetAlert for max vehicle limit notification
@@ -264,7 +264,7 @@
                     },
                     dataType: "json",
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         var len = response.length;
                         $(`#model${vehicleNumber}`).empty();
                         $(`#model${vehicleNumber}`).append("<option value=''>Please select</option>");
