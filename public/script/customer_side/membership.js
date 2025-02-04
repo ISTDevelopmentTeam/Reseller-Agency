@@ -126,16 +126,18 @@ function updateNavigationButtons() {
   if (!isFirstStep) {
     const prevButton             = document.createElement('button');
           prevButton.type        = 'button';
-          prevButton.className   = 'btn btn-secondary rounded';
-          prevButton.textContent = 'Previous';
+          prevButton.className   = 'btn btn-prev';
+          // prevButton.textContent = 'Previous';
+          prevButton.innerHTML   = `<i class="bi bi-caret-left-fill"></i> Previous`;
           prevButton.onclick     = previousStep;
     leftNav.appendChild(prevButton);
   }
 
   const nextButton             = document.createElement('button');
         nextButton.type        = 'button';                          // Changed to always be 'button' type
-        nextButton.className   = 'btn btn-primary rounded';
-        nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+        nextButton.className   = 'btn btn-next';
+        // nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+        nextButton.innerHTML   = `${isLastStep ? 'Submit' : 'Next'} <i class="bi bi-caret-right-fill"></i>`;
         nextButton.onclick     = isLastStep ?
     () => {
       if (validateStep(currentStepNumber)) {
@@ -497,7 +499,8 @@ function handleVehicleFileUpload(input, imageId, feedbackId) {
 
   // Reset previous feedback and preview
   feedback.textContent = '';
-  imagePreview.style.display = 'none';
+  imagePreview.parentElement.style.display = 'none';
+  imagePreview.parentElement.classList.remove('animated-moveDown');
   imagePreview.src = '';
 
   // Validate file type
@@ -518,7 +521,8 @@ function handleVehicleFileUpload(input, imageId, feedbackId) {
   const reader = new FileReader();
   reader.onload = function (e) {
       imagePreview.src = e.target.result;
-      imagePreview.style.display = 'block';
+      imagePreview.parentElement.style.display = 'flex';
+      imagePreview.parentElement.classList.add('animated-moveDown');
   };
   reader.readAsDataURL(file);
 }
@@ -548,8 +552,8 @@ function updateLabeldyna(checkedId, uncheckedId) {
       checkedCheckbox.parentElement.classList.add("cbox-yes");
       uncheckedCheckbox.parentElement.classList.remove("cbox-no");
   } else {
-      platenumLabel.textContent = "Plate No";
-      platenumInput.placeholder = "Enter plate no";
+      platenumLabel.textContent = "Plate Number";
+      platenumInput.placeholder = "Enter plate no.";
       platenumInput.dataset.inputType = 'plate';
       $(platenumInput).mask('AAAAAAAA', {
           translation: {
@@ -565,6 +569,8 @@ function updateLabeldyna(checkedId, uncheckedId) {
               }
           }
       });
+      checkedCheckbox.parentElement.classList.add("cbox-no");
+      uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
   }
   platenumInput.value = "";
   var_csticker.value = checkedCheckbox.value;
