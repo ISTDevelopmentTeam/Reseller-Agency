@@ -17,18 +17,18 @@
     <link rel="stylesheet" href="{{ asset('style/customer_form/mem_branch.css') }}">
 </head>
 
-<body style="background-image: url({{ asset('images/bg-4.png') }});">
+<body style="background-image: url({{ asset('images/bg-5.webp') }});">
 
     <div class="container-xl p-0 d-flex flex-column main-container shadow">
         <!-- Form Card -->
-        <div class="container-fluid p-4 overflow-hidden progress-container">
+        <div class="container-fluid p-4 overflow-hidden progress-container" style="background-image: url({{ asset('images/wave-1.svg') }});">
             <div class="d-flex gap-2 align-items-center form-title-container">
                 <!-- Logo -->
                 <div class="sm-logo-container">
                     <img class="img-fluid" src="{{ asset('images/aap_logo.png') }}" alt="Logo" class="logo">
                 </div>
                 <!-- Title -->
-                <h3>Membership</h3>
+                <h3 class="text-white">Membership</h3>
             </div>
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
@@ -38,26 +38,26 @@
                         <div class="progress-bar" role="progressbar"></div>
                     </div>
                     <li class="breadcrumb-item position-relative ps-0 active" data-step="1">
-                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-user"></i></span>
+                        <span class="breadcrumb-icon position-relative z-2"><i class="fa-solid fa-user"></i></span>
                         <h6>Personal Information</h6>
                     </li>
                     <li class="breadcrumb-item position-relative ps-0" data-step="2">
-                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-address-book"></i></span>
+                        <span class="breadcrumb-icon position-relative z-2"><i class="fa-solid fa-address-book"></i></span>
                         <h6>Contact Information</h6>
                     </li>
                     <li class="breadcrumb-item position-relative ps-0" data-step="3">
-                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-car"></i></span>
+                        <span class="breadcrumb-icon position-relative z-2"><i class="fa-solid fa-car"></i></span>
                         <h6>Vehicle Details</h6>
                     </li>
                     <li class="breadcrumb-item position-relative ps-0" data-step="4">
-                        <span class="breadcrumb-icon p-1 position-relative z-2"><i class="fa-solid fa-list"></i></span>
+                        <span class="breadcrumb-icon position-relative z-2"><i class="fa-solid fa-list"></i></span>
                         <h6>Information Summary</h6>
                     </li>
                 </ol>
             </nav>
-            <div class="position-absolute xl-logo-container">
-                <img class="img-fluid" src="{{ asset('images/aap_logo_cropped.png') }}" alt="Logo" class="logo">
-            </div>
+            {{-- <div class="position-absolute xl-svg-container">
+                <img src="{{ asset('images/wave.svg') }}" alt="wave">
+            </div> --}}
         </div>
         <div class="container-fluid ps-5 pe-5 pb-5 flex-grow-1" id="formContainer">
             <div class="card-body">
@@ -125,8 +125,8 @@
                                         <i class="fas fa-upload"></i>
                                     </label>
                                 </div>
-                                <div id="pictureDropdown" class="dropdown">
-                                    <button type="button" id="pictureDropdownButton" class="dropdown-toggle" data-bs-toggle="dropdown"></button>
+                                <div id="" class="dropdown pictureDropdown">
+                                    <button type="button" id="" class="dropdown-toggle pictureDropdownButton" data-bs-toggle="dropdown"></button>
                                     <div class="dropdown-menu w-100" style="place-content: center;">
                                         <div id="valid_id_container">
                                             <img id="valid_id" class="img-fluid" src="{{ asset('images/image-placeholder.png') }}" alt="Image valid_id" style="object-fit: contain;">
@@ -338,11 +338,13 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-2 mb-4">
-                                            <label for="zcode" class="form-label">Zip</label>
+                                        <div class="col-md-3 mb-4">
+                                            <label for="zcode" class="form-label">ZIP Code</label>
                                             <input type="text" class="form-control number_only" maxlength="4"
                                                 name="personal_info[members_housezipcode]" id="zcode"
-                                                value="{{ old('personal_info.members_housezipcode') }}" required>
+                                                value="{{ old('personal_info.members_housezipcode') }}"
+                                                placeholder="e.g. 1234"
+                                                required>
                                             @error('personal_info.members_housezipcode')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -359,7 +361,7 @@
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-xl-3 col-md-6 mb-4 with-number">
-                                        <label for="mobileNumber" class="form-label">Mobile Number
+                                        <label for="mobileNumber" class="form-label d-flex justify-content-between">Mobile No.
                                             <span id="valid-msg-1" class="hide valid-msg"></span>
                                             <span id="error-msg-1" class="hide error-msg"></span>
                                         </label>
@@ -372,9 +374,8 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-xl-3 col-md-6 mb-4 with-number">
-                                        <label for="alternateMobile" class="form-label">Alternate Mobile
-                                            Number
+                                    <div class="col-xl-3pt6 col-md-6 mb-4 with-number">
+                                        <label for="alternateMobile" class="form-label d-flex justify-content-between">Alternate Mobile No.
                                             <span id="valid-msg-2" class="hide valid-msg"></span>
                                             <span id="error-msg-2" class="hide error-msg"></span>
                                         </label>
@@ -387,11 +388,13 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-xl-3 col-md-6 mb-4">
+                                    <div class="col-xl-2pt4 col-md-6 mb-4">
                                         <label for="emailAddress" class="form-label">Email Address</label>
                                         <input type="email" class="form-control"
                                             name="personal_info[members_emailaddress]" id="emailAddress"
-                                            value="{{ old('personal_info.members_emailaddress') }}" required>
+                                            value="{{ old('personal_info.members_emailaddress') }}"
+                                            placeholder="example@email.com"
+                                            required>
                                         @error('personal_info.members_emailaddress')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -401,7 +404,8 @@
                                             Address</label>
                                         <input type="email" class="form-control"
                                             name="personal_info[members_alternate_emailaddress]" id="alternateEmail"
-                                            value="{{ old('personal_info.members_alternate_emailaddress') }}">
+                                            value="{{ old('personal_info.members_alternate_emailaddress') }}"
+                                            placeholder="alt_example@email.com">
                                         @error('personal_info.members_alternate_emailaddress')
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
@@ -449,10 +453,11 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-2">
-                                            <label for="zcode1" class="form-label">Zip</label>
+                                            <label for="zcode1" class="form-label">ZIP Code</label>
                                             <input type="text" class="form-control number_only"
                                                 name="personal_info[members_officezipcode]" id="zcode1" maxlength="4"
-                                                value="{{ old('personal_info.members_officezipcode') }}">
+                                                value="{{ old('personal_info.members_officezipcode') }}"
+                                                placeholder="e.g. 1234">
                                             @error('personal_info.members_officezipcode')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -463,7 +468,8 @@
                                             <label for="comname" class="form-label">Company Name</label>
                                             <input type="text" class="form-control"
                                                 name="personal_info[members_businessname]" id="comname"
-                                                value="{{ old('personal_info.members_businessname') }}">
+                                                value="{{ old('personal_info.members_businessname') }}"
+                                                placeholder="e.g. ABC Corporation">
                                             @error('personal_info.members_businessname')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -474,7 +480,8 @@
                                             <input type="tel" class="form-control number_only"
                                                 name="personal_info[tele_num]" id="telephoneNumber"
                                                 onkeyup="maskTelNo(this.id)"
-                                                value="{{ old('personal_info.tele_num') }}">
+                                                value="{{ old('personal_info.tele_num') }}"
+                                                placeholder="(123) 456-7890">
                                             @error('personal_info.tele_num')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -518,7 +525,7 @@
                                                                 <span class="checkmark"></span>
                                                                 YES
                                                             </label>
-                                                            <label class="p-1 radio-checkbox">
+                                                            <label class="p-1 radio-checkbox cbox-no">
                                                                 <input type="checkbox" id="csticker_no" value="0"
                                                                     {{ old('is_cs.0') == '0' ? 'checked' : '' }}
                                                                     onchange="updateLabeldyna('csticker_no', 'csticker_yes')"
@@ -533,13 +540,13 @@
                                                     @enderror
                                                 </div>
                                                 <div class="col-md-4 p-0 platenum-container">
-                                                    <label for="platenum" class="label">Plate No</label>
+                                                    <label for="platenum" class="label">Plate Number</label>
                                                     <input name="vehicle_plate[]" type="text"
-                                                        class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
+                                                        class="text-input form-control platenum @error('vehicle_plate.*') is-invalid @enderror"
                                                         id="platenum" 
                                                         value="{{ old('vehicle_plate.0') }}" 
                                                         autocomplete="off"
-                                                        placeholder="Enter Plate No" 
+                                                        placeholder="Enter Plate No." 
                                                         style="text-transform: uppercase;" 
                                                         required
                                                         data-input-type="plate"> <!-- Added data attribute to track input type -->
@@ -563,7 +570,7 @@
                                                                 <span class="checkmark"></span>
                                                                 YES
                                                             </label>
-                                                            <label class="p-1 radio-checkbox">
+                                                            <label class="p-1 radio-checkbox cbox-no">
                                                                 <input type="checkbox" id="is_diplomat_no_1" value="0"
                                                                     {{ old('is_diplomat.0') == '0' ? 'checked' : '' }}
                                                                     onchange="update_diplomat('is_diplomat_no_1', 'is_diplomat_yes_1')"
@@ -725,7 +732,9 @@
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                     <div id="orFeedback" class="text-danger"></div>
-                                                    <img id="or" src="" alt="Image or" style="max-width: 200px; display: none; margin-top: 10px;">
+                                                    <div class="or-container">
+                                                        <img id="or" class="img-fluid" src="" alt="Image or">
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -747,7 +756,9 @@
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                     <div id="crFeedback" class="text-danger"></div>
-                                                    <img id="cr" src="" alt="Image cr" style="max-width: 200px; display: none; margin-top: 10px;">
+                                                    <div class="cr-container">
+                                                        <img id="cr" class="img-fluid" src="" alt="Image cr">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -766,12 +777,18 @@
 
                             <!-- Step 4: Information Summary -->
                             <div class="form-step tab" id="step4">
+                                <div class="step-title-container pt-4">
+                                    <div class="mb-3">
+                                        <h5 class="card-title mb-2">Step 4&#58; <span class="fw-normal">Before submitting your application, carefully review and confirm all the information you've entered across the preceding steps.</span></h5>
+                                    </div>
+                                    <hr />
+                                </div>
                                 <div class="justify-content-right"></div>
-                                <div class="row col-md-12">
-                                  <table class="table table-bordered ">
+                                <div class="container-fluid">
+                                  {{-- <table class="table table-bordered">
                                     <thead>
                                       <tr>
-                                        <th colspan="5" class="text-center text-light" style="background-color: rgba(21, 24, 72, 0.836);">PERSONAL INFORMATION</th>
+                                        <th colspan="5" class="text-center text-light dark-blue-bg">PERSONAL INFORMATION</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -782,23 +799,44 @@
                                         <td id="echoMiddleName"></td>
                                       </tr>
                                       <tr>
-                                        <td id="echoBirthdate"></td>
-                                        <td colspan="2" id="echoBirthPlace"></td>
-                                        <td id="echoGender"></td>
+                                        <td id="echoBirthdate" class="col-md-3"></td>
+                                        <td colspan="2" id="echoBirthPlace" class="col-md-6"></td>
+                                        <td id="echoGender" class="col-md-3"></td>
                                       </tr>
                                       <tr>
-                                        <td id="echoCitizenship"></td>
-                                        <td id="echoStatus"></td>
-                                        <td colspan="2" id="echoOccupation"></td>
+                                        <td id="echoCitizenship" class="col-md-3"></td>
+                                        <td id="echoStatus" class="col-md-3"></td>
+                                        <td colspan="2" id="echoOccupation" class="col-md-6"></td>
                                       </tr>
                                       <!-- Add more rows as needed -->
                                     </tbody>
-                                  </table>
+                                  </table> --}}
+                                  <div class="mb-4">
+                                    <div class="row text-center text-light dark-blue-bg p-2">
+                                        <h6 class="m-0">PERSONAL INFORMATION</h6>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoTitle">test</div>
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoLastName">test</div>
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoFirstName">test</div>
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoMiddleName">test</div>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoBirthdate">test</div>
+                                        <div class="col-md-6 p-2 light-border-subtle" id="echoBirthPlace">test</div>
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoGender">test</div>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoCitizenship">test</div>
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoStatus">test</div>
+                                        <div class="col-md-6 p-2 light-border-subtle" id="echoOccupation">test</div>
+                                    </div>
+                                  </div>
                             
-                                  <table class="table table-bordered">
+                                  {{-- <table class="table table-bordered">
                                     <thead>
                                       <tr>
-                                        <th colspan="4" class="text-center text-light" style="background-color: rgba(21, 24, 72, 0.836);">CONTACT INFORMATION</th>
+                                        <th colspan="4" class="text-center text-light dark-blue-bg">CONTACT INFORMATION</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -813,25 +851,58 @@
                                       </tr>
                                       <tr>
                                         <!-- <td id="echoHomeMobileNo"></td> -->
-                                        <td id="echomobilenum"></td>
-                                        <td id="echoOfficeMobileNo"></td>
-                                        <td colspan="2" id="echoMailingPreference"></td>
+                                        <td id="echomobilenum" class="col-md-3"></td>
+                                        <td id="echoOfficeMobileNo" class="col-md-3"></td>
+                                        <td colspan="2" id="echoMailingPreference" class="col-md-6"></td>
                                       </tr>
                                       <tr>
-                                        <td id="echoalternatemobilenum"></td>
-                                        <td id="echoemailadd"></td>
-                                        <td id="echoalternateemailadd"></td>
+                                        <td id="echoalternatemobilenum" class="col-md-4"></td>
+                                        <td id="echoemailadd" class="col-md-4"></td>
+                                        <td id="echoalternateemailadd" class="col-md-4"></td>
                                       </tr>
                                     </tbody>
-                                  </table>
-                                  <table class="table table-bordered" id="myTable">
+                                  </table> --}}
+
+                                  <div class="mb-4">
+                                    <div class="row text-center text-light dark-blue-bg p-2">
+                                        <h6 class="m-0">CONTACT INFORMATION</h6>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-12 p-2 light-border-subtle" id="echoHomeAddress">test</div>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-12 p-2 light-border-subtle" id="echocomname">test</div>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-12 p-2 light-border-subtle" id="echoOfficeAddress">test</div>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echomobilenum">test</div>
+                                        <div class="col-md-3 p-2 light-border-subtle" id="echoOfficeMobileNo">test</div>
+                                        <div class="col-md-6 p-2 light-border-subtle" id="echoMailingPreference">test</div>
+                                    </div>
+                                    <div class="row centered-text">
+                                        <div class="col-md-4 p-2 light-border-subtle" id="echoalternatemobilenum">test</div>
+                                        <div class="col-md-4 p-2 light-border-subtle" id="echoemailadd">test</div>
+                                        <div class="col-md-4 p-2 light-border-subtle" id="echoalternateemailadd">test</div>
+                                    </div>
+                                  </div>
+
+                                  {{-- <table class="table table-bordered" id="myTable">
                                     <thead>
                                       <tr>
-                                        <th colspan="5" class="text-center text-light" style="background-color: rgba(21, 24, 72, 0.836);">VEHICLE DETAILS</th>
+                                        <th colspan="5" class="text-center text-light dark-blue-bg">VEHICLE DETAILS</th>
                                       </tr>
                                     </thead>
                                     <tbody id="tbodyid">
-                                    </tbody>
+                                    </tbody> --}}
+
+                                    <div class="mb-3" id="myTable">
+                                        <div class="row text-center text-light dark-blue-bg p-2">
+                                            <h6 class="m-0">VEHICLE DETAILS</h6>
+                                        </div>
+                                        <div id="tbodyid"></div>
+                                    </div>
                             
                                   </table>
                                 </div>

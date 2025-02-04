@@ -5,15 +5,16 @@
     --dark-blue: #002D6A;
     --yellow: #FFDD00;
     --orange: #ffc107;
-    --dark-gray: #828282;
+    --dark-gray: #787878;
     --light-gray: #9b9b9b;
     --black: #212529;
     --dirty-white: #f8f9fa;
 
-    --icon-size: 32px;
+    --icon-size: 36px;
 }
 
 body {
+    position: relative;
     min-height: 100%;
     height: min-content;
     place-content: center;
@@ -21,8 +22,31 @@ body {
     background-size: cover;
     background-repeat: no-repeat; 
     background-position: 50% 50%;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(3px);
     padding-bottom: 50px;
+}
+
+body > * {
+    position: relative;
+    z-index: 2;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+}
+
+.animated-moveDown {
+    animation-name: moveDown;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
 }
 
 .main-container {
@@ -41,6 +65,8 @@ body {
     top: 0;
     z-index: 1000;
     background-color: #F9FBFA;
+    background-repeat: repeat-x;
+    background-size: cover;
 }
 
 .step-title-container {
@@ -59,13 +85,22 @@ body {
     width: 85%;
     transform: translateX(-50%);
     transform-origin: left top;
+    border: 1px solid var(--bs-dark-border-subtle);
+    background-color: #fff;
+}
+
+.progress-bar {
+    background-color: rgb(255, 210, 149);
 }
 
 .form-title-container {
+    position: relative;
+    z-index: 3;
     margin-bottom: 1.75rem !important;
 }
 
 .breadcrumb {
+    z-index: 3;
     flex-direction: row;
     flex-wrap: nowrap;
     width: 90%;
@@ -78,12 +113,11 @@ body {
     place-items: center;
     gap: 6px;
     text-wrap: nowrap;
-    transition: all 0.9s ease;
+    transition: all 0.4s ease;
 }
 
-.breadcrumb-item.active {
-    color: var(--dark-blue) !important;
-    border-color: var(--black);
+.breadcrumb-item.active > h6 {
+    color: var(--yellow) !important;
 }
 
 .breadcrumb-item.active > .breadcrumb-icon {
@@ -94,25 +128,25 @@ body {
     background-color: #F9FBFA;
 }
 
-.breadcrumb-item:not(.active) {
-    color: var(--dark-gray);
-    border-color: var(--dark-gray);
+.breadcrumb-item:not(.active) > h6 {
+    color: #fff !important;
 }
 
 .breadcrumb-icon {
     display: inline-grid;
     border: 1px solid;
-    border-radius: 3px;
+    border-radius: 50%;
     height: var(--icon-size);
     aspect-ratio: 1;
     place-items: center;
 }
 
-.xl-logo-container {
-    bottom: 12%;
-    left: 60%;
-    width: 50%;
-    opacity: 0.1;
+.xl-svg-container {
+    z-index: 2;
+    top: 0;
+    right: 0;
+    width: 100%;
+    opacity: 0.3;
 }
 
 #formContainer {
@@ -133,12 +167,12 @@ body {
     font-weight: 300;
 }
 
-#pictureDropdown {
+.pictureDropdown {
     width: 100%;
     height: 15px;
 }
 
-#pictureDropdownButton {
+.pictureDropdownButton {
     width: 100%;
     height: 100%;
     padding: 2px;
@@ -146,7 +180,7 @@ body {
     background-color: #e4e6e4;
 }
 
-#pictureDropdownButton::after {
+.pictureDropdownButton::after {
     height: 100%;
 }
 
@@ -210,6 +244,20 @@ body {
     background-color: var(--bs-danger);
 } */
 
+.or-container, .cr-container {
+    display: none;
+    height: 225px;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding-top: 10px;
+    justify-content: center;
+    transform: translateY(-15px);
+}
+
+.centered-text > * {
+    place-content: center;
+}
+
 .btn-prev, .btn-next {
     font-weight: 500;
     padding: 0.45rem 1rem;
@@ -237,6 +285,14 @@ body {
     color: var(--light-gray);
 }
 
+.dark-blue-bg {
+    background-color: var(--dark-blue) !important;
+}
+
+.light-border-subtle {
+    border: 1px solid var(--bs-light-border-subtle);
+}
+
 .min-width-150 {
     min-width: 150px;
 }
@@ -251,6 +307,17 @@ body {
 
 .min-width-300 {
     min-width: 300px;
+}
+
+@keyframes moveDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 575px) {
@@ -313,5 +380,17 @@ body {
 
     .main-container {
         height: calc(100vh - 50px);
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2pt4 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+
+    .col-xl-3pt6 {
+        flex: 0 0 auto;
+        width: 30%;
     }
 }
