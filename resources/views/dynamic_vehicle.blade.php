@@ -169,8 +169,9 @@
                     </label>
                 </div>
                 <div id="orFeedback${vehicleCount}" class="text-danger"></div>
-                <img id="or${vehicleCount}" src="" alt="Image or"
-                    style="max-width: 200px; display: none; margin-top: 10px;">
+                <div class="or-container">
+                    <img id="or${vehicleCount}" class="img-fluid" src="" alt="Image or">
+                </div>
             </div>
         </div>
         <div class="col-md-6">
@@ -185,8 +186,9 @@
                     </label>
                 </div>
                 <div id="crFeedback${vehicleCount}" class="text-danger"></div>
-                <img id="cr${vehicleCount}" src="" alt="Image cr"
-                    style="max-width: 200px; display: none; margin-top: 10px;">
+                <div class="cr-container">
+                    <img id="cr${vehicleCount}" class="img-fluid" src="" alt="Image cr">
+                </div>
             </div>
         </div>
                 </div>
@@ -406,7 +408,7 @@
     // Add this after your existing DOMContentLoaded event listener
 
 function updateVehicleSummary() {
-    const tbody = $("#myTable tbody");
+    const tbody = $("#myTable #tbodyid");
     tbody.empty();
     
     // Get all vehicle entries (both static and dynamic)
@@ -421,24 +423,49 @@ function updateVehicleSummary() {
 
         if (plate) {
             tbody.append(`
-                <tr>
-                    <td rowspan="3" style="text-align: center; vertical-align: middle;">
+                <div class="row centered-text">
+                    <div class="col-md-1 g-0 light-border-subtle">
                         <h3 class="text-center">${index + 1}${nthNumber(index + 1)}</h3>
-                    </td>
-                    <td colspan="1"><strong>Plate No.</strong> ${plate}</td>
-                    <td><strong>Make:</strong> ${make}</td>
-                    <td><strong>Model:</strong> ${model}</td>
-                </tr>
-                <tr>
-                    <td><strong>Year:</strong> ${year}</td>
-                    <td><strong>Color:</strong> ${color}</td>
-                    <td><strong>Fuel:</strong> ${fuel}</td>
-                </tr>
-                <tr>
-                    <td colspan="3"><strong>Transmission: </strong>${transmission}</td>
-                </tr>
+                    </div>
+                    <div class="col-md-11 g-0">
+                        <div class="row m-0">
+                            <div class="col-md-4 p-2 light-border-subtle"><strong>Plate No.</strong> ${plate}</div>
+                            <div class="col-md-4 p-2 light-border-subtle"><strong>Make:</strong> ${make}</div>
+                            <div class="col-md-4 p-2 light-border-subtle"><strong>Model:</strong> ${model}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-md-4 p-2 light-border-subtle"><strong>Year:</strong> ${year}</div>
+                            <div class="col-md-4 p-2 light-border-subtle"><strong>Color:</strong> ${color}</div>
+                            <div class="col-md-4 p-2 light-border-subtle"><strong>Fuel:</strong> ${fuel}</div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-md-12 p-2 light-border-subtle"><strong>Transmission:</strong> ${transmission}</div>
+                        </div>
+                    </div>
+                </div>
             `);
         }
+
+        // if (plate) {
+        //     tbody.append(`
+        //         <tr>
+        //             <td rowspan="3" style="text-align: center; vertical-align: middle;">
+        //                 <h3 class="text-center">${index + 1}${nthNumber(index + 1)}</h3>
+        //             </td>
+        //             <td colspan="1"><strong>Plate No.</strong> ${plate}</td>
+        //             <td><strong>Make:</strong> ${make}</td>
+        //             <td><strong>Model:</strong> ${model}</td>
+        //         </tr>
+        //         <tr>
+        //             <td><strong>Year:</strong> ${year}</td>
+        //             <td><strong>Color:</strong> ${color}</td>
+        //             <td><strong>Fuel:</strong> ${fuel}</td>
+        //         </tr>
+        //         <tr>
+        //             <td colspan="3"><strong>Transmission: </strong>${transmission}</td>
+        //         </tr>
+        //     `);
+        // }
     });
 }
 
