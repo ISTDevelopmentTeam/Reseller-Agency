@@ -52,11 +52,21 @@ class RenewResellerController extends Controller
     // {
     //     return  $this->Regular_search->handle($request);      
     // }
-
     public function membership(Request $request)
     {
         $data = $this->renew_membership_fetch->handle($request);
         return view('renew_form/renew_membership')->with($data);
+    }
+    public function motorcycle(Request $request)
+    {
+        $data = $this->renew_membership_fetch->handle($request);
+        return view('renew_form/motorcycle
+        ')->with($data);
+    }
+    public function pidp(Request $request)
+    {
+        $data = $this->renew_membership_fetch->handle($request);
+        return view('renew_form/renew_pidp')->with($data);
     }
 
     public function store(Request $request)
