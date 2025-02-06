@@ -81,7 +81,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-11"> <!-- Adjusted column width -->
                 <div class="card-header custom-header mb-3 text-center">
-                    <h2 class="header-title mb-0 typewriter">Renew Membership Form</h2>
+                    <h2 class="header-title mb-0 typewriter">New Membership Form</h2>
                     <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
                 </div>
                 <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST"
@@ -224,31 +224,6 @@
                             <div class="vehicle-item border rounded p-3 mb-3">
                                 <h6 class="mb-3">Vehicle <span class="vehicle-number">{{$loop->index+1}}</span></h6>
                                 <div class="row g-3">
-                                    <div class="d-flex flex-column justify-content-center align-items-center mb-3">
-                                        <label class="label" style="font-size: medium;color:red">
-                                          Do you want to remove this vehicle to your membership?
-                                        </label>
-                                        <input type="hidden" id="is_vehicle_removed_{{$loop->index+1}}" name="is_vehicle_removed[]" value="0">
-                                        <div>
-                                            <div class="options-container mb-4">
-                                                <label class="radio-checkbox">
-                                                    <input type="checkbox" id="is_vehicle_removed_yes_{{$loop->index+1}}" value="1"
-                                                        onchange="remove_vehicle('is_vehicle_removed_yes_{{$loop->index+1}}', 'is_vehicle_removed_no_{{$loop->index+1}}')">
-                                                    <span class="checkmark"></span>
-                                                    YES
-                                                </label>
-                                                <label class="radio-checkbox">
-                                                    <input type="checkbox" id="is_vehicle_removed_no_{{$loop->index+1}}" value="0"
-                                                        onchange="remove_vehicle('is_vehicle_removed_no_{{$loop->index+1}}', 'is_vehicle_removed_yes_{{$loop->index+1}}')"
-                                                        checked disabled>
-                                                    <span class="checkmark"></span>
-                                                    NO
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row g-3">
                                     <!-- First Row -->
                                     <div class="col-md-3 centered-content">
                                         <label class="label" style="font-size: medium;">
@@ -299,7 +274,7 @@
                                         <label for="platenum" class="label">Plate No</label>
                                         <input name="vehicle_plate[]" type="text"
                                             class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
-                                            id="platenum{{$loop->index+1}}" maxlength="8" onchange="updateVehicleSummary()"
+                                            id="platenum" 
                                             value="<?= $item['vehicleinfo_plateno']?>" 
                                             autocomplete="off"
                                             placeholder="Enter Plate No" 
@@ -316,18 +291,18 @@
                                         <label class="label" style="font-size: medium;">
                                             Is Diplomat?
                                         </label>
-                                        <input type="hidden" id="is_diplomat_{{$loop->index+1}}" name="is_diplomat[]">
+                                        <input type="hidden" id="is_diplomat_1" name="is_diplomat[]">
                                             <div>
                                                 <div class="options-container">
                                                     <label class="radio-checkbox">
-                                                        <input type="checkbox" id="is_diplomat_yes_{{$loop->index+1}}" value="1"
+                                                        <input type="checkbox" id="is_diplomat_yes_1" value="1"
                                                             {{ old('is_diplomat.0') == '1' ? 'checked' : '' }}
                                                             onchange="update_diplomat('is_diplomat_yes_1', 'is_diplomat_no_1')">
                                                         <span class="checkmark"></span>
                                                         YES
                                                     </label>
                                                     <label class="radio-checkbox">
-                                                        <input type="checkbox" id="is_diplomat_no_{{$loop->index+1}}" value="0"
+                                                        <input type="checkbox" id="is_diplomat_no_1" value="0"
                                                             {{ old('is_diplomat.0') == '0' ? 'checked' : '' }}
                                                             onchange="update_diplomat('is_diplomat_no_1', 'is_diplomat_yes_1')"
                                                             {{ old('is_diplomat.0') == '1' ? '' : 'checked disabled' }}>
@@ -341,7 +316,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Car Make</label>
                                         <select class="form-control form-control-sm select2 @error('vehicle_make.*') is-invalid @enderror" 
-                                                id="make{{$loop->index+1}}" name="vehicle_make[]" disabled
+                                                id="make1" name="vehicle_make[]" disabled
                                                 required>
                                             <option value="">Car Make</option>
                                             @foreach ($carMake as $row2)
@@ -359,7 +334,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Car Models</label>
                                         <select class="form-control select2 @error('vehicle_model.*') is-invalid @enderror" 
-                                                id="model{{$loop->index+1}}" name="vehicle_model[]" disabled
+                                                id="model1" name="vehicle_model[]" disabled
                                                 required>
                                             <option value="">Car Model</option>
                                             @if(old('vehicle_model.0'))
@@ -378,7 +353,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Vehicle Type</label>
                                         <select class="form-control select2 @error('vehicle_type.*') is-invalid @enderror" 
-                                                id="vehicle_type{{$loop->index+1}}" name="vehicle_type[]" disabled
+                                                id="vehicle_type1" name="vehicle_type[]" disabled
                                                 required>
                                             <option value="" selected>Vehicle Type</option>
                                             <!-- Vehicle types will be populated via JavaScript -->
@@ -396,7 +371,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Year</label>
                                         <input type="text" 
-                                            id="year{{$loop->index+1}}" 
+                                            id="year1" 
                                             name="vehicle_year[]" 
                                             maxlength="4" 
                                             class="form-control number_only @error('vehicle_year.*') is-invalid @enderror"
@@ -411,7 +386,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Sub model</label>
                                         <input type="text" 
-                                            id="submodel{{$loop->index+1}}" 
+                                            id="submodel1" 
                                             name="submodel[]" 
                                             class="form-control @error('submodel.*') is-invalid @enderror"
                                             value="{{ old('submodel.0', $item['submodel_name']) }}"
@@ -425,8 +400,8 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Color</label>
                                         <input type="text" 
-                                            id="color{{$loop->index+1}}" 
-                                            name="vehicle_color[]" onchange="updateVehicleSummary()"
+                                            id="color" 
+                                            name="vehicle_color[]" 
                                             class="form-control @error('vehicle_color.*') is-invalid @enderror"
                                             value="{{ old('vehicle_color.0', $item['vehiclecolor_name']) }}"
                                             placeholder="Enter color" disabled
@@ -440,7 +415,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Fuel Type</label>
                                         <select class="form-select @error('vehicle_fuel.*') is-invalid @enderror" 
-                                                name="vehicle_fuel[]" onchange="updateVehicleSummary()" disabled
+                                                name="vehicle_fuel[]" disabled
                                                 required>
                                             <option disabled selected value="">Fuel Type</option>
                                             @foreach(['GAS', 'DIESEL', 'ELECTRIC'] as $fuel)
@@ -457,7 +432,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Transmission Type</label>
                                         <select class="form-select @error('vehicle_transmission.*') is-invalid @enderror" 
-                                                name="vehicle_transmission[]" onchange="updateVehicleSummary()" disabled
+                                                name="vehicle_transmission[]" disabled
                                                 required>
                                             <option disabled selected value="">Select Transmission Type</option>
                                             @foreach(['AUTOMATIC', 'MANUAL'] as $transmission)
@@ -471,7 +446,7 @@
                                         @enderror
                                     </div>
 
-                                    {{-- <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="orAttachment" class="form-label">Upload: Official Receipt</label>
                                             <div class="input-group">
@@ -512,7 +487,7 @@
                                             <div id="crFeedback" class="text-danger"></div>
                                             <img id="cr" src="" alt="Image cr" style="max-width: 200px; display: none; margin-top: 10px;">
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -924,7 +899,50 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    @if (!empty($records['result_car']))
+                                        @foreach ($records['result_car'] as $key => $r)
+                                            <tr>
+                                                <td rowspan="2" style="text-align: center; vertical-align: middle;">
+                                                    <h3 class="text-center">{{ $loop->iteration }}</h3>
+                                                </td>
+                                                <td><strong>Update:</strong><br><input type="checkbox" id="v{{ $key + 1 }}"
+                                                        name="v{{ $key + 1 }}" class="check" onclick="updateV{{ $key + 1 }}()"
+                                                        disabled></td>
+                                                <?php
+                                                if($r['vehicleinfo_csticker']== 1){ ?>
+                                                <td><strong>Conduction
+                                                        Sticker:&nbsp;</strong><br><br><input type="checkbox" id="csticker"
+                                                        name="csticker" value="csticker" checked disabled></td>
+                                                <?php
+                                                }else
+                                                { ?>
+                                                <td><strong>Conduction Sticker:&nbsp;</strong><input type="checkbox" id="csticker"
+                                                        name="csticker" value="csticker" disabled></td>
+                                                <?php
+                                                }
+                                                ?>
+                                                <td colspan="2" id="echoplatenum"><strong>Plate
+                                                        No:</strong>
+                                                    <?= isset($r['vehicleinfo_plateno']) ? $r['vehicleinfo_plateno'] : '' ?></td>
+                                                <td id="echomake"><strong>Make:</strong>
+                                                    <?= isset($r['vehiclebrand_name']) ? $r['vehiclebrand_name'] : '' ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td id="echomodel"><strong>Model:</strong>
+                                                    <?= isset($r['vehiclemodel_name']) ? $r['vehiclemodel_name'] : '' ?></td>
+                                                <td id="echoymodel"><strong>Year Model:</strong>
+                                                    <?= isset($r['vehicleinfo_year']) ? $r['vehicleinfo_year'] : '' ?></td>
+                                                <td id="echocolor"><strong>Color:</strong>
+                                                    <?= isset($r['vehiclecolor_name']) ? $r['vehiclecolor_name'] : '' ?></td>
+                                                <td id="echoftype"><strong>Fuel Type:</strong>
+                                                    <?= isset($r['vehiclefuel_name']) ? $r['vehiclefuel_name'] : '' ?></td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="6">No vehicle details available</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                     
@@ -953,8 +971,7 @@
 
 
 
-   <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -966,12 +983,11 @@
     <script src="{{ asset('script/sidebar.js') }}"></script>
 
     @include('vehicle_autocomp')
-    @include('renew_form/renew_dynamic_vehicle')
-    @include('renew_form/renew_countrycode')
+    @include('dynamic_vehicle')
+    @include('countrycode')
     @include('address')
     @include('update_info')
     <script>
-        
         
 // Function to handle vehicle information update toggle
 document.addEventListener('DOMContentLoaded', function() {
@@ -1029,23 +1045,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-function remove_vehicle(checkedId, uncheckedId) {
-            const checkedCheckbox = document.getElementById(checkedId);
-            const uncheckedCheckbox = document.getElementById(uncheckedId);
-            uncheckedCheckbox.disabled = false;
-            uncheckedCheckbox.checked = false;
-            checkedCheckbox.disabled = true;
-
-            if (checkedCheckbox.id == 'is_vehicle_removed_1' || checkedCheckbox.id == 'is_vehicle_updated_1') {
-                var_removevehivle = document.getElementById("is_vehicle_removed_1");
-                var_removevehivle.value = checkedCheckbox.value
-            } else {
-                var_removevehivle = document.getElementById("is_vehicle_removed_" + checkedCheckbox.id.slice(-1));
-                var_removevehivle.value = checkedCheckbox.value
-            }
-        }
-        
         </script>
 </body>
 
