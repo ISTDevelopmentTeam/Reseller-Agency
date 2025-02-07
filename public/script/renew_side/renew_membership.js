@@ -153,7 +153,7 @@ $('.letters_only_fname').on('input', function (event) {
     // updateNavigationButtons();
     // VehicleHandling();
     FileUploads();
-    toggleRequiredAttributes();
+    // toggleRequiredAttributes();
   });
   // ----------------------------------------------------------Validation for TAB/STEP-----------------------------------------------------------------//
   
@@ -260,231 +260,231 @@ $(document).ready(function () {
   }
   
   
-  function handleGeneralFileUpload(input, imageId, feedbackId) {
-    const file = input.files && input.files[0];
-    if (!file) {
-        return;
-    }
+  // function handleGeneralFileUpload(input, imageId, feedbackId) {
+  //   const file = input.files && input.files[0];
+  //   if (!file) {
+  //       return;
+  //   }
   
-    const feedback = document.getElementById(feedbackId);
-    const imagePreview = document.getElementById(imageId);
+  //   const feedback = document.getElementById(feedbackId);
+  //   const imagePreview = document.getElementById(imageId);
   
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-    const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
+  //   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+  //   const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
   
-    // Reset previous feedback and preview
-    feedback.textContent = '';
-    imagePreview.style.display = 'none';
-    imagePreview.src = '';
+  //   // Reset previous feedback and preview
+  //   feedback.textContent = '';
+  //   imagePreview.style.display = 'none';
+  //   imagePreview.src = '';
   
-    // Validate file type
-    if (!allowedTypes.includes(file.type)) {
-        feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
-        input.value = '';
-        return;
-    }
+  //   // Validate file type
+  //   if (!allowedTypes.includes(file.type)) {
+  //       feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
+  //       input.value = '';
+  //       return;
+  //   }
   
-    // Validate file size
-    if (file.size > maxSizeInBytes) {
-        feedback.textContent = 'File size exceeds 8MB limit.';
-        input.value = '';
-        return;
-    }
+  //   // Validate file size
+  //   if (file.size > maxSizeInBytes) {
+  //       feedback.textContent = 'File size exceeds 8MB limit.';
+  //       input.value = '';
+  //       return;
+  //   }
   
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        imagePreview.src = e.target.result;
-        imagePreview.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  }
+  //   // Create preview
+  //   const reader = new FileReader();
+  //   reader.onload = function (e) {
+  //       imagePreview.src = e.target.result;
+  //       imagePreview.style.display = 'block';
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
   // END FILE UPLOAD
   
   // Start Title Gender-----------------
-  document.getElementById('title').addEventListener('change', function() {
-      const title = this.value;
-      const genderSelect = document.getElementById('gender');
+  // document.getElementById('title').addEventListener('change', function() {
+  //     const title = this.value;
+  //     const genderSelect = document.getElementById('gender');
   
-      switch (title) {
-          case 'MR':
-              genderSelect.value = 'MALE';
-              break;
-          case 'MS':
-          case 'MRS':
-              genderSelect.value = 'FEMALE';
-              break;
-          case 'ATTY':
-          case 'DR':
-          case 'ENGR':
-              genderSelect.value = '';
-              break;
-          default:
-              genderSelect.value = '';
-      }
-  });
+  //     switch (title) {
+  //         case 'MR':
+  //             genderSelect.value = 'MALE';
+  //             break;
+  //         case 'MS':
+  //         case 'MRS':
+  //             genderSelect.value = 'FEMALE';
+  //             break;
+  //         case 'ATTY':
+  //         case 'DR':
+  //         case 'ENGR':
+  //             genderSelect.value = '';
+  //             break;
+  //         default:
+  //             genderSelect.value = '';
+  //     }
+  // });
   
   // Start Citizenship Dropdown-------------------
-  document.addEventListener('DOMContentLoaded', function () {
-    var citizenshipDropdown = document.getElementById('citizenship');
-    var addInfoSection = document.getElementById('add_info');
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   var citizenshipDropdown = document.getElementById('citizenship');
+  //   var addInfoSection = document.getElementById('add_info');
   
-    citizenshipDropdown.addEventListener('change', function () {
-      if (citizenshipDropdown.value === 'foreigner') {
-        addInfoSection.style.display = 'block';
-        setRequiredForeigner(true);
+  //   citizenshipDropdown.addEventListener('change', function () {
+  //     if (citizenshipDropdown.value === 'foreigner') {
+  //       addInfoSection.style.display = 'block';
+  //       setRequiredForeigner(true);
   
-      } else {
-        addInfoSection.style.display = 'none';
-        setRequiredForeigner(false);
-        nationality.value = "";
-      }
-    });
-  });
+  //     } else {
+  //       addInfoSection.style.display = 'none';
+  //       setRequiredForeigner(false);
+  //       nationality.value = "";
+  //     }
+  //   });
+  // });
   
-  function setRequiredForeigner(isRequired) {
-    var nationality = document.getElementById("nationality");
-    nationality.required = isRequired;
-  }
+  // function setRequiredForeigner(isRequired) {
+  //   var nationality = document.getElementById("nationality");
+  //   nationality.required = isRequired;
+  // }
   // END Citizenship Dropdown
   
   
   // FLAT Picker FOR BIRTHDATE
-  document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("birthdate");
-    let datePicker;
-    let lastValue = "";
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const input = document.getElementById("birthdate");
+  //   let datePicker;
+  //   let lastValue = "";
   
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() - 18);
+  //   const maxDate = new Date();
+  //   maxDate.setFullYear(maxDate.getFullYear() - 18);
   
-    datePicker = flatpickr("#birthdate", {
-      dateFormat: "m/d/Y",
-      allowInput: true,
-      maxDate: maxDate,
-      formatDate: (date) => {
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${month}/${day}/${date.getFullYear()}`;
-      },
-      onChange: function (selectedDates, dateStr, instance) {
-        if (selectedDates.length > 0) {
-          const formattedDate = instance.formatDate(selectedDates[0], "m/d/Y");
-          input.value = formattedDate;
-          lastValue = formattedDate;
-        }
-      }
-    });
+  //   datePicker = flatpickr("#birthdate", {
+  //     dateFormat: "m/d/Y",
+  //     allowInput: true,
+  //     maxDate: maxDate,
+  //     formatDate: (date) => {
+  //       const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  //       const day = date.getDate().toString().padStart(2, '0');
+  //       return `${month}/${day}/${date.getFullYear()}`;
+  //     },
+  //     onChange: function (selectedDates, dateStr, instance) {
+  //       if (selectedDates.length > 0) {
+  //         const formattedDate = instance.formatDate(selectedDates[0], "m/d/Y");
+  //         input.value = formattedDate;
+  //         lastValue = formattedDate;
+  //       }
+  //     }
+  //   });
   
-    input.addEventListener('input', function (e) {
-      let v = this.value;
+  //   input.addEventListener('input', function (e) {
+  //     let v = this.value;
   
-      if (v.length < lastValue.length) {
-        lastValue = v;
-        if (v.length === 0) datePicker.clear();
-        return;
-      }
+  //     if (v.length < lastValue.length) {
+  //       lastValue = v;
+  //       if (v.length === 0) datePicker.clear();
+  //       return;
+  //     }
   
-      if (v.length > lastValue.length) {
-        if (v.match(/^\d{2}$/) !== null) {
-          let month = parseInt(v);
-          v = v.padStart(2, '0');
-          v = (month > 12 ? '12' : v) + '/';
-        }
-        else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-          let [month, day] = v.split('/').map(num => parseInt(num));
-          v = month.toString().padStart(2, '0') + '/' + 
-              (day > 31 ? '31' : day.toString().padStart(2, '0')) + '/';
-        }
-        else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
-          let [month, day, year] = v.split('/').map(num => parseInt(num));
-          let dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
-          let date = new Date(dateStr);
+  //     if (v.length > lastValue.length) {
+  //       if (v.match(/^\d{2}$/) !== null) {
+  //         let month = parseInt(v);
+  //         v = v.padStart(2, '0');
+  //         v = (month > 12 ? '12' : v) + '/';
+  //       }
+  //       else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+  //         let [month, day] = v.split('/').map(num => parseInt(num));
+  //         v = month.toString().padStart(2, '0') + '/' + 
+  //             (day > 31 ? '31' : day.toString().padStart(2, '0')) + '/';
+  //       }
+  //       else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
+  //         let [month, day, year] = v.split('/').map(num => parseInt(num));
+  //         let dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+  //         let date = new Date(dateStr);
   
-          if (!isNaN(date.getTime()) && date <= maxDate) {
-            datePicker.setDate(date, true);
-          } else {
-            this.value = lastValue;
-            return;
-          }
-        }
+  //         if (!isNaN(date.getTime()) && date <= maxDate) {
+  //           datePicker.setDate(date, true);
+  //         } else {
+  //           this.value = lastValue;
+  //           return;
+  //         }
+  //       }
   
-        this.value = v;
-        lastValue = v;
-      }
-    });
+  //       this.value = v;
+  //       lastValue = v;
+  //     }
+  //   });
   
-    input.addEventListener('keydown', function (e) {
-      if ((e.key === 'Backspace' || e.key === 'Delete') && this.value.length === 0) {
-        datePicker.clear();
-      }
-    });
-  });
+  //   input.addEventListener('keydown', function (e) {
+  //     if ((e.key === 'Backspace' || e.key === 'Delete') && this.value.length === 0) {
+  //       datePicker.clear();
+  //     }
+  //   });
+  // });
   // END OF FLAT PICKER
   
   // ---------------------------------------------------END FUNCTION FOR PERSONAL INFORMATION------------------------------------------------ //
   
   
   // ---------------------------------------------------CONTACT INFORMATION FUNCTION-------------------------------------------------------- //
-  document.addEventListener('DOMContentLoaded', function () {
-    var mailingAddressDropdown = document.getElementById('mail');
-    var officeAddressSection   = document.getElementById('officeAddress');
-    var street1                = document.getElementById('street1');
-    var town1                  = document.getElementById('town1');
-    var city1                  = document.getElementById('city1');
-    var province1              = document.getElementById('province1');
-    var zcode1                 = document.getElementById('zcode1');
-    var comname                = document.getElementById('comname');
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   var mailingAddressDropdown = document.getElementById('mail');
+  //   var officeAddressSection   = document.getElementById('officeAddress');
+  //   var street1                = document.getElementById('street1');
+  //   var town1                  = document.getElementById('town1');
+  //   var city1                  = document.getElementById('city1');
+  //   var province1              = document.getElementById('province1');
+  //   var zcode1                 = document.getElementById('zcode1');
+  //   var comname                = document.getElementById('comname');
   
-      // Function to set or remove the required attribute for the specified fields
-    function updateRequiredFields(required) {
-      street1.required   = required;
-      town1.required     = required;
-      city1.required     = required;
-      province1.required = required;
-      zcode1.required    = required;
-      comname.required   = required;
-    }
+  //     // Function to set or remove the required attribute for the specified fields
+  //   function updateRequiredFields(required) {
+  //     street1.required   = required;
+  //     town1.required     = required;
+  //     city1.required     = required;
+  //     province1.required = required;
+  //     zcode1.required    = required;
+  //     comname.required   = required;
+  //   }
   
-    mailingAddressDropdown.addEventListener('change', function () {
-      if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
-        officeAddressSection.style.display = 'block';
-        updateRequiredFields(true);
-      } else {
-        officeAddressSection.style.display = 'none';
-        street1.value                      = "";
-        town1.value                        = "";
-        city1.value                        = "";
-        province1.value                    = "";
-        zcode1.value                       = "";
-        comname.value                      = "";
-        updateRequiredFields(false);
-      }
-    });
-  });
+  //   mailingAddressDropdown.addEventListener('change', function () {
+  //     if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
+  //       officeAddressSection.style.display = 'block';
+  //       updateRequiredFields(true);
+  //     } else {
+  //       officeAddressSection.style.display = 'none';
+  //       street1.value                      = "";
+  //       town1.value                        = "";
+  //       city1.value                        = "";
+  //       province1.value                    = "";
+  //       zcode1.value                       = "";
+  //       comname.value                      = "";
+  //       updateRequiredFields(false);
+  //     }
+  //   });
+  // });
   
-  function toggleRequiredAttributes() {
-    const phoneInput = document.getElementById('mobileNumber');
-    const emailInput = document.getElementById('emailAddress');
+  // function toggleRequiredAttributes() {
+  //   const phoneInput = document.getElementById('mobileNumber');
+  //   const emailInput = document.getElementById('emailAddress');
   
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
-    const isEmailValid = emailRegex.test(emailInput.value.trim());
+  //   const isEmailValid = emailRegex.test(emailInput.value.trim());
   
-    phoneInput.addEventListener('input', function() {
-      if (this.value.trim() !== '') {
-        emailInput.removeAttribute('required');
-      } else {
-        emailInput.setAttribute('required', 'required');
-      }
-    });
+  //   phoneInput.addEventListener('input', function() {
+  //     if (this.value.trim() !== '') {
+  //       emailInput.removeAttribute('required');
+  //     } else {
+  //       emailInput.setAttribute('required', 'required');
+  //     }
+  //   });
   
-    if (isEmailValid) {
-      phoneInput.removeAttribute('required');
-    } else {
-      phoneInput.setAttribute('required', 'required');
-    }
-  }
+  //   if (isEmailValid) {
+  //     phoneInput.removeAttribute('required');
+  //   } else {
+  //     phoneInput.setAttribute('required', 'required');
+  //   }
+  // }
   
   function maskTelNo(id) {
     $("#" + id).mask("9-999-9999");
@@ -492,6 +492,37 @@ $(document).ready(function () {
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
   
+  // THIS FOR UPDATE SLIDE BUTTON FUNCTION
+//   document.addEventListener('DOMContentLoaded', function() {
+//     // Add event listeners to all vehicle switches
+//     const vehicleSwitches = document.querySelectorAll('.vehicle-switch');
+    
+//     vehicleSwitches.forEach((toggle, index) => {
+//         toggle.addEventListener('change', function() {
+//             // Get the current vehicle container
+//             const vehicleContainer = this.closest('.vehicle-item');
+            
+//             // Get the hidden input for vehicle update status
+//             const updateStatus = document.getElementById(`is_vehicle_updated_${index + 1}`);
+            
+//             // Get the relevant input fields
+//             const plateNoInput = vehicleContainer.querySelector('[name="vehicle_plate[]"]');
+//             const colorInput = vehicleContainer.querySelector('[name="vehicle_color[]"]');
+            
+//             if (this.checked) {
+//                 // Enable fields and set update status to 1
+//                 plateNoInput.disabled = false;
+//                 colorInput.disabled = false;
+//                 updateStatus.value = '1';
+//             } else {
+//                 // Disable fields and set update status to 0
+//                 plateNoInput.disabled = true;
+//                 colorInput.disabled = true;
+//                 updateStatus.value = '0';
+//             }
+//         });
+//     });
+// });
   // vehicleFileUpload function to work with dynamic IDs
   function handleVehicleFileUpload(input, imageId, feedbackId) {
     const file = input.files && input.files[0];
@@ -533,170 +564,99 @@ $(document).ready(function () {
     reader.readAsDataURL(file);
   }
   
-  function updateLabeldyna(checkedId, uncheckedId) {
-    const checkedCheckbox = document.getElementById(checkedId);
-    const uncheckedCheckbox = document.getElementById(uncheckedId);
-    uncheckedCheckbox.disabled = false;
-    uncheckedCheckbox.checked = false;
-    checkedCheckbox.disabled = true;
-  
-    const vehicleNum = checkedId.match(/\d+$/)?.[0] || '';
-    const platenumId = vehicleNum ? `platenum${vehicleNum}` : 'platenum';
-    const cstickerId = vehicleNum ? `csticker${vehicleNum}` : 'csticker';
-  
-    const platenumInput = document.getElementById(platenumId);
-    const platenumLabel = document.querySelector(`label[for="${platenumId}"]`);
-    const var_csticker = document.getElementById(cstickerId);
-  
-    $(platenumInput).unmask();
-    
-    if (checkedCheckbox.value == 1) {
-        platenumLabel.textContent = "Conduction Sticker";
-        platenumInput.placeholder = "Enter conduction sticker";
-        platenumInput.dataset.inputType = 'conduction';
-        $(platenumInput).mask('AAAAAA');
-    } else {
-        platenumLabel.textContent = "Plate No";
-        platenumInput.placeholder = "Enter plate no";
-        platenumInput.dataset.inputType = 'plate';
-        $(platenumInput).mask('AAAAAAAA', {
-            translation: {
-                'A': {
-                    pattern: /[A-Za-z0-9\s-]/,
-                    transform: function(val) {
-                        let currentVal = this.el.val();
-                        if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                            return '';
-                        }
-                        return val;
-                    }
-                }
-            }
-        });
-    }
-    platenumInput.value = "";
-    var_csticker.value = checkedCheckbox.value;
+// Helper function to apply mask based on type
+// Place these functions at the top of your script file
+function applyMaskBasedOnType(input, label, isConduction) {
+  if ($(input).data('mask')) {
+      $(input).unmask();
   }
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initial vehicle plate mask
-    const initialPlateInput = document.getElementById('platenum');
-    if (initialPlateInput) {
-        applyPlateMask(initialPlateInput);
-    }
-  
-    // Observer for dynamic vehicles
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-                if (node.classList?.contains('vehicle-item')) {
-                    const plateInput = node.querySelector('.platenum');
-                    if (plateInput) {
-                        applyPlateMask(plateInput);
-                    }
-                }
-            });
-        });
-    });
-  
-    const vehicleContainer = document.getElementById('vehicleFields');
-    if (vehicleContainer) {
-        observer.observe(vehicleContainer, { childList: true, subtree: true });
-    }
-  });
-  
-  function applyPlateMask(element) {
-    $(element).mask('AAAAAAAA', {
-        translation: {
-            'A': {
-                pattern: /[A-Za-z0-9\s-]/,
-                transform: function(val) {
-                    let currentVal = this.el.val();
-                    if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                        return '';
-                    }
-                    return val;
-                }
-            }
-        }
-    });
+
+  if (isConduction) {
+      label.textContent = "Conduction Sticker";
+      input.placeholder = "Enter conduction sticker";
+      input.dataset.inputType = 'conduction';
+
+      $(input).mask('AAAAAA', {
+          translation: {
+              'A': {
+                  pattern: /[A-Za-z0-9]/,
+                  transform: function(val) {
+                      return val.toUpperCase();
+                  }
+              }
+          },
+          placeholder: "",
+          clearIfNotMatch: true
+      });
+  } else {
+      label.textContent = "Plate No";
+      input.placeholder = "Enter plate no";
+      input.dataset.inputType = 'plate';
+
+      $(input).mask('AAAAAAAA', {
+          translation: {
+              'A': {
+                  pattern: /[A-Za-z0-9\s-]/,
+                  transform: function(val) {
+                      let currentVal = $(input).val();
+                      if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
+                          return '';
+                      }
+                      return val.toUpperCase();
+                  }
+              }
+          },
+          placeholder: "",
+          clearIfNotMatch: true
+      });
   }
-  
+}
+
+// Function to handle checkbox changes
+function updateLabelDyna(checkbox, type) {
+  const vehicleContainer = checkbox.closest('.vehicle-item');
+  if (!vehicleContainer) return;
+
+  const otherCheckbox = vehicleContainer.querySelector(type === 'yes' ? '.cs-no' : '.cs-yes');
+  const hiddenInput = vehicleContainer.querySelector('.cs-value');
+  const plateInput = vehicleContainer.querySelector('input[name="vehicle_plate[]"]');
+  const plateLabel = vehicleContainer.querySelector('.label:not([style])');
+
+  if (!otherCheckbox || !hiddenInput || !plateInput || !plateLabel) {
+      console.error("Required elements not found");
+      return;
+  }
+
+  otherCheckbox.disabled = false;
+  otherCheckbox.checked = false;
+  checkbox.disabled = true;
+  plateInput.value = '';
+  hiddenInput.value = checkbox.value;
+
+  applyMaskBasedOnType(plateInput, plateLabel, type === 'yes');
+}
+
+// Function to initialize a vehicle
+function initializeVehicle(vehicle) {
+  const csYesCheckbox = vehicle.querySelector('.cs-yes');
+  const csNoCheckbox = vehicle.querySelector('.cs-no');
+  const plateInput = vehicle.querySelector('input[name="vehicle_plate[]"]');
+  const plateLabel = vehicle.querySelector('.label:not([style])');
+
+  if (csYesCheckbox && csNoCheckbox && plateInput && plateLabel) {
+      // Apply initial mask
+      applyMaskBasedOnType(plateInput, plateLabel, csYesCheckbox.checked);
+
+      // Add event listeners
+      csYesCheckbox.addEventListener('change', function() {
+          updateLabelDyna(this, 'yes');
+      });
+
+      csNoCheckbox.addEventListener('change', function() {
+          updateLabelDyna(this, 'no');
+      });
+  }
+}
   // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
-  function summary_fetch() {
   
-      // Step 1 Values
-    var membershipType  = $('#membership_type').val();
-    var plan_type       = $('#plan_type').val();
-    var pin_code        = $('#pinCode').val();
-    var paInsurance     = $('#paInsurance').val();
-    var activationDate  = $('#activationDate').val();
-    var applicationType = $('#applicationType').val();
-  
-  
-      // Step 2 Values
-    var title       = $('#title').val();
-    var first_name  = $('#firstName').val();
-    var last_name   = $('#lastName').val();
-    var middle_name = $('#middleName').val();
-      // var full_name    = first_name+ ' ,'+ last_name;
-    var gender      = $('#gender').val();
-    var birthdate   = $('#birthdate').val();
-    var birthplace  = $('#birthplace').val();
-    var citizenship = $('#citizenship').val();
-    var nationality = $('#nationality').val();
-      // var civilStatus        = $('#civilStatus').val();
-      // var acrNo        = $('#acrNo').val();
-    var occupation   = $('#occupation').val();
-    var mobileNumber = $('#mobileNumber').val();
-    var emailAddress = $('#emailAddress').val();
-    var occupation   = $('#occupation').val();
-    var civilStatus  = $('#civilStatus').val();
-  
-      // Step 3 Values
-  
-      // Home Address
-    var mailing       = $('#mail').val();
-    var street        = $('#street').val();
-    var town          = $('#town').val();
-    var city          = $('#city').val();
-    var province      = $('#province').val();
-    var zcode         = $('#zcode').val();
-    var homeaddress   = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-    var availMagazine = $('#availMagazine').val();
-  
-      // Office Address
-    var street        = $('#street1').val();
-    var town          = $('#town1').val();
-    var city          = $('#city1').val();
-    var province      = $('#province1').val();
-    var zcode         = $('#zcode1').val();
-    var officeaddress = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-    var companyName   = $('#comname').val();
-  
-  
-      // Summary Fields
-    document.getElementById('summaryApplicationType').textContent = applicationType;
-    document.getElementById('summaryMembershipType').textContent  = membershipType;
-    document.getElementById('summaryPlanType').textContent        = plan_type;
-    document.getElementById('summaryActivationDate').textContent  = activationDate;
-  
-    document.getElementById('summaryTitle').textContent       = title;
-    document.getElementById('summaryLastname').textContent    = last_name;
-    document.getElementById('summaryFirstname').textContent   = first_name;
-    document.getElementById('summaryMiddlename').textContent  = middle_name;
-    document.getElementById('summaryGender').textContent      = gender;
-    document.getElementById('summaryBirthdate').textContent   = birthdate;
-    document.getElementById('summaryBirthplace').textContent  = birthplace;
-    document.getElementById('summaryCivilstatus').textContent = civilStatus;
-    document.getElementById('summaryCitizenship').textContent = citizenship;
-    document.getElementById('summaryOccupation').textContent  = occupation;
-  
-    document.getElementById('summaryCompanyName').textContent       = companyName;
-    document.getElementById('summaryhomeaddress').textContent       = homeaddress;
-    document.getElementById('summaryofficeaddress').textContent     = officeaddress;
-    document.getElementById('summaryMailingPreference').textContent = mailing;
-    document.getElementById('summaryMagazine').textContent          = availMagazine;
-  
-  } 
   // -------------------------------------- END INFORMATION SUMMARY FUNCTION-------------------------------------------- //
