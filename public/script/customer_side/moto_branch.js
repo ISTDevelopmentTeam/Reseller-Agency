@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     idDropdownBtn.addEventListener("click", () => {
-        idContainer.classList.toggle("animated-moveUpExit");
-        idContainer.classList.toggle("animated-moveDown");
+        idDropdown.classList.remove("animated-moveUpExit");
+        idDropdown.classList.remove("animated-moveDown");
 
         if (idContainer.classList.contains("hide")) {
             idContainer.classList.add("animated-moveDown");

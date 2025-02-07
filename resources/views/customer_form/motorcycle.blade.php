@@ -19,7 +19,7 @@
 </head>
 
 <body style="background-image: url({{ asset('images/bg-6-moto.webp') }});">
-    <div class="container-xl p-0 d-flex flex-column main-container shadow">
+    <div class="container-xl p-0 d-flex flex-column main-container shadow rounded-4 overflow-hidden ">
         <div class="container-fluid p-4 progress-container" style="background-image: url({{ asset('images/wave-1.svg') }});">
             <div class="d-flex gap-2 align-items-center form-title-container">
                 <!-- Logo -->
@@ -501,7 +501,7 @@
                                 </div>
                                 <!-- First Beneficiary (Always visible) -->
                                 <div class="insured insured-container">
-                                    <div class="insured1 p-4 rounded-3">
+                                    <div class="insured1 p-4 rounded-3 animated-moveDown">
                                         <div class="insured-num ps-2 pe-1 pt-1 pb-1"><h6 class="m-0">1</h6></div>
                                         <div class="row mb-3">
                                             <div class="col-md-6">

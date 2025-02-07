@@ -43,58 +43,64 @@
 
                 // Create new vehicle fields dynamically
                 const newVehicleDiv = document.createElement('div');
-                newVehicleDiv.classList.add('vehicle-item', 'border', 'rounded', 'p-3', 'mb-3');
+                newVehicleDiv.classList.add('vehicle-item', 'border', 'rounded', 'p-3', 'mb-3', 'animated-moveDown');
 
                 newVehicleDiv.innerHTML = `
-                <h6 class="mb-3">Vehicle <span class="vehicle-number">${vehicleCount}</span></h6>
-                <div class="row g-3 vehicle-entry">
+                <div class="vehicle-title mb-4">
+                    <h6 class="mb-3">Vehicle <span class="vehicle-number">${vehicleCount}</span></h6>
+                </div>
+                <div class="row g-4 mt-0">
                     <!-- First Row -->
-                    <div class="col-md-4 centered-content">
-                        <label class="label" style="font-size: medium;">
-                            Is Conduction Sticker Available?
-                        </label>
-                        <input type="hidden" id="csticker${vehicleCount}" name="is_cs[]" value="0" >
-                        <div>
-                            <div class="options-container">
-                                <label class="radio-checkbox">
-                                    <input type="checkbox" id="csticker_yes${vehicleCount}"  value="1" onchange="updateLabeldyna('csticker_yes${vehicleCount}', 'csticker_no${vehicleCount}')" >
-                                    <span class="checkmark"></span> YES
+                    <div class="w-100 mt-1 psd-container">
+                        <div class="col-md-4 pt-0 pb-0 ps-0 pe-3 centered-content c-sticker-container">
+                            <label class="label" style="font-size: medium;">
+                                Is Conduction Sticker Available?
+                            </label>
+                            <input type="hidden" id="csticker${vehicleCount}" name="is_cs[]" value="0">
+                            <div>
+                                <div class="options-container">
+                                    <label class="p-1 radio-checkbox">
+                                        <input type="checkbox" id="csticker_yes${vehicleCount}"  value="1" onchange="updateLabeldyna('csticker_yes${vehicleCount}', 'csticker_no${vehicleCount}')" >
+                                        <span class="checkmark"></span> YES
+                                    </label>
+                                    <label class="p-1 radio-checkbox cbox-no">
+                                        <input type="checkbox" id="csticker_no${vehicleCount}" value="0" onchange="updateLabeldyna('csticker_no${vehicleCount}', 'csticker_yes${vehicleCount}')" checked disabled>
+                                        <span class="checkmark"></span>NO
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 p-0 platenum-container">
+                            <label for="platenum${vehicleCount}" class="label">Plate Number</label>
+                            <input name="vehicle_plate[]" type="text" class="text-input form-control platenum @error('vehicle_plate.*') is-invalid @enderror" id="platenum${vehicleCount}"
+                            autocomplete="off" placeholder=" Enter Plate No" style="text-transform: uppercase;" required>
+                            <div class="validation-message_plateno" id="validation-message_plateno" style="color: red;"></div>
+                        </div>
+
+                        <div class="col-md-4 pt-0 pb-0 ps-3 pe-0 centered-content is-diplomat-container">
+                            <label class="label" style="font-size: medium;">
+                                Is Diplomat?
+                            </label>
+                            <input type="hidden" id="is_diplomat_${vehicleCount}" name="is_diplomat[]" value="0" >
+                            <div>
+                                <div class="options-container">
+                                <label class="p-1 radio-checkbox">
+                                    <input type="checkbox" id="is_diplomat_yes_${vehicleCount}"  value="1" onchange="update_diplomat('is_diplomat_yes_${vehicleCount}', 'is_diplomat_no_${vehicleCount}')" >
+                                    <span class="checkmark"></span>
+                                    YES
                                 </label>
-                                <label class="radio-checkbox">
-                                    <input type="checkbox" id="csticker_no${vehicleCount}" value="0" onchange="updateLabeldyna('csticker_no${vehicleCount}', 'csticker_yes${vehicleCount}')" checked disabled>
-                                    <span class="checkmark"></span>NO
+                                <label class="p-1 radio-checkbox cbox-no">
+                                    <input type="checkbox" id="is_diplomat_no_${vehicleCount}" value="0" onchange="update_diplomat('is_diplomat_no_${vehicleCount}', 'is_diplomat_yes_${vehicleCount}')" checked disabled>
+                                    <span class="checkmark"></span>
+                                    NO
                                 </label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <label for="platenum${vehicleCount}" class="label">Plate No</label>
-                        <input name="vehicle_plate[]" type="text" class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror" id="platenum${vehicleCount}"
-                        autocomplete="off" placeholder=" Enter Plate No" style="text-transform: uppercase;" required>
-                        <div class="validation-message_plateno" id="validation-message_plateno" style="color: red;"></div>
-                    </div>
-                    <div class="col-md-3 centered-content">
-                        <label class="label" style="font-size: medium;">
-                            Is Diplomat?
-                        </label>
-                        <input type="hidden" id="is_diplomat_${vehicleCount}" name="is_diplomat[]" value="0" >
-                        <div>
-                            <div class="options-container">
-                            <label class="radio-checkbox">
-                                <input type="checkbox" id="is_diplomat_yes_${vehicleCount}"  value="1" onchange="update_diplomat('is_diplomat_yes_${vehicleCount}', 'is_diplomat_no_${vehicleCount}')" >
-                                <span class="checkmark"></span>
-                                YES
-                            </label>
-                            <label class="radio-checkbox">
-                                <input type="checkbox" id="is_diplomat_no_${vehicleCount}" value="0" onchange="update_diplomat('is_diplomat_no_${vehicleCount}', 'is_diplomat_yes_${vehicleCount}')" checked disabled>
-                                <span class="checkmark"></span>
-                                NO
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 d-flex flex-column with-select2">
                         <label class="form-label">Car Make</label>
                         <select class="form-control form-control-sm select2" id="make${vehicleCount}" name="vehicle_make[]" required>
                             <option value="" selected>Car Make</option>
@@ -103,19 +109,22 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+
+                    <div class="col-md-3 d-flex flex-column with-select2">
                         <label class="form-label">Car Models</label>
                         <select class="form-control select2" id="model${vehicleCount}" name="vehicle_model[]">
                             <option value="" selected>Car Model</option>
                         </select>
                     </div>
+
                     <!-- Second Row -->
-                    <div class="col-md-3">
+                    <div class="col-md-3 d-flex flex-column with-select2">
                         <label class="form-label">Vehicle Type</label>
                         <select class="form-control select2" id="vehicle_type${vehicleCount}" name="vehicle_type[]">
                             <option value="" selected>Vehicle Type</option>
                         </select>
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label">Year</label>
                         <input type="text" 
@@ -128,11 +137,13 @@
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                             pattern="[0-9]{4}">
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label">Sub model</label>
                         <input type="text" id="submodel${vehicleCount}" name="submodel[]" class="form-control"
                             placeholder="Enter sub model">
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label">Color</label>
                         <input type="text" id="color${vehicleCount}" name="vehicle_color[]" class="form-control"
@@ -149,6 +160,7 @@
                             <option value="ELECTRIC">ELECTRIC</option>
                         </select>
                     </div>
+
                     <div class="col-md-3">
                         <label class="form-label">Transmission Type</label>
                         <select class="form-select" name="vehicle_transmission[]">
@@ -157,51 +169,63 @@
                             <option value="MANUAL">MANUAL</option>
                         </select>
                     </div>
-<div class="col-md-6">
-            <div class="form-group">
-                <label for="orAttachment${vehicleCount}" class="form-label">Upload: Official Receipt</label>
-                <div class="input-group">
-                    <input type="file" class="form-control" id="orAttachment${vehicleCount}"
-                        name="or_image[]"
-                        onchange="handleVehicleFileUpload(this, 'or${vehicleCount}', 'orFeedback${vehicleCount}')" required>
-                    <label class="input-group-text" for="orAttachment${vehicleCount}">
-                        <i class="fas fa-upload"></i>
-                    </label>
-                </div>
-                <div id="orFeedback${vehicleCount}" class="text-danger"></div>
-                <div class="or-container">
-                    <img id="or${vehicleCount}" class="img-fluid" src="" alt="Image or">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="crAttachment${vehicleCount}" class="form-label">Upload: Certificate of Registration</label>
-                <div class="input-group">
-                    <input type="file" class="form-control" id="crAttachment${vehicleCount}"
-                        name="cr_image[]"
-                        onchange="handleVehicleFileUpload(this, 'cr${vehicleCount}', 'crFeedback${vehicleCount}')" required>
-                    <label class="input-group-text" for="crAttachment${vehicleCount}">
-                        <i class="fas fa-upload"></i>
-                    </label>
-                </div>
-                <div id="crFeedback${vehicleCount}" class="text-danger"></div>
-                <div class="cr-container">
-                    <img id="cr${vehicleCount}" class="img-fluid" src="" alt="Image cr">
-                </div>
-            </div>
-        </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="orAttachment${vehicleCount}" class="form-label">Upload: Official Receipt</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="orAttachment${vehicleCount}"
+                                    name="or_image[]"
+                                    onchange="handleVehicleFileUpload(this, 'or${vehicleCount}', 'orFeedback${vehicleCount}')" required>
+                                <label class="input-group-text" for="orAttachment${vehicleCount}">
+                                    <i class="fas fa-upload"></i>
+                                </label>
+                            </div>
+                            <div id="orFeedback${vehicleCount}" class="text-danger"></div>
+                            <div class="or-container">
+                                <img id="or${vehicleCount}" class="img-fluid" src="" alt="Image or">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="crAttachment${vehicleCount}" class="form-label">Upload: Certificate of Registration</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="crAttachment${vehicleCount}"
+                                    name="cr_image[]"
+                                    onchange="handleVehicleFileUpload(this, 'cr${vehicleCount}', 'crFeedback${vehicleCount}')" required>
+                                <label class="input-group-text" for="crAttachment${vehicleCount}">
+                                    <i class="fas fa-upload"></i>
+                                </label>
+                            </div>
+                            <div id="crFeedback${vehicleCount}" class="text-danger"></div>
+                            <div class="cr-container">
+                                <img id="cr${vehicleCount}" class="img-fluid" src="" alt="Image cr">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button type="button" class="btn btn-danger mt-3 remove-vehicle">
                     <i class="bi bi-trash me-2"></i>Remove Vehicle
                 </button>
-            `;
+                `;
 
                 // Add event listener to remove button
                 newVehicleDiv.querySelector('.remove-vehicle').addEventListener('click', function () {
                     const vehicleItems = document.querySelectorAll('.vehicle-item');
                     if (vehicleItems.length > 1) {
-                        this.closest('.vehicle-item').remove();
+                        this.closest('.vehicle-item').classList.add('animated-moveUpExit');
+                        this.closest('.vehicle-item').classList.remove('animated-moveDown');
+
+                        //Show exit animation before removing
+                        setTimeout(() => {
+                            this.closest('.vehicle-item').remove();
+                        }, 250);
+
+                        setTimeout(() => {
+                            document.querySelector("#formContainer").scrollTo({top: 0, behavior: 'smooth'});
+                        }, 300);
+
                         vehicleCount--; // Decrement vehicle count
                         updateVehicleNumbers();
                     } else {
@@ -213,6 +237,11 @@
                 });
 
                 vehicleFieldsContainer.appendChild(newVehicleDiv);
+
+                const stepTitleContainer = vehicleFieldsContainer.previousElementSibling;
+
+                //Scroll twoards the newly added vehicle item
+                document.querySelector("#formContainer").scrollTo({top: vehicleFieldsContainer.lastElementChild.offsetTop - stepTitleContainer.clientHeight - 10, behavior: 'smooth'});
 
                 // Initialize Select2 for the newly added vehicle only
                 if (typeof $ !== 'undefined' && $.fn.select2) {
@@ -445,27 +474,6 @@ function updateVehicleSummary() {
                 </div>
             `);
         }
-
-        // if (plate) {
-        //     tbody.append(`
-        //         <tr>
-        //             <td rowspan="3" style="text-align: center; vertical-align: middle;">
-        //                 <h3 class="text-center">${index + 1}${nthNumber(index + 1)}</h3>
-        //             </td>
-        //             <td colspan="1"><strong>Plate No.</strong> ${plate}</td>
-        //             <td><strong>Make:</strong> ${make}</td>
-        //             <td><strong>Model:</strong> ${model}</td>
-        //         </tr>
-        //         <tr>
-        //             <td><strong>Year:</strong> ${year}</td>
-        //             <td><strong>Color:</strong> ${color}</td>
-        //             <td><strong>Fuel:</strong> ${fuel}</td>
-        //         </tr>
-        //         <tr>
-        //             <td colspan="3"><strong>Transmission: </strong>${transmission}</td>
-        //         </tr>
-        //     `);
-        // }
     });
 }
 
