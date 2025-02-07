@@ -156,7 +156,7 @@ $('.fullname').on('input', function(event) {
     }
   
     const navArea           = document.createElement('div');
-          navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
+          navArea.className = 'nav-area d-flex justify-content-between mt-5 w-100';
     currentStep.appendChild(navArea);
   
     const leftNav            = document.createElement('div');
@@ -169,16 +169,18 @@ $('.fullname').on('input', function(event) {
     if (!isFirstStep) {
       const prevButton             = document.createElement('button');
             prevButton.type        = 'button';
-            prevButton.className   = 'btn btn-secondary rounded';
-            prevButton.textContent = 'Previous';
+            prevButton.className   = 'btn btn-prev';
+            // prevButton.textContent = 'Previous';
+            prevButton.innerHTML   = `<i class="bi bi-caret-left-fill"></i> Previous`;
             prevButton.onclick     = previousStep;
       leftNav.appendChild(prevButton);
     }
   
     const nextButton             = document.createElement('button');
           nextButton.type        = 'button';                          // Changed to always be 'button' type
-          nextButton.className   = 'btn btn-primary rounded';
-          nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+          nextButton.className   = 'btn btn-next';
+          // nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+          nextButton.innerHTML   = `${isLastStep ? 'Submit' : 'Next'} <i class="bi bi-caret-right-fill"></i>`;
           nextButton.onclick     = isLastStep ?
       () => {
         if (validateStep(currentStepNumber)) {
@@ -208,6 +210,9 @@ $('.fullname').on('input', function(event) {
       if (currentStep && nextStep) {
         currentStep.classList.remove('active');
         nextStep.classList.add('active');
+
+        //Sets the scrollbar to top when the active step is loaded
+        document.querySelector("#formContainer").scrollTo({top: 0, behavior: 'smooth'});
   
         const progress = document.querySelector('.progress-bar');
         progress.style.width = `${currentStepNumber * 25}%`;
@@ -304,6 +309,15 @@ $('.fullname').on('input', function(event) {
   
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
     const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
+
+    let idDropdown;
+    let idDropdownBtnCaret;
+
+
+    if (imageId === "valid_id") {
+      idDropdown = document.querySelector("#valid_id_dropdown");
+      idDropdownBtnCaret = document.querySelector("#id_dropdown_btn > i");
+    }
   
     // Reset previous feedback and preview
     feedback.textContent = '';
@@ -314,6 +328,9 @@ $('.fullname').on('input', function(event) {
     if (!allowedTypes.includes(file.type)) {
         feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
         input.value = '';
+        if (idDropdown) {
+          idDropdown.classList.toggle("hide");
+        }
         return;
     }
   
@@ -321,6 +338,9 @@ $('.fullname').on('input', function(event) {
     if (file.size > maxSizeInBytes) {
         feedback.textContent = 'File size exceeds 8MB limit.';
         input.value = '';
+        if (idDropdown) {
+          idDropdown.classList.toggle("hide"); 
+        }
         return;
     }
   
@@ -328,7 +348,12 @@ $('.fullname').on('input', function(event) {
     const reader = new FileReader();
     reader.onload = function (e) {
         imagePreview.src = e.target.result;
-        imagePreview.style.display = 'block';
+        imagePreview.classList.add("show");
+        if (idDropdown) {
+          idDropdown.classList.remove("hide");
+          idDropdown.classList.add("animated-moveDown");
+          idDropdownBtnCaret.classList.add("rotate180");
+        }
     };
     reader.readAsDataURL(file);
   }
@@ -538,7 +563,9 @@ $('.fullname').on('input', function(event) {
       
     const nextSection = document.querySelector(`.insured${nextNum}`);
     if (nextSection) {
-      nextSection.style.display = "table";
+      nextSection.style.display = "block";
+      nextSection.classList.add("animated-moveDown");
+      nextSection.classList.remove("animated-moveUpExit");
       document.getElementById(`hide${nextNum-1}`).style.display = "block";
       setFieldsRequired(nextNum, true);
       removedBeneficiaries.delete(nextNum);
@@ -553,7 +580,11 @@ $('.fullname').on('input', function(event) {
   
     const section = document.querySelector(`.insured${num}`);
     if (section) {
-      section.style.display = "none";
+      section.classList.remove("animated-moveDown");
+      section.classList.add("animated-moveUpExit");
+      setTimeout(() => {
+        section.style.display = "none";
+      }, 250);
       clearFields(num);
       setFieldsRequired(num, false);
       beneficiaryCount--;
@@ -713,6 +744,34 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
+  // FUNCTION FOR DIPLOMAT 
+  function update_diplomat(checkedId, uncheckedId) {
+    const checkedCheckbox            = document.getElementById(checkedId);
+    const uncheckedCheckbox          = document.getElementById(uncheckedId);
+          uncheckedCheckbox.disabled = false;
+          uncheckedCheckbox.checked  = false;
+          checkedCheckbox.disabled   = true;
+  
+    if (checkedCheckbox.id == 'is_diplomat_1' || checkedCheckbox.id == 'is_diplomat_1') {
+      var_actofnature       = document.getElementById("is_diplomat_1");
+      var_actofnature.value = checkedCheckbox.value;
+      console.log(checkedCheckbox);
+      console.log(uncheckedCheckbox);
+    } else {
+      var_actofnature       = document.getElementById("is_diplomat_" + checkedCheckbox.id.slice(-1));
+      var_actofnature.value = checkedCheckbox.value;
+    }
+
+    if (checkedCheckbox.value == 1) {
+      checkedCheckbox.parentElement.classList.add("cbox-yes");
+      uncheckedCheckbox.parentElement.classList.remove("cbox-no");
+    }
+    else {
+      checkedCheckbox.parentElement.classList.add("cbox-no");
+      uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
+    }
+  }
+  
   // vehicleFileUpload function to work with dynamic IDs
   function handleVehicleFileUpload(input, imageId, feedbackId) {
     const file = input.files && input.files[0];
@@ -728,7 +787,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // Reset previous feedback and preview
     feedback.textContent = '';
-    imagePreview.style.display = 'none';
+    imagePreview.parentElement.style.display = 'none';
+    imagePreview.parentElement.classList.remove('animated-moveDown');
     imagePreview.src = '';
   
     // Validate file type
@@ -748,8 +808,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create preview
     const reader = new FileReader();
     reader.onload = function (e) {
-        imagePreview.src = e.target.result;
-        imagePreview.style.display = 'block';
+      imagePreview.src = e.target.result;
+      imagePreview.parentElement.style.display = 'flex';
+      imagePreview.parentElement.classList.add('animated-moveDown');
     };
     reader.readAsDataURL(file);
   }
@@ -783,13 +844,17 @@ document.addEventListener('DOMContentLoaded', function() {
         $(platenumInput).mask('AAAA-AAAAAAAA');
         platenumInput.value = "";
         var_csticker.value = 1;
+        checkedCheckbox.parentElement.classList.add("cbox-yes");
+        uncheckedCheckbox.parentElement.classList.remove("cbox-no");
     } else {
-        platenumLabel.textContent = "Plate No";
-        platenumInput.placeholder = "Enter plate no";
+        platenumLabel.textContent = "Plate Number";
+        platenumInput.placeholder = "Enter plate no.";
         platenumInput.dataset.inputType = 'plate'; // Set input type
         applyPlateMask(platenumInput);
         platenumInput.value = "";
         var_csticker.value = 0;
+        checkedCheckbox.parentElement.classList.add("cbox-no");
+        uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
     }
 }
 
