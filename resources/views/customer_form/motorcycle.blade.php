@@ -501,7 +501,7 @@
                                 </div>
                                 <!-- First Beneficiary (Always visible) -->
                                 <div class="insured insured-container">
-                                    <div class="insured1 p-4 rounded-3">
+                                    <div class="insured1 p-4 rounded-3 animated-moveDown">
                                         <div class="insured-num ps-2 pe-1 pt-1 pb-1"><h6 class="m-0">1</h6></div>
                                         <div class="row mb-3">
                                             <div class="col-md-6">

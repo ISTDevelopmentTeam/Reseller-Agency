@@ -230,6 +230,9 @@ $('.fullname').on('input', function(event) {
   function previousStep() {
     const currentStep = document.querySelector('.form-step.active');
     const stepNumber = parseInt(currentStep.id.replace('step', ''));
+
+     //Sets the scrollbar to top when the active step is loaded
+    document.querySelector("#formContainer").scrollTo({top: 0, behavior: 'smooth'});
   
     if (stepNumber > 1) {
       currentStep.classList.remove('active');
@@ -311,12 +314,16 @@ $('.fullname').on('input', function(event) {
     const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
 
     let idDropdown;
+    let idContainer;
     let idDropdownBtnCaret;
 
 
     if (imageId === "valid_id") {
       idDropdown = document.querySelector("#valid_id_dropdown");
+      idContainer = document.querySelector("#valid_id_container");
       idDropdownBtnCaret = document.querySelector("#id_dropdown_btn > i");
+
+      idDropdown.classList.remove("animated-moveDown");
     }
   
     // Reset previous feedback and preview
@@ -353,6 +360,10 @@ $('.fullname').on('input', function(event) {
           idDropdown.classList.remove("hide");
           idDropdown.classList.add("animated-moveDown");
           idDropdownBtnCaret.classList.add("rotate180");
+
+          idContainer.classList.add("animated-moveDown");
+          idContainer.classList.remove("animated-moveupExit");
+          idContainer.classList.remove("hide");
         }
     };
     reader.readAsDataURL(file);
@@ -755,8 +766,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (checkedCheckbox.id == 'is_diplomat_1' || checkedCheckbox.id == 'is_diplomat_1') {
       var_actofnature       = document.getElementById("is_diplomat_1");
       var_actofnature.value = checkedCheckbox.value;
-      console.log(checkedCheckbox);
-      console.log(uncheckedCheckbox);
     } else {
       var_actofnature       = document.getElementById("is_diplomat_" + checkedCheckbox.id.slice(-1));
       var_actofnature.value = checkedCheckbox.value;
