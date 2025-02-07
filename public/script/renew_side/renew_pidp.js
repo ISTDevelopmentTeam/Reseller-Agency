@@ -92,6 +92,7 @@ $('.letters_only_fname').on('input', function (event) {
     const planTypeSelect  = document.getElementById('plantype');
     const expirationInput = document.getElementById('expiration');
 
+
     // Add event listener to each radio button for real-time validation
     radioInputs.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -598,6 +599,48 @@ $('.letters_only_fname').on('input', function (event) {
   // ----------------------------------------------------------Validation for TAB/STEP-----------------------------------------------------------------//
   
   // ----------------------------------------------------------LICENSE DETAILS FUNCTION----------------------------------------------------------//
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const yesRadio = document.getElementById('yesRadio');
+    const noRadio = document.getElementById('noRadio');
+    const planTypeSelect = document.getElementById('planType');
+    const planMessage = document.getElementById('planMessage');
+
+    function filterPlanOptions() {
+        const options = planTypeSelect.getElementsByTagName('option');
+        for (let option of options) {
+            if (yesRadio.checked && option.getAttribute('data-plan-id') !== '8') {
+                option.style.display = 'none';
+            } else {
+                option.style.display = '';
+            }
+        }
+        // Reset the selected index to the default option
+        planTypeSelect.selectedIndex = 0;
+        // Hide the message when radio button is changed
+        planMessage.style.display = 'none';
+        // Trigger the change event to update the message display
+        showPlanMessage();
+    }
+
+    function showPlanMessage() {
+        const selectedOption = planTypeSelect.options[planTypeSelect.selectedIndex];
+        if (selectedOption && (selectedOption.text.includes('TWO YEARS') || selectedOption.text.includes('THREE YEARS'))) {
+            planMessage.style.display = 'block';
+        } else {
+            planMessage.style.display = 'none';
+        }
+    }
+
+    yesRadio.addEventListener('change', filterPlanOptions);
+    noRadio.addEventListener('change', filterPlanOptions);
+    planTypeSelect.addEventListener('change', showPlanMessage);
+
+    // Initial filter based on default selection
+    filterPlanOptions();
+    showPlanMessage();
+});
+
 
   // EXPIRATION DATE FUNCTION
   document.addEventListener("DOMContentLoaded", function() {
@@ -1599,75 +1642,44 @@ var closeBtn         = document.getElementsByClassName("closeBtn")[0];
   }
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
-  
-// THIS FOR HIDE AND SHOW FOR VEHICLE
-
-function toggleVehicleDetails(element) {
-
-    const vehicleFields    = document.getElementById('vehicleFields');
-    const withVehicleInput = document.getElementById('with_vehicle');
+  // Function to handle vehicle information update toggle
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners to all vehicle switches
+    const vehicleSwitches = document.querySelectorAll('.vehicle-switch');
     
-    // Get all required fields
-    const requiredFields = vehicleFields.querySelectorAll('input[type="text"], input[type="file"], select');
-    
-    if (element.value === 'yes') {
-        vehicleFields.style.display = 'block';
-        // Update hidden input
-        withVehicleInput.value = 'yes';
-        
-        // Add required attribute to all fields
-        requiredFields.forEach(field => {
-            if (!field.classList.contains('optional')) {
-                field.setAttribute('required', '');
-            }
-        });
-        
-        // Specifically handle select2 fields if they exist
-        const select2Fields = vehicleFields.querySelectorAll('.select2');
-        select2Fields.forEach(field => {
-            if (!field.classList.contains('optional')) {
-                field.setAttribute('required', '');
-            }
-        });
-        
-    } else {
-        // Hide the vehicle fields
-        vehicleFields.style.display = 'none';
-        // Update hidden input
-        withVehicleInput.value = 'no';
-        
-        // Remove required attribute from all fields
-        requiredFields.forEach(field => {
-            field.removeAttribute('required');
-            if (field.tagName === 'SELECT') {
-                field.selectedIndex = 0;
-                // If using select2, update it
-                if (field.classList.contains('select2')) {
-                    try {
-                        $(field).val('').trigger('change');
-                    } catch (e) {
-                        console.warn('Select2 not initialized');
-                    }
-                }
+    vehicleSwitches.forEach((toggle, index) => {
+        toggle.addEventListener('change', function() {
+            // Get the current vehicle container
+            const vehicleContainer = this.closest('.vehicle-item');
+            
+            // Get the hidden input for vehicle update status
+            const updateStatus = document.getElementById(`is_vehicle_updated_${index + 1}`);
+            
+            // Get the relevant input fields
+            const plateNoInput      = vehicleContainer.querySelector('[name="vehicle_plate[]"]');
+            const colorInput        = vehicleContainer.querySelector('[name="vehicle_color[]"]');
+            const fuelInput         = vehicleContainer.querySelector('[name="vehicle_fuel[]"]');
+            const transmissionInput = vehicleContainer.querySelector('[name="vehicle_transmission[]"]');
+            
+            if (this.checked) {
+                // Enable fields and set update status to 1
+                plateNoInput.disabled      = false;
+                colorInput.disabled        = false;
+                fuelInput.disabled         = false;
+                transmissionInput.disabled = false;
+                updateStatus.value         = '1';
             } else {
-                field.value = '';
+                // Disable fields and set update status to 0
+                plateNoInput.disabled      = true;
+                colorInput.disabled        = true;
+                fuelInput.disabled         = true;
+                transmissionInput.disabled = true;
+                updateStatus.value = '0';
             }
         });
-        
-        // Clear file upload previews
-        const previewImages = vehicleFields.querySelectorAll('img[id="or"], img[id="cr"]');
-        previewImages.forEach(img => {
-            img.style.display = 'none';
-            img.src = '';
-        });
-        
-        // Clear error messages
-        const errorMessages = vehicleFields.querySelectorAll('.invalid-feedback, .text-danger');
-        errorMessages.forEach(error => {
-            error.style.display = 'none';
-        });
-    }
-}
+    });
+});
+
 
 // Initialize the form state on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -1729,252 +1741,94 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
 // Function to update label and mask for conduction sticker/plate number
-function updateLabeldyna(checkedId, uncheckedId) {
-    const checkedCheckbox = document.getElementById(checkedId);
-    const uncheckedCheckbox = document.getElementById(uncheckedId);
-    uncheckedCheckbox.disabled = false;
-    uncheckedCheckbox.checked = false;
-    checkedCheckbox.disabled = true;
+function applyMaskBasedOnType(input, label, isConduction) {
+    if ($(input).data('mask')) {
+        $(input).unmask();
+    }
   
-    const vehicleNum = checkedId.match(/\d+$/)?.[0] || '';
-    const platenumId = vehicleNum ? `platenum${vehicleNum}` : 'platenum';
-    const cstickerId = vehicleNum ? `csticker${vehicleNum}` : 'csticker';
+    if (isConduction) {
+        label.textContent = "Conduction Sticker";
+        input.placeholder = "Enter conduction sticker";
+        input.dataset.inputType = 'conduction';
   
-    const platenumInput = document.getElementById(platenumId);
-    const platenumLabel = document.querySelector(`label[for="${platenumId}"]`);
-    const var_csticker = document.getElementById(cstickerId);
-  
-    $(platenumInput).unmask();
-    
-    if (checkedCheckbox.value == 1) {
-        platenumLabel.textContent = "Conduction Sticker";
-        platenumInput.placeholder = "Enter conduction sticker";
-        platenumInput.dataset.inputType = 'conduction';
-        $(platenumInput).mask('AAAAAA');
+        $(input).mask('AAAAAA', {
+            translation: {
+                'A': {
+                    pattern: /[A-Za-z0-9]/,
+                    transform: function(val) {
+                        return val.toUpperCase();
+                    }
+                }
+            },
+            placeholder: "",
+            clearIfNotMatch: true
+        });
     } else {
-        platenumLabel.textContent = "Plate No";
-        platenumInput.placeholder = "Enter plate no";
-        platenumInput.dataset.inputType = 'plate';
-        $(platenumInput).mask('AAAAAAAA', {
+        label.textContent = "Plate No";
+        input.placeholder = "Enter plate no";
+        input.dataset.inputType = 'plate';
+  
+        $(input).mask('AAAAAAAA', {
             translation: {
                 'A': {
                     pattern: /[A-Za-z0-9\s-]/,
                     transform: function(val) {
-                        let currentVal = this.el.val();
+                        let currentVal = $(input).val();
                         if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
                             return '';
                         }
-                        return val;
+                        return val.toUpperCase();
                     }
                 }
-            }
+            },
+            placeholder: "",
+            clearIfNotMatch: true
         });
     }
-    platenumInput.value = "";
-    var_csticker.value = checkedCheckbox.value;
   }
   
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initial vehicle plate mask
-    const initialPlateInput = document.getElementById('platenum');
-    if (initialPlateInput) {
-        applyPlateMask(initialPlateInput);
+  // Function to handle checkbox changes
+  function updateLabelDyna(checkbox, type) {
+    const vehicleContainer = checkbox.closest('.vehicle-item');
+    if (!vehicleContainer) return;
+  
+    const otherCheckbox = vehicleContainer.querySelector(type === 'yes' ? '.cs-no' : '.cs-yes');
+    const hiddenInput = vehicleContainer.querySelector('.cs-value');
+    const plateInput = vehicleContainer.querySelector('input[name="vehicle_plate[]"]');
+    const plateLabel = vehicleContainer.querySelector('.label:not([style])');
+  
+    if (!otherCheckbox || !hiddenInput || !plateInput || !plateLabel) {
+        console.error("Required elements not found");
+        return;
     }
   
-    // Observer for dynamic vehicles
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-                if (node.classList?.contains('vehicle-item')) {
-                    const plateInput = node.querySelector('.platenum');
-                    if (plateInput) {
-                        applyPlateMask(plateInput);
-                    }
-                }
-            });
+    otherCheckbox.disabled = false;
+    otherCheckbox.checked = false;
+    checkbox.disabled = true;
+    plateInput.value = '';
+    hiddenInput.value = checkbox.value;
+  
+    applyMaskBasedOnType(plateInput, plateLabel, type === 'yes');
+  }
+  
+  // Function to initialize a vehicle
+  function initializeVehicle(vehicle) {
+    const csYesCheckbox = vehicle.querySelector('.cs-yes');
+    const csNoCheckbox = vehicle.querySelector('.cs-no');
+    const plateInput = vehicle.querySelector('input[name="vehicle_plate[]"]');
+    const plateLabel = vehicle.querySelector('.label:not([style])');
+  
+    if (csYesCheckbox && csNoCheckbox && plateInput && plateLabel) {
+        // Apply initial mask
+        applyMaskBasedOnType(plateInput, plateLabel, csYesCheckbox.checked);
+  
+        // Add event listeners
+        csYesCheckbox.addEventListener('change', function() {
+            updateLabelDyna(this, 'yes');
         });
-    });
   
-    const vehicleContainer = document.getElementById('vehicleFields');
-    if (vehicleContainer) {
-        observer.observe(vehicleContainer, { childList: true, subtree: true });
+        csNoCheckbox.addEventListener('change', function() {
+            updateLabelDyna(this, 'no');
+        });
     }
-  });
-  
-  function applyPlateMask(element) {
-    $(element).mask('AAAAAAAA', {
-        translation: {
-            'A': {
-                pattern: /[A-Za-z0-9\s-]/,
-                transform: function(val) {
-                    let currentVal = this.el.val();
-                    if (currentVal.replace(/[-\s]/g, '').length >= 7 && val !== '-' && val !== ' ') {
-                        return '';
-                    }
-                    return val;
-                }
-            }
-        }
-    });
   }
-  
-  // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
-  function summary_fetch() {
-  
-      // Step 1 Values
-    var membershipType  = $('#membership_type').val();
-    var plan_type       = $('#plan_type').val();
-    var pin_code        = $('#pinCode').val();
-    var paInsurance     = $('#paInsurance').val();
-    var activationDate  = $('#activationDate').val();
-    var applicationType = $('#applicationType').val();
-  
-  
-      // Step 2 Values
-    var title       = $('#title').val();
-    var first_name  = $('#firstName').val();
-    var last_name   = $('#lastName').val();
-    var middle_name = $('#middleName').val();
-      // var full_name    = first_name+ ' ,'+ last_name;
-    var gender      = $('#gender').val();
-    var birthdate   = $('#birthdate').val();
-    var birthplace  = $('#birthplace').val();
-    var citizenship = $('#citizenship').val();
-    var nationality = $('#nationality').val();
-      // var civilStatus        = $('#civilStatus').val();
-      // var acrNo        = $('#acrNo').val();
-    var occupation   = $('#occupation').val();
-    var mobileNumber = $('#mobileNumber').val();
-    var emailAddress = $('#emailAddress').val();
-    var occupation   = $('#occupation').val();
-    var civilStatus  = $('#civilStatus').val();
-  
-      // Step 3 Values
-  
-      // Home Address
-    var mailing       = $('#mail').val();
-    var street        = $('#street').val();
-    var town          = $('#town').val();
-    var city          = $('#city').val();
-    var province      = $('#province').val();
-    var zcode         = $('#zcode').val();
-    var homeaddress   = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-    var availMagazine = $('#availMagazine').val();
-  
-      // Office Address
-    var street        = $('#street1').val();
-    var town          = $('#town1').val();
-    var city          = $('#city1').val();
-    var province      = $('#province1').val();
-    var zcode         = $('#zcode1').val();
-    var officeaddress = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-    var companyName   = $('#comname').val();
-  
-  
-      // Summary Fields
-    document.getElementById('summaryApplicationType').textContent = applicationType;
-    document.getElementById('summaryMembershipType').textContent  = membershipType;
-    document.getElementById('summaryPlanType').textContent        = plan_type;
-    document.getElementById('summaryActivationDate').textContent  = activationDate;
-  
-    document.getElementById('summaryTitle').textContent       = title;
-    document.getElementById('summaryLastname').textContent    = last_name;
-    document.getElementById('summaryFirstname').textContent   = first_name;
-    document.getElementById('summaryMiddlename').textContent  = middle_name;
-    document.getElementById('summaryGender').textContent      = gender;
-    document.getElementById('summaryBirthdate').textContent   = birthdate;
-    document.getElementById('summaryBirthplace').textContent  = birthplace;
-    document.getElementById('summaryCivilstatus').textContent = civilStatus;
-    document.getElementById('summaryCitizenship').textContent = citizenship;
-    document.getElementById('summaryOccupation').textContent  = occupation;
-  
-    document.getElementById('summaryCompanyName').textContent       = companyName;
-    document.getElementById('summaryhomeaddress').textContent       = homeaddress;
-    document.getElementById('summaryofficeaddress').textContent     = officeaddress;
-    document.getElementById('summaryMailingPreference').textContent = mailing;
-    document.getElementById('summaryMagazine').textContent          = availMagazine;
-  
-  } 
-  // -------------------------------------- END INFORMATION SUMMARY FUNCTION-------------------------------------------- //
-
-  $(document).ready(function () {
-    var line = $("#planType option").hide();
-    // console.log(line);
-    $("#membershipType").change(function () {
-      var selectedMembershipType = $(this).val();
-  
-      // Show options based on the selected membership type
-      if (selectedMembershipType === "REGULAR INDIVIDUAL") {
-        $("#planType").val("");
-        $("#planType option[value='ANNUAL FEE (REGULAR)']").show();
-        $("#planType option[value='THREE YEAR FEE (REGULAR)']").show();
-        $("#planType option[value='ANNUAL FEE (ASSOCIATE)']").hide();
-        $("#planType option[value='THREE YEAR FEE (ASSOCIATE) ']").hide();
-        $("#planType option[value='ANNUAL FEE (MEMBERSHIP LITE)']").hide();
-        $("#planType option[value='ANNUAL FEE (ELITE)']").hide();
-        $("#planType option[value='THREE YEAR FEE (ELITE)']").hide();
-      }
-      else if (selectedMembershipType === "ASSOCIATE INDIVIDUAL") {
-        $("#planType").val("");
-        $("#planType option[value='ANNUAL FEE (REGULAR)']").hide();
-        $("#planType option[value='THREE YEAR FEE (REGULAR)']").hide();
-        $("#planType option[value='ANNUAL FEE (ASSOCIATE)']").show();
-        $("#planType option[value='THREE YEAR FEE (ASSOCIATE) ']").show();
-        $("#planType option[value='ANNUAL FEE (MEMBERSHIP LITE)']").hide();
-        $("#planType option[value='ANNUAL FEE (ELITE)']").hide();
-        $("#planType option[value='THREE YEAR FEE (ELITE)']").hide();
-      }
-      else if (selectedMembershipType === "MEMBERSHIP LITE") {
-        $("#planType").val("");
-        $("#planType option[value='ANNUAL FEE (REGULAR)']").hide();
-        $("#planType option[value='THREE YEAR FEE (REGULAR)']").hide();
-        $("#planType option[value='ANNUAL FEE (ASSOCIATE)']").hide();
-        $("#planType option[value='THREE YEAR FEE (ASSOCIATE) ']").hide();
-        $("#planType option[value='ANNUAL FEE (MEMBERSHIP LITE)']").show();
-        $("#planType option[value='ANNUAL FEE (ELITE)']").hide();
-        $("#planType option[value='THREE YEAR FEE (ELITE)']").hide();
-      }
-      else if (selectedMembershipType === "ELITE") {
-        $("#planType").val("");
-        $("#planType option[value='ANNUAL FEE (REGULAR)']").hide();
-        $("#planType option[value='THREE YEAR FEE (REGULAR)']").hide();
-        $("#planType option[value='ANNUAL FEE (ASSOCIATE)']").hide();
-        $("#planType option[value='THREE YEAR FEE (ASSOCIATE) ']").hide();
-        $("#planType option[value='ANNUAL FEE (MEMBERSHIP LITE)']").hide();
-        $("#planType option[value='ANNUAL FEE (ELITE)']").show();
-        $("#planType option[value='THREE YEAR FEE (ELITE)']").show();
-      }
-    });
-  });
-  
-  $(document).ready(function () {
-    $("#planType").change(function () {
-      var selectedPlanType = $(this).val();
-  
-      // Show options based on the selected planType
-      if (selectedPlanType === "ANNUAL FEE (REGULAR)" || "THREE YEAR FEE (REGULAR)") {
-        $("#planType option[value='regular']").show();
-        $("#planType option[value='associate']").hide();
-        $("#planType option[value='lite']").hide();
-        $("#planType option[value='elite']").hide();
-      }
-      else if (selectedPlanType === "ANNUAL FEE (ASSOCIATE)" || "THREE YEAR FEE (ASSOCIATE)") {
-        $("#planType option[value='regular']").hide();
-        $("#planType option[value='associate']").show();
-        $("#planType option[value='lite']").hide();
-        $("#planType option[value='elite']").hide();
-      }
-      else if (selectedPlanType === "ANNUAL FEE (MEMBERSHIP LITE)") {
-        $("#planType option[value='regular']").hide();
-        $("#planType option[value='associate']").hide();
-        $("#planType option[value='lite']").show();
-        $("#planType option[value='elite']").hide();
-      }
-      else if (selectedPlanType === "ANNUAL FEE (ELITE)" || "THREE YEAR FEE (ELITE)") {
-        $("#planType option[value='regular']").hide();
-        $("#planType option[value='associate']").hide();
-        $("#planType option[value='lite']").hide();
-        $("#planType option[value='elite']").show();
-      }
-    });
-  });

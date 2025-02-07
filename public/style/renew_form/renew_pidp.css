@@ -939,4 +939,40 @@
     border-right: 2px solid #343a40; 
     animation: typewriter 6s steps(20, end) infinite, blink 0.75s step-end infinite;
  }
- 
+
+ .vehicle-switch {
+   position: relative;
+   height: 1.5rem;
+   width: 3rem;
+   cursor: pointer;
+   appearance: none;
+   -webkit-appearance: none;
+   border-radius: 9999px;
+   background-color: rgba(100, 116, 139, 0.377);
+   transition: all .3s ease;
+}
+
+.vehicle-switch:checked {
+   background-color: #4040F2;
+}
+
+.vehicle-switch::before {
+   position: absolute;
+   content: "";
+   left: calc(1.5rem - 1.6rem);
+   top: calc(1.5rem - 1.6rem);
+   display: block;
+   height: 1.6rem;
+   width: 1.6rem;
+   cursor: pointer;
+   border: 1px solid rgba(100, 116, 139, 0.527);
+   border-radius: 9999px;
+   background-color: rgba(255, 255, 255, 1);
+   box-shadow: 0 3px 10px rgba(100, 116, 139, 0.327);
+   transition: all .3s ease;
+}
+
+.vehicle-switch:checked:before {
+   transform: translateX(100%);
+   border-color: #4040F2;
+}

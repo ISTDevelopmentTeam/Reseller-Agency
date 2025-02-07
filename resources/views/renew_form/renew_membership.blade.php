@@ -965,7 +965,6 @@
     <script src="{{ asset('script/renew_side/renew_membership.js') }} "></script>
     <script src="{{ asset('script/sidebar.js') }}"></script>
 
-    @include('vehicle_autocomp')
     @include('renew_form/renew_dynamic_vehicle')
     @include('renew_form/renew_countrycode')
     @include('address')

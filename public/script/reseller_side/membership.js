@@ -407,6 +407,21 @@ function maskTelNo(id) {
 
 // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
 
+function update_diplomat(checkedId, uncheckedId) {
+  const checkedCheckbox            = document.getElementById(checkedId);
+  const uncheckedCheckbox          = document.getElementById(uncheckedId);
+        uncheckedCheckbox.disabled = false;
+        uncheckedCheckbox.checked  = false;
+        checkedCheckbox.disabled   = true;
+
+  if (checkedCheckbox.id == 'is_diplomat_1' || checkedCheckbox.id == 'is_diplomat_1') {
+    var_actofnature       = document.getElementById("is_diplomat_1");
+    var_actofnature.value = checkedCheckbox.value
+  } else {
+    var_actofnature       = document.getElementById("is_diplomat_" + checkedCheckbox.id.slice(-1));
+    var_actofnature.value = checkedCheckbox.value
+  }
+}
 // vehicleFileUpload function to work with dynamic IDs
 function handleVehicleFileUpload(input, imageId, feedbackId) {
   const file = input.files && input.files[0];

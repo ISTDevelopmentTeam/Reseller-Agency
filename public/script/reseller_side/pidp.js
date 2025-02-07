@@ -1599,9 +1599,24 @@ var closeBtn         = document.getElementsByClassName("closeBtn")[0];
   }
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
-  
-// THIS FOR HIDE AND SHOW FOR VEHICLE
 
+  // FUNCTION FOR DIPLOMAT
+  function update_diplomat(checkedId, uncheckedId) {
+    const checkedCheckbox            = document.getElementById(checkedId);
+    const uncheckedCheckbox          = document.getElementById(uncheckedId);
+          uncheckedCheckbox.disabled = false;
+          uncheckedCheckbox.checked  = false;
+          checkedCheckbox.disabled   = true;
+  
+    if (checkedCheckbox.id == 'is_diplomat_1' || checkedCheckbox.id == 'is_diplomat_1') {
+      var_actofnature       = document.getElementById("is_diplomat_1");
+      var_actofnature.value = checkedCheckbox.value
+    } else {
+      var_actofnature       = document.getElementById("is_diplomat_" + checkedCheckbox.id.slice(-1));
+      var_actofnature.value = checkedCheckbox.value
+    }
+  }
+// THIS FOR HIDE AND SHOW FOR VEHICLE
 function toggleVehicleDetails(element) {
 
     const vehicleFields    = document.getElementById('vehicleFields');

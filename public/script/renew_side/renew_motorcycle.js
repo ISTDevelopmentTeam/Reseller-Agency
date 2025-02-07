@@ -197,7 +197,7 @@ $('.fullname2').on('input', function(event) {
     // updateNavigationButtons();
     // VehicleHandling();
     FileUploads();
-    toggleRequiredAttributes();
+    // toggleRequiredAttributes();
   });
   // ----------------------------------------------------------Validation for TAB/STEP-----------------------------------------------------------------//
   
@@ -263,203 +263,203 @@ $('.fullname2').on('input', function(event) {
   // END FILE UPLOAD
   
   // Start Title Gender-----------------
-  document.getElementById('title').addEventListener('change', function() {
-      const title = this.value;
-      const genderSelect = document.getElementById('gender');
+//   document.getElementById('title').addEventListener('change', function() {
+//       const title = this.value;
+//       const genderSelect = document.getElementById('gender');
   
-      switch (title) {
-          case 'MR':
-              genderSelect.value = 'MALE';
-              break;
-          case 'MS':
-          case 'MRS':
-              genderSelect.value = 'FEMALE';
-              break;
-          case 'ATTY':
-          case 'DR':
-          case 'ENGR':
-              genderSelect.value = '';
-              break;
-          default:
-              genderSelect.value = '';
-      }
-  });
+//       switch (title) {
+//           case 'MR':
+//               genderSelect.value = 'MALE';
+//               break;
+//           case 'MS':
+//           case 'MRS':
+//               genderSelect.value = 'FEMALE';
+//               break;
+//           case 'ATTY':
+//           case 'DR':
+//           case 'ENGR':
+//               genderSelect.value = '';
+//               break;
+//           default:
+//               genderSelect.value = '';
+//       }
+//   });
   
   // Start Citizenship Dropdown-------------------
-  document.addEventListener('DOMContentLoaded', function () {
-    var citizenshipDropdown = document.getElementById('citizenship');
-    var addInfoSection = document.getElementById('add_info');
+//   document.addEventListener('DOMContentLoaded', function () {
+//     var citizenshipDropdown = document.getElementById('citizenship');
+//     var addInfoSection = document.getElementById('add_info');
   
-    citizenshipDropdown.addEventListener('change', function () {
-      if (citizenshipDropdown.value === 'foreigner') {
-        addInfoSection.style.display = 'block';
-        setRequiredForeigner(true);
+//     citizenshipDropdown.addEventListener('change', function () {
+//       if (citizenshipDropdown.value === 'foreigner') {
+//         addInfoSection.style.display = 'block';
+//         setRequiredForeigner(true);
   
-      } else {
-        addInfoSection.style.display = 'none';
-        setRequiredForeigner(false);
-        nationality.value = "";
-      }
-    });
-  });
+//       } else {
+//         addInfoSection.style.display = 'none';
+//         setRequiredForeigner(false);
+//         nationality.value = "";
+//       }
+//     });
+//   });
   
-  function setRequiredForeigner(isRequired) {
-    var nationality = document.getElementById("nationality");
-    nationality.required = isRequired;
-  }
+//   function setRequiredForeigner(isRequired) {
+//     var nationality = document.getElementById("nationality");
+//     nationality.required = isRequired;
+//   }
   // END Citizenship Dropdown
   
   
   // FLAT Picker FOR BIRTHDATE
-  document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("birthdate");
-    let datePicker;
-    let lastValue = "";
+//   document.addEventListener("DOMContentLoaded", function () {
+//     const input = document.getElementById("birthdate");
+//     let datePicker;
+//     let lastValue = "";
   
-    // Calculate the maximum allowed date (18 years ago from today)
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() - 18);
+//     // Calculate the maximum allowed date (18 years ago from today)
+//     const maxDate = new Date();
+//     maxDate.setFullYear(maxDate.getFullYear() - 18);
   
-    // Initialize Flatpickr
-    datePicker = flatpickr("#birthdate", {
-      dateFormat: "m/d/Y",
-      allowInput: true,
-      maxDate: maxDate, // Set the maximum allowed date
-      onChange: function (selectedDates, dateStr, instance) {
-        if (selectedDates.length > 0) {
-          input.value = dateStr;
-          lastValue = dateStr;
-        }
-      }
-    });
+//     // Initialize Flatpickr
+//     datePicker = flatpickr("#birthdate", {
+//       dateFormat: "m/d/Y",
+//       allowInput: true,
+//       maxDate: maxDate, // Set the maximum allowed date
+//       onChange: function (selectedDates, dateStr, instance) {
+//         if (selectedDates.length > 0) {
+//           input.value = dateStr;
+//           lastValue = dateStr;
+//         }
+//       }
+//     });
   
-    // Add input event listener for manual typing
-    input.addEventListener('input', function (e) {
-      let v = this.value;
+//     // Add input event listener for manual typing
+//     input.addEventListener('input', function (e) {
+//       let v = this.value;
   
-      // Handle backspace/delete - allow normal deletion
-      if (v.length < lastValue.length) {
-        lastValue = v;
-        if (v.length === 0) {
-          datePicker.clear();
-        }
-        return;
-      }
+//       // Handle backspace/delete - allow normal deletion
+//       if (v.length < lastValue.length) {
+//         lastValue = v;
+//         if (v.length === 0) {
+//           datePicker.clear();
+//         }
+//         return;
+//       }
   
-      // Only proceed with formatting if we're adding characters
-      if (v.length > lastValue.length) {
-        // Handle MM/ format
-        if (v.match(/^\d{2}$/) !== null) {
-          let month = parseInt(v);
-          v = (month > 12 ? 12 : month) + '/';
-        }
-        // Handle MM/DD/ format
-        else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-          let parts = v.split('/');
-          let month = parseInt(parts[0]);
-          let day = parseInt(parts[1]);
-          v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
-        }
-        // Handle complete date format MM/DD/YYYY
-        else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
-          let parts = v.split('/');
-          let month = parseInt(parts[0]);
-          let day = parseInt(parts[1]);
-          let year = parseInt(parts[2]);
+//       // Only proceed with formatting if we're adding characters
+//       if (v.length > lastValue.length) {
+//         // Handle MM/ format
+//         if (v.match(/^\d{2}$/) !== null) {
+//           let month = parseInt(v);
+//           v = (month > 12 ? 12 : month) + '/';
+//         }
+//         // Handle MM/DD/ format
+//         else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+//           let parts = v.split('/');
+//           let month = parseInt(parts[0]);
+//           let day = parseInt(parts[1]);
+//           v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
+//         }
+//         // Handle complete date format MM/DD/YYYY
+//         else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
+//           let parts = v.split('/');
+//           let month = parseInt(parts[0]);
+//           let day = parseInt(parts[1]);
+//           let year = parseInt(parts[2]);
   
-          // Create a date object and update the calendar
-          let dateStr = `${month}/${day}/${year}`;
-          let date = new Date(dateStr);
+//           // Create a date object and update the calendar
+//           let dateStr = `${month}/${day}/${year}`;
+//           let date = new Date(dateStr);
   
-          // Only update if it's a valid date and at least 18 years ago
-          if (!isNaN(date.getTime()) && date <= maxDate) {
-            datePicker.setDate(date, true);
-          } else {
-            // If the date is not valid or not at least 18 years ago, clear the input
-            this.value = lastValue;
-            return;
-          }
-        }
+//           // Only update if it's a valid date and at least 18 years ago
+//           if (!isNaN(date.getTime()) && date <= maxDate) {
+//             datePicker.setDate(date, true);
+//           } else {
+//             // If the date is not valid or not at least 18 years ago, clear the input
+//             this.value = lastValue;
+//             return;
+//           }
+//         }
   
-        this.value = v;
-        lastValue = v;
-      }
-    });
+//         this.value = v;
+//         lastValue = v;
+//       }
+//     });
   
-    // Add keydown listener for better backspace handling
-    input.addEventListener('keydown', function (e) {
-      if (e.key === 'Backspace' || e.key === 'Delete') {
-        if (this.value.length === 0) {
-          datePicker.clear();
-        }
-      }
-    });
-  });
+//     // Add keydown listener for better backspace handling
+//     input.addEventListener('keydown', function (e) {
+//       if (e.key === 'Backspace' || e.key === 'Delete') {
+//         if (this.value.length === 0) {
+//           datePicker.clear();
+//         }
+//       }
+//     });
+//   });
   // END OF FLAT PICKER
   
   // ---------------------------------------------------END FUNCTION FOR PERSONAL INFORMATION------------------------------------------------ //
   
   
   // ---------------------------------------------------CONTACT INFORMATION FUNCTION-------------------------------------------------------- //
-  document.addEventListener('DOMContentLoaded', function () {
-    var mailingAddressDropdown = document.getElementById('mail');
-    var officeAddressSection   = document.getElementById('officeAddress');
-    var street1                = document.getElementById('street1');
-    var town1                  = document.getElementById('town1');
-    var city1                  = document.getElementById('city1');
-    var province1              = document.getElementById('province1');
-    var zcode1                 = document.getElementById('zcode1');
-    var comname                = document.getElementById('comname');
+//   document.addEventListener('DOMContentLoaded', function () {
+//     var mailingAddressDropdown = document.getElementById('mail');
+//     var officeAddressSection   = document.getElementById('officeAddress');
+//     var street1                = document.getElementById('street1');
+//     var town1                  = document.getElementById('town1');
+//     var city1                  = document.getElementById('city1');
+//     var province1              = document.getElementById('province1');
+//     var zcode1                 = document.getElementById('zcode1');
+//     var comname                = document.getElementById('comname');
   
-      // Function to set or remove the required attribute for the specified fields
-    function updateRequiredFields(required) {
-      street1.required   = required;
-      town1.required     = required;
-      city1.required     = required;
-      province1.required = required;
-      zcode1.required    = required;
-      comname.required   = required;
-    }
+//       // Function to set or remove the required attribute for the specified fields
+//     function updateRequiredFields(required) {
+//       street1.required   = required;
+//       town1.required     = required;
+//       city1.required     = required;
+//       province1.required = required;
+//       zcode1.required    = required;
+//       comname.required   = required;
+//     }
   
-    mailingAddressDropdown.addEventListener('change', function () {
-      if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
-        officeAddressSection.style.display = 'block';
-        updateRequiredFields(true);
-      } else {
-        officeAddressSection.style.display = 'none';
-        street1.value                      = "";
-        town1.value                        = "";
-        city1.value                        = "";
-        province1.value                    = "";
-        zcode1.value                       = "";
-        comname.value                      = "";
-        updateRequiredFields(false);
-      }
-    });
-  });
+//     mailingAddressDropdown.addEventListener('change', function () {
+//       if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
+//         officeAddressSection.style.display = 'block';
+//         updateRequiredFields(true);
+//       } else {
+//         officeAddressSection.style.display = 'none';
+//         street1.value                      = "";
+//         town1.value                        = "";
+//         city1.value                        = "";
+//         province1.value                    = "";
+//         zcode1.value                       = "";
+//         comname.value                      = "";
+//         updateRequiredFields(false);
+//       }
+//     });
+//   });
   
-  function toggleRequiredAttributes() {
-    const phoneInput = document.getElementById('mobileNumber');
-    const emailInput = document.getElementById('emailAddress');
+//   function toggleRequiredAttributes() {
+//     const phoneInput = document.getElementById('mobileNumber');
+//     const emailInput = document.getElementById('emailAddress');
   
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
-    const isEmailValid = emailRegex.test(emailInput.value.trim());
+//     const isEmailValid = emailRegex.test(emailInput.value.trim());
   
-    phoneInput.addEventListener('input', function() {
-      if (this.value.trim() !== '') {
-        emailInput.removeAttribute('required');
-      } else {
-        emailInput.setAttribute('required', 'required');
-      }
-    });
+//     phoneInput.addEventListener('input', function() {
+//       if (this.value.trim() !== '') {
+//         emailInput.removeAttribute('required');
+//       } else {
+//         emailInput.setAttribute('required', 'required');
+//       }
+//     });
   
-    if (isEmailValid) {
-      phoneInput.removeAttribute('required');
-    } else {
-      phoneInput.setAttribute('required', 'required');
-    }
-  }
+//     if (isEmailValid) {
+//       phoneInput.removeAttribute('required');
+//     } else {
+//       phoneInput.setAttribute('required', 'required');
+//     }
+//   }
 
   function maskTelNo(id) {
     $("#" + id).mask("9-999-9999");
@@ -858,84 +858,3 @@ $(document).on('focus', '.platenum', function() {
         $(this).mask('AAAA-AAAAAAAA');
     }
 });
-  
-  // --------------------------------------INFORMATION SUMMARY FUNCTION-------------------------------------------- //
-  function summary_fetch() {
-  
-      // Step 1 Values
-    // var membershipType  = $('#membership_type').val();
-    var plan_type       = $('#plan_type').val();
-    var pin_code        = $('#pinCode').val();
-    var paInsurance     = $('#paInsurance').val();
-    var activationDate  = $('#activationDate').val();
-    var applicationType = $('#applicationType').val();
-  
-  
-      // Step 2 Values
-    var title       = $('#title').val();
-    var first_name  = $('#firstName').val();
-    var last_name   = $('#lastName').val();
-    var middle_name = $('#middleName').val();
-      // var full_name    = first_name+ ' ,'+ last_name;
-    var gender      = $('#gender').val();
-    var birthdate   = $('#birthdate').val();
-    var birthplace  = $('#birthplace').val();
-    var citizenship = $('#citizenship').val();
-    var nationality = $('#nationality').val();
-      // var civilStatus        = $('#civilStatus').val();
-      // var acrNo        = $('#acrNo').val();
-    var occupation   = $('#occupation').val();
-    var mobileNumber = $('#mobileNumber').val();
-    var emailAddress = $('#emailAddress').val();
-    var occupation   = $('#occupation').val();
-    var civilStatus  = $('#civilStatus').val();
-  
-  
-  
-      // Step 3 Values
-  
-      // Home Address
-    var mailing       = $('#mail').val();
-    var street        = $('#street').val();
-    var town          = $('#town').val();
-    var city          = $('#city').val();
-    var province      = $('#province').val();
-    var zcode         = $('#zcode').val();
-    var homeaddress   = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-    var availMagazine = $('#availMagazine').val();
-  
-      // Office Address
-    var street        = $('#street1').val();
-    var town          = $('#town1').val();
-    var city          = $('#city1').val();
-    var province      = $('#province1').val();
-    var zcode         = $('#zcode1').val();
-    var officeaddress = street + ' ' + town + ' ' + city + ' ' + province + ' ' + zcode + ' ';
-    var companyName   = $('#comname').val();
-  
-  
-      // Summary Fields
-    document.getElementById('summaryApplicationType').textContent = applicationType;
-    document.getElementById('summaryMembershipType').textContent  = membershipType;
-    document.getElementById('summaryPlanType').textContent        = plan_type;
-    document.getElementById('summaryActivationDate').textContent  = activationDate;
-  
-    document.getElementById('summaryTitle').textContent       = title;
-    document.getElementById('summaryLastname').textContent    = last_name;
-    document.getElementById('summaryFirstname').textContent   = first_name;
-    document.getElementById('summaryMiddlename').textContent  = middle_name;
-    document.getElementById('summaryGender').textContent      = gender;
-    document.getElementById('summaryBirthdate').textContent   = birthdate;
-    document.getElementById('summaryBirthplace').textContent  = birthplace;
-    document.getElementById('summaryCivilstatus').textContent = civilStatus;
-    document.getElementById('summaryCitizenship').textContent = citizenship;
-    document.getElementById('summaryOccupation').textContent  = occupation;
-  
-    document.getElementById('summaryCompanyName').textContent       = companyName;
-    document.getElementById('summaryhomeaddress').textContent       = homeaddress;
-    document.getElementById('summaryofficeaddress').textContent     = officeaddress;
-    document.getElementById('summaryMailingPreference').textContent = mailing;
-    document.getElementById('summaryMagazine').textContent          = availMagazine;
-  
-  } 
-  // -------------------------------------- END INFORMATION SUMMARY FUNCTION-------------------------------------------- //
