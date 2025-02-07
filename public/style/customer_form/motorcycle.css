@@ -349,12 +349,8 @@
 }
 
 .vehicle-item {
-  background-color: #d0e1f1;
+   position: relative;
   transition: all 0.3s ease;
-}
-
-.vehicle-item:hover {
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 .btn-danger {
@@ -373,11 +369,19 @@
   right: 15px;
 }
 
-#orcr, #valid_id {
-   max-width: 200px;
-   margin-top: 10px;
+#orcr, #valid_id_container, .or-container, .cr-container {
    border: 1px solid #ddd;
    border-radius: 4px;
+}
+
+#valid_id_container {
+   background-color: #f8f9fa;
+   height: 200px;
+   place-content: center;
+}
+
+#valid_id, #or, #cr {
+   max-height: 100%;
 }
 
 .text-danger {
@@ -386,7 +390,8 @@
 }
 
 .select2-container {
-   width: 100% !important;
+   width: unset !important;
+   max-width: 100% !important;
 }
 
 .select2-container .select2-selection--single {
@@ -520,17 +525,18 @@
 
 .options-container {
    display: flex;
-   gap: 20px;
+   gap: 24px;
    margin-top: 5px;
 }
 
 .radio-checkbox {
    display: flex;
    align-items: center;
-   position: relative;
-   padding-left: 30px;
+   gap: 9px;
    cursor: pointer;
    user-select: none;
+   border: 1px solid var(--bs-primary-border-subtle);
+   border-radius: 6px;
 }
 
 .radio-checkbox input {
@@ -542,17 +548,13 @@
 }
 
 .checkmark {
-   position: absolute;
-   left: 0;
+   position: relative;
    height: 20px;
    width: 20px;
    background-color: #fff;
    border: 2px solid #ccc;
    border-radius: 50%;
-}
-
-.radio-checkbox input:checked ~ .checkmark {
-   border-color: #2196F3;
+   transition: all 0.1s ease;
 }
 
 .checkmark:after {
@@ -562,27 +564,12 @@
    top: 50%;
    left: 50%;
    transform: translate(-50%, -50%);
-   width: 12px;
-   height: 12px;
+   width: 7px;
+   height: 7px;
    border-radius: 50%;
-   background: #2196F3;
+   background: var(--dirty-white);
 }
 
 .radio-checkbox input:checked ~ .checkmark:after {
    display: block;
-}
- 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 80%;
-  height: 50px; /* Height of the footer */
-  text-align: center;
-  padding: 20px 0;
-  background-color: #f8f9fa;
-}
-
-.footer-text {
-  color: #6c757d;
-  font-size: 14px;
 }
