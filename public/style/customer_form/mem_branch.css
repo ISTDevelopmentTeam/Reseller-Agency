@@ -13,6 +13,18 @@
     --icon-size: 36px;
 }
 
+.show {
+    display: block !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+.rotate180 {
+    transform: rotate(180deg);
+}
+
 body {
     position: relative;
     min-height: 100%;
@@ -40,13 +52,6 @@ body::before {
     height: 100vh;
     width: 100vw;
     z-index: 1;
-}
-
-.animated-moveDown {
-    animation-name: moveDown;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards;
-    animation-timing-function: ease-out;
 }
 
 .main-container {
@@ -167,21 +172,23 @@ body::before {
     font-weight: 300;
 }
 
-.pictureDropdown {
-    width: 100%;
+#valid_id_container {
+    position: relative;
+    z-index: 1;
+}
+
+#id_dropdown_btn {
+    display: grid;
+    place-content: center;
     height: 15px;
 }
 
-.pictureDropdownButton {
-    width: 100%;
-    height: 100%;
-    padding: 2px;
-    border: none;
-    background-color: #e4e6e4;
+#id_dropdown_btn > i {
+    transition: transform 0.1s linear;
 }
 
-.pictureDropdownButton::after {
-    height: 100%;
+#id_dropdown_btn:hover {
+    background-color: #d9dee4 !important;
 }
 
 .with-number .iti {
@@ -307,17 +314,6 @@ body::before {
 
 .min-width-300 {
     min-width: 300px;
-}
-
-@keyframes moveDown {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 @media (max-width: 575px) {

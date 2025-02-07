@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('link/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('style/customer_form/membership.css') }}">
     <link rel="stylesheet" href="{{ asset('style/customer_form/mem_branch.css') }}">
+    <link rel="stylesheet" href="{{ asset('style/customer_form/animation.css') }}">
 </head>
 
 <body style="background-image: url({{ asset('images/bg-5.webp') }});">
@@ -69,7 +70,7 @@
                         <p style="color: red">{{ $key }} : {{ $error }}</p>
                     @endforeach
                     <!-- Step 1:  Membership Application -->
-                    <div class="form-step tab active" id="step1">
+                    <div class="form-step ta" id="step1">
                         <div class="step-title-container pt-4">
                             <div class="mb-3">
                                 <h5 class="card-title mb-2">Step 1&#58; <span class="fw-normal">Provide essential identifying details about yourself, including your name, date of birth, and citizenship.</span></h5>
@@ -125,13 +126,11 @@
                                         <i class="fas fa-upload"></i>
                                     </label>
                                 </div>
-                                <div id="" class="dropdown pictureDropdown">
-                                    <button type="button" id="" class="dropdown-toggle pictureDropdownButton" data-bs-toggle="dropdown"></button>
-                                    <div class="dropdown-menu w-100" style="place-content: center;">
-                                        <div id="valid_id_container">
-                                            <img id="valid_id" class="img-fluid" src="{{ asset('images/image-placeholder.png') }}" alt="Image valid_id" style="object-fit: contain;">
-                                        </div>
+                                <div id="valid_id_dropdown" class="w-100 hide">
+                                    <div id="valid_id_container" class="pt-1 pb-1">
+                                        <img id="valid_id" class="img-fluid m-auto" src="{{ asset('images/image-placeholder.png') }}" alt="Image valid_id" style="object-fit: contain;">
                                     </div>
+                                    <button id="id_dropdown_btn" type="button" class="w-100 p-0 btn bg-dark-subtle"><i class="bi bi-caret-down-fill dark-gray"></i></button>
                                 </div>
                                 @error('idpicture')
                                     <div class="text-danger">{{ $message }}</div>
@@ -286,7 +285,7 @@
                                     </div>
                                     <hr />
                                 </div>
-                                <div class="row mb-4">
+                                <div class="row mb-5">
                                     <div class="col-md-4">
                                         <label for="mail" class="form-label">Mailing Preference</label>
                                         <select class="form-select" name="personal_info[mailing_preference]" id="mail"
@@ -349,7 +348,7 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <div class="col-md-4 mb-4">
+                                        <div class="col-md-3 mb-4">
                                             <label for="availMagazine" class="form-label">Avail Online AQ Magazine</label>
                                             <select class="form-select" name="personal_info[availMagazine]"
                                                 id="availMagazine" required>
@@ -495,7 +494,7 @@
                             <!-- End of Step 2 -->
 
                             <!-- Step 3: Vehicle Information -->
-                            <div class="form-step tab" id="step3">
+                            <div class="form-step tab active" id="step3">
                                 <div class="step-title-container pt-4">
                                     <div class="mb-3">
                                         <h5 class="card-title mb-2">Step 3&#58; <span class="fw-normal">Specify details about your vehicle&lpar;s&rpar;, including the make, model year, and license plate number.</span></h5>
@@ -504,7 +503,7 @@
                                 </div>
                                 <div id="vehicleFields" class="gap-5 mb-4 vehicle-entry">
                                     <!-- Initial Vehicle Form -->
-                                    <div class="vehicle-item border rounded p-3">
+                                    <div class="vehicle-item border rounded p-3 animated-moveDown">
                                         <div class="vehicle-title mb-4">
                                             <h6>Vehicle <span class="vehicle-number">1</span></h6>
                                         </div>
@@ -539,6 +538,7 @@
                                                         <div class="text-danger mt-1">{{ $message }}</div>
                                                     @enderror
                                                 </div>
+
                                                 <div class="col-md-4 p-0 platenum-container">
                                                     <label for="platenum" class="label">Plate Number</label>
                                                     <input name="vehicle_plate[]" type="text"
@@ -904,7 +904,6 @@
                                         <div id="tbodyid"></div>
                                     </div>
                             
-                                  </table>
                                 </div>
 
                                 <div>

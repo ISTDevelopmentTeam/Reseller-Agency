@@ -396,15 +396,13 @@
 }
 
 #valid_id_container {
-   width: 200px;
-   aspect-ratio: 1;
-   margin: auto;
    background-color: #f8f9fa;
+   height: 200px;
+   place-content: center;
 }
 
 #valid_id, #or, #cr {
    max-height: 100%;
-   margin: auto;
 }
 
 .text-danger {
