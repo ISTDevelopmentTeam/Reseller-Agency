@@ -20,7 +20,7 @@
 
 <body style="background-image: url({{ asset('images/bg-5.webp') }});">
 
-    <div class="container-xl p-0 d-flex flex-column main-container shadow">
+    <div class="container-xl p-0 d-flex flex-column main-container shadow rounded-4 overflow-hidden">
         <!-- Form Card -->
         <div class="container-fluid p-4 overflow-hidden progress-container" style="background-image: url({{ asset('images/wave-1.svg') }});">
             <div class="d-flex gap-2 align-items-center form-title-container">
@@ -70,7 +70,7 @@
                         <p style="color: red">{{ $key }} : {{ $error }}</p>
                     @endforeach
                     <!-- Step 1:  Membership Application -->
-                    <div class="form-step ta" id="step1">
+                    <div class="form-step tab active" id="step1">
                         <div class="step-title-container pt-4">
                             <div class="mb-3">
                                 <h5 class="card-title mb-2">Step 1&#58; <span class="fw-normal">Provide essential identifying details about yourself, including your name, date of birth, and citizenship.</span></h5>
@@ -494,7 +494,7 @@
                             <!-- End of Step 2 -->
 
                             <!-- Step 3: Vehicle Information -->
-                            <div class="form-step tab active" id="step3">
+                            <div class="form-step tab" id="step3">
                                 <div class="step-title-container pt-4">
                                     <div class="mb-3">
                                         <h5 class="card-title mb-2">Step 3&#58; <span class="fw-normal">Specify details about your vehicle&lpar;s&rpar;, including the make, model year, and license plate number.</span></h5>
