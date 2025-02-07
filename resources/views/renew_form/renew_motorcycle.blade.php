@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-4 mb-3" hidden>
                                 <label for="membershipType" class="form-label">Type of Membership:</label>
                                 <select value="{{ old('personal_info.membership_type') }}" name="personal_info[membership_type]" class="form-control form-control-sm" id="membershipType" required>
                                     <option value="" disabled>Select Type of Membership.</option>
@@ -215,288 +215,270 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Card 3: Vehicle Details -->
+                    <!-- Card 3: Beneficiaries -->
                     <div class="card bordered">
-                        <h5 class="mb-4">Vehicle Details</h5>
-                        @foreach($records['result_car'] as $item)
-                        <div id="vehicleFields">
-                            <!-- Initial Vehicle Form -->
-                            <div class="vehicle-item border rounded p-3 mb-3">
-                                <h6 class="mb-3">Vehicle <span class="vehicle-number">{{$loop->index+1}}</span></h6>
-                                <div class="row g-3">
-                                    <!-- First Row -->
-                                    <div class="col-md-3 centered-content">
-                                        <label class="label" style="font-size: medium;">
-                                            Update Vehicle Information?
-                                        </label>
-                                        <input type="hidden" id="is_vehicle_updated_{{$loop->index+1}}" name="is_vehicle_updated[]" value="0">
-                                        <label class="toggle-container mt-2">
-                                            <input type="checkbox"
-                                                   id="updateVehicle_{{$loop->index+1}}"
-                                                   name="update_vehicle[]"
-                                                   class="vehicle-switch">
-                                            <span class="slider"></span>
-                                        </label>
-                                    </div>
-                                    <!-- For renewal form -->
-                                    <div class="col-md-3 centered-content">
-                                        <label class="label" style="font-size: medium;">
-                                            Is Conduction Sticker Available?
-                                        </label>
-                                        <input type="hidden" class="cs-value" name="is_cs[]" value="{{ $item['vehicleinfo_csticker'] }}">
-                                        <div>
-                                            <div class="options-container">
-                                                <label class="radio-checkbox">
-                                                    <input type="checkbox" 
-                                                        class="cs-checkbox cs-yes" 
-                                                        value="1"
-                                                        {{ $item['vehicleinfo_csticker'] == 1 ? 'checked disabled' : '' }}
-                                                        onchange="updateLabelDyna(this, 'yes')">
-                                                    <span class="checkmark"></span>
-                                                    YES
-                                                </label>
-                                                <label class="radio-checkbox">
-                                                    <input type="checkbox" 
-                                                        class="cs-checkbox cs-no" 
-                                                        value="0"
-                                                        {{ $item['vehicleinfo_csticker'] == 0 ? 'checked disabled' : '' }}
-                                                        onchange="updateLabelDyna(this, 'no')">
-                                                    <span class="checkmark"></span>
-                                                    NO
-                                                </label>
-                                            </div>
-                                        </div>
-                                        @error('is_cs.*')
-                                            <div class="text-danger mt-1">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="platenum" class="label">Plate No</label>
-                                        <input name="vehicle_plate[]" type="text"
-                                            class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
-                                            id="platenum" 
-                                            value="<?= $item['vehicleinfo_plateno']?>" 
-                                            autocomplete="off"
-                                            placeholder="Enter Plate No" 
-                                            style="text-transform: uppercase;" disabled
-                                            required
-                                            data-input-type="plate"> <!-- Added data attribute to track input type -->
-                                        @error('vehicle_plate.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <div class="validation-message_plateno" style="color: red;"></div>
-                                    </div>
-
-                                    <div class="col-md-3 centered-content">
-                                        <label class="label" style="font-size: medium;">
-                                            Is Diplomat?
-                                        </label>
-                                        <input type="hidden" id="is_diplomat_1" name="is_diplomat[]">
-                                            <div>
-                                                <div class="options-container">
-                                                    <label class="radio-checkbox">
-                                                        <input type="checkbox" id="is_diplomat_yes_1" value="1"
-                                                            {{ old('is_diplomat.0') == '1' ? 'checked' : '' }}
-                                                            onchange="update_diplomat('is_diplomat_yes_1', 'is_diplomat_no_1')">
-                                                        <span class="checkmark"></span>
-                                                        YES
-                                                    </label>
-                                                    <label class="radio-checkbox">
-                                                        <input type="checkbox" id="is_diplomat_no_1" value="0"
-                                                            {{ old('is_diplomat.0') == '0' ? 'checked' : '' }}
-                                                            onchange="update_diplomat('is_diplomat_no_1', 'is_diplomat_yes_1')"
-                                                            {{ old('is_diplomat.0') == '1' ? '' : 'checked disabled' }}>
-                                                        <span class="checkmark"></span>
-                                                        NO
-                                                    </label>
+                        <div class="text">
+                            <p class="p1"><b>Note: </b>If Married, OTHER BENEFICIARIES pertains to spouse not more
+                                than
+                                60
+                                years old &
+                                unmarried
+                                children
+                                between ages 1-23 years.</p>
+                            <p class="p2">If Single, OTHER BENEFICIARIES refers to parents below 60 years old and
+                                unmarried
+                                brothers &
+                                sisters
+                                between ages
+                                1-23 years.</p>
+                        </div>
+                        <div class="insured1">
+                            <div class="insured0 bordered">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredBenefiaries1" class="form-label">Beneficiaries</label>
+                                            <select name="personal_info[insured1]"
+                                                class="form-control form-control-sm " id="insuredBenefiaries1"
+                                                required>
+                                                <!-- <option value="" selected disabled>Select Beneficiaries.</option> -->
+                                                <option value="beneficiaries"
+                                                    @if (old('personal_info.insured1') == 'beneficiaries') {{ 'selected' }} @endif>
+                                                    BENEFICIARIES</option>
+                                            </select>
+                                            @error('personal_info.insured1')
+                                                <div class="text-danger">
+                                                    {{ $message }}
                                                 </div>
-                                            </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Car Make</label>
-                                        <select class="form-control form-control-sm select2 @error('vehicle_make.*') is-invalid @enderror" 
-                                                id="make1" name="vehicle_make[]" disabled
-                                                required>
-                                            <option value="">Car Make</option>
-                                            @foreach ($carMake as $row2)
-                                                <option value="{{ $row2['brand'] }}" 
-                                                        {{ (old('vehicle_make.0') == $row2['brand'] || $item['vehiclebrand_name'] == $row2['brand']) ? 'selected' : '' }}>
-                                                    {{ strtoupper($row2['brand']) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('vehicle_make.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Car Models</label>
-                                        <select class="form-control select2 @error('vehicle_model.*') is-invalid @enderror" 
-                                                id="model1" name="vehicle_model[]" disabled
-                                                required>
-                                            <option value="">Car Model</option>
-                                            @if(old('vehicle_model.0'))
-                                                <option value="{{ old('vehicle_model.0') }}" selected>{{ old('vehicle_model.0') }}</option>
-                                            @elseif($item['vehiclemodel_name'])
-                                                <option value="{{ $item['vehiclemodel_name'] }}" selected>{{ $item['vehiclemodel_name'] }}</option>
-                                            @endif
-                                            <!-- Models will be populated via JavaScript -->
-                                        </select>
-                                        @error('vehicle_model.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Second Row -->
-                                    <div class="col-md-3">
-                                        <label class="form-label">Vehicle Type</label>
-                                        <select class="form-control select2 @error('vehicle_type.*') is-invalid @enderror" 
-                                                id="vehicle_type1" name="vehicle_type[]" disabled
-                                                required>
-                                            <option value="" selected>Vehicle Type</option>
-                                            <!-- Vehicle types will be populated via JavaScript -->
-                                            @if(old('vehicle_type.0'))
-                                                <option value="{{ old('vehicle_type.0') }}" selected>{{ old('vehicle_type.0') }}</option>
-                                            @elseif($item['bodytype_name'])
-                                                <option value="{{ $item['bodytype_name'] }}" selected>{{ $item['bodytype_name'] }}</option>
-                                            @endif
-                                        </select>
-                                        @error('vehicle_type.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Year</label>
-                                        <input type="text" 
-                                            id="year1" 
-                                            name="vehicle_year[]" 
-                                            maxlength="4" 
-                                            class="form-control number_only @error('vehicle_year.*') is-invalid @enderror"
-                                            value="{{ old('vehicle_year.0', $item['vehicleinfo_year']) }}"
-                                            placeholder="Enter year" disabled
-                                            required>
-                                        @error('vehicle_year.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Sub model</label>
-                                        <input type="text" 
-                                            id="submodel1" 
-                                            name="submodel[]" 
-                                            class="form-control @error('submodel.*') is-invalid @enderror"
-                                            value="{{ old('submodel.0', $item['submodel_name']) }}"
-                                            placeholder="Enter sub model" disabled
-                                            required>
-                                        @error('submodel.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Color</label>
-                                        <input type="text" 
-                                            id="color" 
-                                            name="vehicle_color[]" 
-                                            class="form-control @error('vehicle_color.*') is-invalid @enderror"
-                                            value="{{ old('vehicle_color.0', $item['vehiclecolor_name']) }}"
-                                            placeholder="Enter color" disabled
-                                            required>
-                                        @error('vehicle_color.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Third Row -->
-                                    <div class="col-md-3">
-                                        <label class="form-label">Fuel Type</label>
-                                        <select class="form-select @error('vehicle_fuel.*') is-invalid @enderror" 
-                                                name="vehicle_fuel[]" disabled
-                                                required>
-                                            <option disabled selected value="">Fuel Type</option>
-                                            @foreach(['GAS', 'DIESEL', 'ELECTRIC'] as $fuel)
-                                                <option value="{{ $fuel }}" {{ (old('vehicle_fuel.0') == $fuel || $item['vehiclefuel_name'] == $fuel) ? 'selected' : '' }}>
-                                                    {{ $fuel }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('vehicle_fuel.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label">Transmission Type</label>
-                                        <select class="form-select @error('vehicle_transmission.*') is-invalid @enderror" 
-                                                name="vehicle_transmission[]" disabled
-                                                required>
-                                            <option disabled selected value="">Select Transmission Type</option>
-                                            @foreach(['AUTOMATIC', 'MANUAL'] as $transmission)
-                                                <option value="{{ $transmission }}" {{ (old('vehicle_transmission.0') == $transmission || $item['transmission'] == $transmission) ? 'selected' : '' }}>
-                                                    {{ $transmission }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('vehicle_transmission.*')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="orAttachment" class="form-label">Upload: Official Receipt</label>
-                                            <div class="input-group">
-                                                <input type="file" 
-                                                    class="form-control @error('or_image.*') is-invalid @enderror" 
-                                                    id="orAttachment"
-                                                    name="or_image[]"
-                                                    onchange="handleVehicleFileUpload(this, 'or', 'orFeedback')" disabled
-                                                    required>
-                                                <label class="input-group-text" for="orAttachment">
-                                                    <i class="fas fa-upload"></i>
-                                                </label>
-                                            </div>
-                                            @error('or_image.*')
-                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                            <div id="orFeedback" class="text-danger"></div>
-                                            <img id="or" src="" alt="Image or" style="max-width: 200px; display: none; margin-top: 10px;">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="crAttachment" class="form-label">Upload: Certificate of Registration</label>
-                                            <div class="input-group">
-                                                <input type="file" 
-                                                    class="form-control @error('cr_image.*') is-invalid @enderror" 
-                                                    id="crAttachment"
-                                                    name="cr_image[]"
-                                                    onchange="handleVehicleFileUpload(this, 'cr', 'crFeedback')" disabled
-                                                    required>
-                                                <label class="input-group-text" for="crAttachment">
-                                                    <i class="fas fa-upload"></i>
-                                                </label>
-                                            </div>
-                                            @error('cr_image.*')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            <label for="insuredName1" class="form-label">Name</label>
+                                            <input value="{{ old('personal_info.beneficiary1') }}" type="text"
+                                                class="form-control form-control-sm fullname"
+                                                placeholder="Enter Full Name" name="personal_info[beneficiary1]"
+                                                id="insuredName1" autocomplete="off" required>
+                                            <div class="validation-message_fullname" style="color: red;"></div>
+                                            @error('personal_info.beneficiary1')
+                                                <div class="text-danger">
+                                                    {{ $message }}
+                                                </div>
                                             @enderror
-                                            <div id="crFeedback" class="text-danger"></div>
-                                            <img id="cr" src="" alt="Image cr" style="max-width: 200px; display: none; margin-top: 10px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="relationship1" class="form-label">Relationship</label>
+                                            <input value="{{ old('personal_info.relation1') }}" type="text"
+                                                class="form-control form-control-sm" placeholder="Enter Relationship"
+                                                name="personal_info[relation1]" id="relationship1" autocomplete="off"
+                                                required>
+                                            @error('personal_info.relation1')
+                                                <div class="text-danger">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredBirthDate1" class="form-label">Birth Date</label>
+                                            <div class="input-group">
+                                                <input name="personal_info[bday_insured1]" type="text"
+                                                    class="Select-input form-control form-control-sm"
+                                                    id="insuredBirthDate1" autocomplete="off" maxlength="10"
+                                                    value="{{ old('personal_info.bday_insured1') }}"
+                                                    oninput="this.value = this.value.replace(/[^0-9/]/g, '')"
+                                                    pattern="[0-9/]*" placeholder="MM/DD/YYYY" inputmode="numeric"
+                                                    required>
+                                            </div>
+                                            <div id="validationMessage" style="color: red;"></div>
+                                            <input name="age" type="text" id="age" hidden>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!--insured 2------------->
+                            <div id="add_insured1">
+                                <div class="insured2 bordered mt-3" style="display: none; width: 100%;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="insuredBenefiaries2"
+                                                    class="form-label">Beneficiaries</label>
+                                                <select name="personal_info[insured2]"
+                                                    class="form-control form-control-sm " id="insuredBenefiaries2">
+                                                    <option value="beneficiaries"
+                                                        @if (old('personal_info.insured2') == 'beneficiaries') {{ 'selected' }} @endif>
+                                                        BENEFICIARIES</option>
+                                                </select>
+                                                @error('personal_info.insured2')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="insuredName2" class="form-label">Name</label>
+                                                <input value="{{ old('personal_info.beneficiary2') }}" type="text"
+                                                    class="form-control form-control-sm fullname1"
+                                                    placeholder="Enter Full Name" name="personal_info[beneficiary2]"
+                                                    id="insuredName2" autocomplete="off">
+                                                <div class="validation-message_fullname1" id="fullname1"
+                                                    style="color: red;"></div>
+                                                @error('personal_info.beneficiary2')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="relationship2" class="form-label">Relationship</label>
+                                                <input value="{{ old('personal_info.relationship2') }}"
+                                                    type="text" class="form-control form-control-sm"
+                                                    placeholder="Enter Relationship" name="personal_info[relation2]"
+                                                    id="relationship2" autocomplete="off">
+                                                @error('personal_info.relationship2')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="insuredBirthDate2" class="form-label">Birth Date</label>
+                                                <div class="input-group">
+                                                    <input value="{{ old('personal_info.bday_insured2') }}"
+                                                        type="text" class="form-control form-control-sm"
+                                                        placeholder="MM/DD/YYYY" name="personal_info[bday_insured2]"
+                                                        id="insuredBirthDate2" maxlength="10"
+                                                        value="{{ old('personal_info.bday_insured2') }}"
+                                                        oninput="this.value = this.value.replace(/[^0-9/]/g, '')"
+                                                        pattern="[0-9/]*" inputmode="numeric" autocomplete="off">
+                                                </div>
+                                                <div id="validationMessage2" style="color: red;"></div>
+                                                <input name="age2" type="text" id="age2" hidden>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <button type="button" onclick="hidex()" class="btn btn-danger"
+                                            id="hide1"
+                                            style="margin: auto; padding: .3rem 1.4rem; border-radius: .3rem;">Remove
+                                            this insured
+                                            information</button>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="show7()" class="btn btn-primary mt-3" id="add1"
+                                    style="padding: .3rem 1.4rem; border-radius: .3rem;">+ Add Another
+                                    Beneficiaries</button>
+                            </div>
+
+                            <!--insured 3--------->
+                            <div id="add_insured2">
+                                <div class="insured3 bordered mt-3" style="display: none; width: 100%;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="insuredBenefiaries3"
+                                                    class="form-label">Beneficiaries</label>
+                                                <select name="personal_info[insured3]"
+                                                    class="form-control form-control-sm " id="insuredBenefiaries3">
+                                                    <!-- <option value="" selected disabled>Select Beneficiaries.</option> -->
+                                                    <option value="beneficiaries"
+                                                        @if (old('personal_info.insured3') == 'beneficiaries') {{ 'selected' }} @endif>
+                                                        BENEFICIARIES</option>
+                                                </select>
+                                                @error('personal_info.insured3')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="insuredName3" class="form-label">Name</label>
+                                                <input value="{{ old('personal_info.beneficiary3') }}" type="text"
+                                                    class="form-control form-control-sm fullname2"
+                                                    placeholder="Enter Full Name" name="personal_info[beneficiary3]"
+                                                    id="insuredName3" autocomplete="off">
+                                                <div class="validation-message_fullname2" id="fullname2"
+                                                    style="color: red;"></div>
+                                                @error('personal_info.beneficiary3')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="relationship3" class="form-label">Relationship</label>
+                                                <input value="{{ old('personal_info.relation3') }}" type="text"
+                                                    class="form-control form-control-sm"
+                                                    placeholder="Enter Relationship" name="personal_info[relation3]"
+                                                    id="relationship3" autocomplete="off">
+                                                @error('personal_info.relation3')
+                                                    <div class="text-danger">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="insuredBirthDate3" class="form-label">Birth Date</label>
+                                                <div class="input-group">
+                                                    <input value="{{ old('personal_info.bday_insured3') }}"
+                                                        type="text" class="form-control form-control-sm"
+                                                        placeholder="MM/DD/YYYY" name="personal_info[bday_insured3]"
+                                                        id="insuredBirthDate3" autocomplete="off"
+                                                        oninput="this.value = this.value.replace(/[^0-9/]/g, '')"
+                                                        pattern="[0-9/]*" inputmode="numeric" maxlength="10">
+                                                </div>
+                                                <div id="validationMessage3" style="color: red;"></div>
+                                                <input name="age3" type="text" id="age3" hidden>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <button type="button" onclick="hidey()" class="btn btn-danger"
+                                            id="hide2"
+                                            style="margin: auto; padding: .3rem 1.4rem; border-radius: .3rem;">Remove
+                                            this insured
+                                            information</button>
+                                    </div>
+                                </div>
+
+                                <button type="button" onclick="show8()" class="btn btn-primary mt-3" id="add2"
+                                    style="display: none; padding: .3rem 1.4rem; border-radius: .3rem;">+ Add Another
+                                    Beneficiaries</button>
+                            </div>
                         </div>
-                        @endforeach
-                        <!-- Add Vehicle Button -->
-                        <button type="button" class="btn btn-primary mt-3" id="addVehicle">
-                            <i class="bi bi-plus-circle me-2"></i>+ Add another vehicle
-                        </button>
                     </div>
+                    <!-- Card 3: Summary Information -->
                     <div class="card bordered">
                         <div class="justify-content-right"></div>
                         <div class="row col-md-12">
@@ -979,54 +961,12 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-    <script src="{{ asset('script/renew_side/renew_membership.js') }} "></script>
+    <script src="{{ asset('script/renew_side/renew_motorcycle.js') }} "></script>
     <script src="{{ asset('script/sidebar.js') }}"></script>
 
-    @include('vehicle_autocomp')
-    @include('dynamic_vehicle')
-    @include('countrycode')
+    @include('renew_form/renew_countrycode')
     @include('address')
     @include('update_info')
-    <script>
-        
-// Function to handle vehicle information update toggle
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listeners to all vehicle switches
-    const vehicleSwitches = document.querySelectorAll('.vehicle-switch');
-    
-    vehicleSwitches.forEach((toggle, index) => {
-        toggle.addEventListener('change', function() {
-            // Get the current vehicle container
-            const vehicleContainer = this.closest('.vehicle-item');
-            
-            // Get the hidden input for vehicle update status
-            const updateStatus = document.getElementById(`is_vehicle_updated_${index + 1}`);
-            
-            // Get the relevant input fields
-            const plateNoInput      = vehicleContainer.querySelector('[name="vehicle_plate[]"]');
-            const colorInput        = vehicleContainer.querySelector('[name="vehicle_color[]"]');
-            const fuelInput         = vehicleContainer.querySelector('[name="vehicle_fuel[]"]');
-            const transmissionInput = vehicleContainer.querySelector('[name="vehicle_transmission[]"]');
-            
-            if (this.checked) {
-                // Enable fields and set update status to 1
-                plateNoInput.disabled      = false;
-                colorInput.disabled        = false;
-                fuelInput.disabled         = false;
-                transmissionInput.disabled = false;
-                updateStatus.value         = '1';
-            } else {
-                // Disable fields and set update status to 0
-                plateNoInput.disabled      = true;
-                colorInput.disabled        = true;
-                fuelInput.disabled         = true;
-                transmissionInput.disabled = true;
-                updateStatus.value = '0';
-            }
-        });
-    });
-});
-    </script>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     const yesRadio = document.getElementById('uyes');

@@ -84,9 +84,8 @@
                     <h2 class="header-title mb-0 typewriter">New Membership Form</h2>
                     <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
                 </div>
-                <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
+                <form id="resellerForm" action="{{ route('new_pidp.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                     <div class="card bordered">
                         <h5 class="card-title mb-4">Personal Information</h5>
                         <!-- Are you going to JAPAN? -->
@@ -98,6 +97,7 @@
                                     <input name="personal_info[members_licenseno]" type="text"
                                         class="text-input form-control form-control-sm license_no"
                                         style='text-transform:uppercase' id="license" autocomplete="off"
+                                        value="<?= $records['result_info'][0]['members_licenseno'] ?>"
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         maxlength="13" placeholder="###-##-######" required>
                                     <div class="validation-message_license" style="color: red;"></div>
@@ -106,10 +106,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="expiration" class="Select-label">License Expiration Date</label>
+                                    <?php
+                                        $date = $records['result_info'][0]['members_licenseexpirationdate'];
+                                        $formattedDate = date('Y-m-d', strtotime($date));
+                                    ?>
                                     <div class="input-group">
                                         <input name="personal_info[members_licenseexpirationdate]" type="text"
                                             class="Select-input form-control form-control-sm" autocomplete="off" id="expiration"
-                                            placeholder="DD/MM/YYYY" required>
+                                            placeholder="DD/MM/YYYY" value="<?= $date ?>" required>
                                     </div>
                                     <div id="expiration-message" class="text-danger"></div>
                                 </div>
@@ -122,8 +126,12 @@
                                         <select name="personal_info[members_licensecard]"
                                             class="form-control form-control-sm" id="card-type" required>
                                             <option disabled selected value="">Select Card Type</option>
-                                            <option value="NON-CARD">NON CARD</option>
-                                            <option value="CARD">CARD</option>
+                                            @foreach($card as $c)
+                                                        <option value="{{ $c }}" {{ $records['result_info'][0]['pidp_cardtype'] == $c
+                                                ? 'selected' : '' }}>
+                                                            {{ $c }}
+                                                        </option>
+                                            @endforeach
                                         </select>
                                         <div class="invalid-feedback"></div>
                                     </div>
@@ -412,11 +420,14 @@
                                         <label for="planType" class="form-label">Plan Type:</label>
                                         <select value="{{ old('personal_info.plan_type') }}" name="personal_info[plan_type]" class="form-control form-control-sm" id="planType" required>
                                             <option value="" selected disabled>Select Plan Type</option>
-                                            @foreach ($packages as $pidp)
-                                                <option value="{{ $pidp->plan_name }}">{{ $pidp->plan_name }} - ₱ {{ $pidp->plan_amount }}</option>
+                                            @foreach ($members as $pidp)
+                                                <option value="{{ $pidp->plan_name }}" data-plan-id="{{ $pidp->plan_id }}">{{ $pidp->plan_name }} - ₱ {{ $pidp->plan_amount }}</option>
                                             @endforeach
                                         </select>
                                         <div class="invalid-feedback">This field is required</div>
+                                        <small id="planMessage" style="color: orange !important; margin-top: 10px; display: none;">
+                                            Most countries permit only a one-year duration, and Japan offers only an Annual Year.
+                                        </small>
                                     </div>
                                 </div>
                             </div>
@@ -745,6 +756,31 @@
                             <div class="vehicle-item border rounded p-3 mb-3">
                                 <h6 class="mb-3">Vehicle <span class="vehicle-number">{{$loop->index+1}}</span></h6>
                                 <div class="row g-3">
+                                    <div class="d-flex flex-column justify-content-center align-items-center mb-3">
+                                        <label class="label" style="font-size: medium;color:red">
+                                          Do you want to remove this vehicle to your membership?
+                                        </label>
+                                        <input type="hidden" id="is_vehicle_removed_{{$loop->index+1}}" name="is_vehicle_removed[]" value="0">
+                                        <div>
+                                            <div class="options-container mb-4">
+                                                <label class="radio-checkbox">
+                                                    <input type="checkbox" id="is_vehicle_removed_yes_{{$loop->index+1}}" value="1"
+                                                        onchange="remove_vehicle('is_vehicle_removed_yes_{{$loop->index+1}}', 'is_vehicle_removed_no_{{$loop->index+1}}')">
+                                                    <span class="checkmark"></span>
+                                                    YES
+                                                </label>
+                                                <label class="radio-checkbox">
+                                                    <input type="checkbox" id="is_vehicle_removed_no_{{$loop->index+1}}" value="0"
+                                                        onchange="remove_vehicle('is_vehicle_removed_no_{{$loop->index+1}}', 'is_vehicle_removed_yes_{{$loop->index+1}}')"
+                                                        checked disabled>
+                                                    <span class="checkmark"></span>
+                                                    NO
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
                                     <!-- First Row -->
                                     <div class="col-md-3 centered-content">
                                         <label class="label" style="font-size: medium;">
@@ -795,7 +831,7 @@
                                         <label for="platenum" class="label">Plate No</label>
                                         <input name="vehicle_plate[]" type="text"
                                             class="text-input form-control form-control-sm platenum @error('vehicle_plate.*') is-invalid @enderror"
-                                            id="platenum" 
+                                            id="platenum{{$loop->index+1}}" maxlength="8" onchange="updateVehicleSummary()"
                                             value="<?= $item['vehicleinfo_plateno']?>" 
                                             autocomplete="off"
                                             placeholder="Enter Plate No" 
@@ -812,18 +848,18 @@
                                         <label class="label" style="font-size: medium;">
                                             Is Diplomat?
                                         </label>
-                                        <input type="hidden" id="is_diplomat_1" name="is_diplomat[]">
+                                        <input type="hidden" id="is_diplomat_{{$loop->index+1}}" name="is_diplomat[]">
                                             <div>
                                                 <div class="options-container">
                                                     <label class="radio-checkbox">
-                                                        <input type="checkbox" id="is_diplomat_yes_1" value="1"
+                                                        <input type="checkbox" id="is_diplomat_yes_{{$loop->index+1}}" value="1"
                                                             {{ old('is_diplomat.0') == '1' ? 'checked' : '' }}
                                                             onchange="update_diplomat('is_diplomat_yes_1', 'is_diplomat_no_1')">
                                                         <span class="checkmark"></span>
                                                         YES
                                                     </label>
                                                     <label class="radio-checkbox">
-                                                        <input type="checkbox" id="is_diplomat_no_1" value="0"
+                                                        <input type="checkbox" id="is_diplomat_no_{{$loop->index+1}}" value="0"
                                                             {{ old('is_diplomat.0') == '0' ? 'checked' : '' }}
                                                             onchange="update_diplomat('is_diplomat_no_1', 'is_diplomat_yes_1')"
                                                             {{ old('is_diplomat.0') == '1' ? '' : 'checked disabled' }}>
@@ -837,7 +873,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Car Make</label>
                                         <select class="form-control form-control-sm select2 @error('vehicle_make.*') is-invalid @enderror" 
-                                                id="make1" name="vehicle_make[]" disabled
+                                                id="make{{$loop->index+1}}" name="vehicle_make[]" disabled
                                                 required>
                                             <option value="">Car Make</option>
                                             @foreach ($carMake as $row2)
@@ -855,7 +891,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Car Models</label>
                                         <select class="form-control select2 @error('vehicle_model.*') is-invalid @enderror" 
-                                                id="model1" name="vehicle_model[]" disabled
+                                                id="model{{$loop->index+1}}" name="vehicle_model[]" disabled
                                                 required>
                                             <option value="">Car Model</option>
                                             @if(old('vehicle_model.0'))
@@ -874,7 +910,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Vehicle Type</label>
                                         <select class="form-control select2 @error('vehicle_type.*') is-invalid @enderror" 
-                                                id="vehicle_type1" name="vehicle_type[]" disabled
+                                                id="vehicle_type{{$loop->index+1}}" name="vehicle_type[]" disabled
                                                 required>
                                             <option value="" selected>Vehicle Type</option>
                                             <!-- Vehicle types will be populated via JavaScript -->
@@ -892,7 +928,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Year</label>
                                         <input type="text" 
-                                            id="year1" 
+                                            id="year{{$loop->index+1}}" 
                                             name="vehicle_year[]" 
                                             maxlength="4" 
                                             class="form-control number_only @error('vehicle_year.*') is-invalid @enderror"
@@ -907,7 +943,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Sub model</label>
                                         <input type="text" 
-                                            id="submodel1" 
+                                            id="submodel{{$loop->index+1}}" 
                                             name="submodel[]" 
                                             class="form-control @error('submodel.*') is-invalid @enderror"
                                             value="{{ old('submodel.0', $item['submodel_name']) }}"
@@ -921,8 +957,8 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Color</label>
                                         <input type="text" 
-                                            id="color" 
-                                            name="vehicle_color[]" 
+                                            id="color{{$loop->index+1}}" 
+                                            name="vehicle_color[]" onchange="updateVehicleSummary()"
                                             class="form-control @error('vehicle_color.*') is-invalid @enderror"
                                             value="{{ old('vehicle_color.0', $item['vehiclecolor_name']) }}"
                                             placeholder="Enter color" disabled
@@ -936,7 +972,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Fuel Type</label>
                                         <select class="form-select @error('vehicle_fuel.*') is-invalid @enderror" 
-                                                name="vehicle_fuel[]" disabled
+                                                name="vehicle_fuel[]" onchange="updateVehicleSummary()" disabled
                                                 required>
                                             <option disabled selected value="">Fuel Type</option>
                                             @foreach(['GAS', 'DIESEL', 'ELECTRIC'] as $fuel)
@@ -953,7 +989,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Transmission Type</label>
                                         <select class="form-select @error('vehicle_transmission.*') is-invalid @enderror" 
-                                                name="vehicle_transmission[]" disabled
+                                                name="vehicle_transmission[]" onchange="updateVehicleSummary()" disabled
                                                 required>
                                             <option disabled selected value="">Select Transmission Type</option>
                                             @foreach(['AUTOMATIC', 'MANUAL'] as $transmission)
@@ -967,7 +1003,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="orAttachment" class="form-label">Upload: Official Receipt</label>
                                             <div class="input-group">
@@ -1008,7 +1044,7 @@
                                             <div id="crFeedback" class="text-danger"></div>
                                             <img id="cr" src="" alt="Image cr" style="max-width: 200px; display: none; margin-top: 10px;">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -1503,50 +1539,13 @@
     <script src="{{ asset('script/renew_side/renew_pidp.js') }} "></script>
     <script src="{{ asset('script/sidebar.js') }}"></script>
 
-    @include('vehicle_autocomp')
     @include('renew_form/renew_dynamic_vehicle')
     @include('renew_form/renew_countrycode')
     @include('address')
     @include('update_info')
     <script>
         
-// Function to handle vehicle information update toggle
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listeners to all vehicle switches
-    const vehicleSwitches = document.querySelectorAll('.vehicle-switch');
-    
-    vehicleSwitches.forEach((toggle, index) => {
-        toggle.addEventListener('change', function() {
-            // Get the current vehicle container
-            const vehicleContainer = this.closest('.vehicle-item');
-            
-            // Get the hidden input for vehicle update status
-            const updateStatus = document.getElementById(`is_vehicle_updated_${index + 1}`);
-            
-            // Get the relevant input fields
-            const plateNoInput      = vehicleContainer.querySelector('[name="vehicle_plate[]"]');
-            const colorInput        = vehicleContainer.querySelector('[name="vehicle_color[]"]');
-            const fuelInput         = vehicleContainer.querySelector('[name="vehicle_fuel[]"]');
-            const transmissionInput = vehicleContainer.querySelector('[name="vehicle_transmission[]"]');
-            
-            if (this.checked) {
-                // Enable fields and set update status to 1
-                plateNoInput.disabled      = false;
-                colorInput.disabled        = false;
-                fuelInput.disabled         = false;
-                transmissionInput.disabled = false;
-                updateStatus.value         = '1';
-            } else {
-                // Disable fields and set update status to 0
-                plateNoInput.disabled      = true;
-                colorInput.disabled        = true;
-                fuelInput.disabled         = true;
-                transmissionInput.disabled = true;
-                updateStatus.value = '0';
-            }
-        });
-    });
-});
+
     </script>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1566,6 +1565,94 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+var destinations = @json($destinations);
+
+        $("#destinationIn").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                var term = request.term;
+                var filteredDestinations = destinations.filter(function (destination) {
+                    return destination.ad_name.toLowerCase().indexOf(term.toLowerCase()) !== -1 && destination.ad_name.toLowerCase().indexOf("japan") === -1;
+                });
+                var limitedDestinations = filteredDestinations.slice(0, 10);
+                response(limitedDestinations.map(function (destination) {
+                    return {
+                        label: destination.ad_name,
+                        value: destination.ad_id,
+                        destination: destination.ad_name,
+                        remarks: destination.ad_remarks
+                    };
+                }));
+            },
+            select: function (event, ui) {
+                $("#destinationIn").val(decodeHtml(ui.item.destination));
+                $("#dremarks").text(decodeHtml(ui.item.remarks));
+                if (ui.item.remarks) {
+                    $('#dropDownYes').show();
+                    $('#checkbox, #checkbox22').prop('required', true);
+                } else {
+                    $('#dropDownYes').hide();
+                    $('#checkbox, #checkbox22').prop('required', false);
+                }
+
+                $('#checkbox').change(function () {
+                    if (this.checked) {
+                        // $('#waiver2').hide();
+                        $('#checkbox_waiver1').prop('required', true);
+                    } else {
+                        $('#checkbox_waiver1').prop('required', false);
+                    }
+                });
+
+                $("input").trigger("select");
+                return false;
+            }
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li>")
+                .attr("data-value", item.value)
+                .append(item.label)
+                .appendTo(ul);
+        };
+
+        var destinations = @json($destinations);
+
+        $("#destinationOut").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                var term = request.term;
+                var filteredDestinations = destinations.filter(function (destination) {
+                    return destination.ad_name.toLowerCase().indexOf(term.toLowerCase()) !== -1 && destination.ad_name.toLowerCase().indexOf("japan") === -1;
+                });
+                var limitedDestinations = filteredDestinations.slice(0, 10);
+                response(limitedDestinations.map(function (destination) {
+                    return {
+                        label: destination.ad_name,
+                        value: destination.ad_id,
+                        destination: destination.ad_name,
+                        remarks: destination.ad_remarks
+                    };
+                }));
+            },
+            select: function (event, ui) {
+                $("#destinationOut").val(decodeHtml(ui.item.destination));
+                $("#dremarks1").text(decodeHtml(ui.item.remarks));
+                if (ui.item.remarks) {
+                    $('#Nojapan').show();
+                    $('#checkbox21').prop('required', true);
+                } else {
+                    $('#Nojapan').hide();
+                    $('#checkbox21').prop('required', false);
+                }
+                $("input").trigger("select");
+                return false;
+            }
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li>")
+                .attr("data-value", item.value)
+                .append(item.label)
+                .appendTo(ul);
+        };
         </script>
 </body>
 

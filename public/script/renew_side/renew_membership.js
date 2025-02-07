@@ -492,37 +492,21 @@ $(document).ready(function () {
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //
   
-  // THIS FOR UPDATE SLIDE BUTTON FUNCTION
-//   document.addEventListener('DOMContentLoaded', function() {
-//     // Add event listeners to all vehicle switches
-//     const vehicleSwitches = document.querySelectorAll('.vehicle-switch');
-    
-//     vehicleSwitches.forEach((toggle, index) => {
-//         toggle.addEventListener('change', function() {
-//             // Get the current vehicle container
-//             const vehicleContainer = this.closest('.vehicle-item');
-            
-//             // Get the hidden input for vehicle update status
-//             const updateStatus = document.getElementById(`is_vehicle_updated_${index + 1}`);
-            
-//             // Get the relevant input fields
-//             const plateNoInput = vehicleContainer.querySelector('[name="vehicle_plate[]"]');
-//             const colorInput = vehicleContainer.querySelector('[name="vehicle_color[]"]');
-            
-//             if (this.checked) {
-//                 // Enable fields and set update status to 1
-//                 plateNoInput.disabled = false;
-//                 colorInput.disabled = false;
-//                 updateStatus.value = '1';
-//             } else {
-//                 // Disable fields and set update status to 0
-//                 plateNoInput.disabled = true;
-//                 colorInput.disabled = true;
-//                 updateStatus.value = '0';
-//             }
-//         });
-//     });
-// });
+  function update_diplomat(checkedId, uncheckedId) {
+    const checkedCheckbox            = document.getElementById(checkedId);
+    const uncheckedCheckbox          = document.getElementById(uncheckedId);
+          uncheckedCheckbox.disabled = false;
+          uncheckedCheckbox.checked  = false;
+          checkedCheckbox.disabled   = true;
+  
+    if (checkedCheckbox.id == 'is_diplomat_1' || checkedCheckbox.id == 'is_diplomat_1') {
+      var_actofnature       = document.getElementById("is_diplomat_1");
+      var_actofnature.value = checkedCheckbox.value
+    } else {
+      var_actofnature       = document.getElementById("is_diplomat_" + checkedCheckbox.id.slice(-1));
+      var_actofnature.value = checkedCheckbox.value
+    }
+  }
   // vehicleFileUpload function to work with dynamic IDs
   function handleVehicleFileUpload(input, imageId, feedbackId) {
     const file = input.files && input.files[0];

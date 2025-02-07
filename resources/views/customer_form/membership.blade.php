@@ -936,9 +936,9 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('script/customer_side/membership.js') }}"></script>
-    <script src="{{ asset('script/customer_side/mem_branch.js') }}"></script>
-    <script src="{{ asset('script/sidebar.js')}}"></script>
+    <script src="/script/customer_side/membership.js"></script>
+    <script src="/script/customer_side/mem_branch.js"></script>
+    <script src="/script/sidebar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

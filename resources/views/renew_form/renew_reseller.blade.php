@@ -148,9 +148,9 @@
                                             <td>
                                                 @php
                                                     $routeName = match(strtoupper($member['sponsor_name'])) {
-                                                        'PIDP' => 'renew_pidp',
-                                                        'MOTORCYCLE' => 'renew_motorcycle',
-                                                        default => 'renew_membership'
+                                                        'PIDP'                       => 'renew_pidp',
+                                                        'MOTORCYCLE MEMBERSHIP PLUS' => 'renew_motorcycle',
+                                                        default                      => 'renew_membership'
                                                     };
                                                 @endphp
                                                 <a href="{{ route($routeName, ['id' => $member['members_id'], 'vehicle' => $member['vehicleinfohead_id']]) }}" 

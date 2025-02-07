@@ -7,6 +7,8 @@ use App\Actions\Renew\Search_by_pin;
 use App\Actions\Renew\Regular_search;
 use App\Actions\Renew\Renew_Membership\Renew_membership_fetch;
 use App\Actions\Renew\Renew_Membership\Renew_membership_store;
+use App\Actions\Renew\Renew_PIDP\Renew_pidp_fetch;
+use App\Actions\Renew\Renew_Motorcycle\Renew_motorcyle_fetch;
 use App\Models\PlanType;
 use App\Models\MembershipType;
 use App\Models\Town;
@@ -25,16 +27,21 @@ class RenewResellerController extends Controller
     protected $Regular_search;
     protected $renew_membership_fetch;
     protected $renew_membership_store;
+    protected $renew_pidp_fetch;
+    protected $renew_motorcyle_fetch;
     public $Result_record;
 
     public function __construct(Search_by_pin $Search_by_pin, Regular_search $Regular_search,
-    Renew_membership_fetch $renew_membership_fetch, Renew_membership_store $renew_membership_store)
+    Renew_membership_fetch $renew_membership_fetch, Renew_membership_store $renew_membership_store,
+    Renew_pidp_fetch $renew_pidp_fetch, Renew_motorcyle_fetch $renew_motorcyle_fetch)
     {
         $this->Search_by_pin          = $Search_by_pin;
         $this->Regular_search         = $Regular_search;
         $this->renew_membership_fetch = $renew_membership_fetch;
         $this->renew_membership_store = $renew_membership_store;
-        $this->Result_record = [];
+        $this->renew_pidp_fetch       = $renew_pidp_fetch;
+        $this->renew_motorcyle_fetch  = $renew_motorcyle_fetch;
+        $this->Result_record          = [];
     }
     public function index(){
         return view("renew_form/renew_reseller");
@@ -59,15 +66,15 @@ class RenewResellerController extends Controller
     }
     public function motorcycle(Request $request)
     {
-        $data = $this->renew_membership_fetch->handle($request);
-        return view('renew_form/motorcycle
-        ')->with($data);
+        $data = $this->renew_motorcyle_fetch->handle($request);
+        return view('renew_form/renew_motorcycle')->with($data);
     }
     public function pidp(Request $request)
     {
-        $data = $this->renew_membership_fetch->handle($request);
+        $data = $this->renew_pidp_fetch->handle($request);
         return view('renew_form/renew_pidp')->with($data);
     }
+
 
     public function store(Request $request)
     {
