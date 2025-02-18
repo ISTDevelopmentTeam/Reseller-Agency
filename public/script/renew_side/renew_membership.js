@@ -49,102 +49,127 @@ $('.letters_only_fname').on('input', function (event) {
   // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
   // Form validation and submission handling
   document.addEventListener('DOMContentLoaded', function() {
-      const resellerForm = document.getElementById('resellerForm');
-      const submitBtn = document.getElementById('submit_btn');
-      const mobileInput = document.getElementById('mobileNumber');
-      const errorMsg = document.getElementById('error-msg-1');
-  
-      // Function to check if all required fields are filled and valid
-      function isFormValid() {
-          // Check required fields
-          const requiredElements = resellerForm.querySelectorAll('[required]');
-          for (const element of requiredElements) {
-              if (!element.value.trim()) {
-                  return {
-                      valid: false,
-                      message: 'Please fill in all required fields'
-                  };
-              }
-  
-              // Special check for file inputs
-              if (element.type === 'file' && !element.files.length) {
-                  return {
-                      valid: false,
-                      message: 'Please upload all required files'
-                  };
-              }
-  
-              // Special check for select elements
-              if (element.tagName === 'SELECT' && element.value === '') {
-                  return {
-                      valid: false,
-                      message: 'Please select all required options'
-                  };
-              }
-          }
-  
-          // Check if mobile number has error message displayed
-          if (!errorMsg.classList.contains('hide')) {
-              return {
-                  valid: false,
-                  message: 'Please enter a valid mobile number'
-              };
-          }
-  
-          return {
-              valid: true,
-              message: ''
-          };
-      }
-  
-      // Handle form submission
-      resellerForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-  
-          const formValidation = isFormValid();
-  
-          if (!formValidation.valid) {
-              // Show error message using SweetAlert
-              Swal.fire({
-                  title: 'Validation Error',
-                  text: formValidation.message,
-                  icon: 'error',
-                  confirmButtonColor: '#d33'
-              });
-              return;
-          }
-  
-          // If form is valid, show confirmation SweetAlert
-          Swal.fire({
-              title: 'Submit Form?',
-              text: 'Are you sure you want to submit this form?',
-              icon: 'question',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Yes, submit it!',
-              cancelButtonText: 'No, cancel'
-          }).then((result) => {
-              if (result.isConfirmed) {
-                  // Submit the form
-                  resellerForm.submit();
-              }
-          });
-      });
-  
-      // File input validation
-      const fileInputs = resellerForm.querySelectorAll('input[type="file"]');
-      fileInputs.forEach(input => {
-          input.addEventListener('change', function() {
-              const feedback = document.getElementById(this.getAttribute('data-feedback'));
-              if (this.files.length === 0 && feedback) {
-                  feedback.textContent = 'Please select a file';
-              } else if (feedback) {
-                  feedback.textContent = '';
-              }
-          });
-      });
-  });
+    const resellerForm = document.getElementById('resellerForm');
+    const submitBtn    = document.getElementById('submit_btn');
+    const mobileInput  = document.getElementById('mobileNumber');
+    const errorMsg     = document.getElementById('error-msg-1');
+
+    // Function to check if radio buttons are selected
+    function isRadioSelected() {
+        const radioButtons = document.querySelectorAll('input[name="uradio"]');
+        return Array.from(radioButtons).some(radio => radio.checked);
+    }
+
+    // Function to check if all required fields are filled and valid
+    function isFormValid() {
+        // Check radio button selection
+        if (!isRadioSelected()) {
+            return {
+                valid: false,
+                message: 'Please select Yes or No for updating personal information'
+            };
+        }
+
+        // Check required fields
+        const requiredElements = resellerForm.querySelectorAll('[required]');
+        for (const element of requiredElements) {
+            if (!element.value.trim()) {
+                return {
+                    valid: false,
+                    message: 'Please fill in all required fields'
+                };
+            }
+
+            // Special check for file inputs
+            if (element.type === 'file' && !element.files.length) {
+                return {
+                    valid: false,
+                    message: 'Please upload all required files'
+                };
+            }
+
+            // Special check for select elements
+            if (element.tagName === 'SELECT' && element.value === '') {
+                return {
+                    valid: false,
+                    message: 'Please select all required options'
+                };
+            }
+        }
+
+        // Check if mobile number has error message displayed
+        if (!errorMsg.classList.contains('hide')) {
+            return {
+                valid: false,
+                message: 'Please enter a valid mobile number'
+            };
+        }
+
+        return {
+            valid: true,
+            message: ''
+        };
+    }
+
+    // Handle form submission
+    resellerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formValidation = isFormValid();
+
+        if (!formValidation.valid) {
+            // Show error message using SweetAlert
+            Swal.fire({
+                title: 'Validation Error',
+                text: formValidation.message,
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+            return;
+        }
+
+        // If form is valid, show confirmation SweetAlert
+        Swal.fire({
+            title: 'Submit Form?',
+            text: 'Are you sure you want to submit this form?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!',
+            cancelButtonText: 'No, cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the form
+                resellerForm.submit();
+            }
+        });
+    });
+
+    // File input validation
+    const fileInputs = resellerForm.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const feedback = document.getElementById(this.getAttribute('data-feedback'));
+            if (this.files.length === 0 && feedback) {
+                feedback.textContent = 'Please select a file';
+            } else if (feedback) {
+                feedback.textContent = '';
+            }
+        });
+    });
+
+    // Mobile number validation example
+    // mobileInput.addEventListener('input', function() {
+    //     const phonePattern = /^[0-9]{10}$/;
+    //     if (!phonePattern.test(this.value)) {
+    //         errorMsg.textContent = 'Please enter a valid 10-digit mobile number';
+    //         errorMsg.classList.remove('hide');
+    //     } else {
+    //         errorMsg.classList.add('hide');
+    //     }
+    // });
+});
   
   
   

@@ -50,7 +50,7 @@ class Renew_membership_fetch
         $carMake = json_decode($this->get_carmake(), true);
         // dd($records);
 
-        return [
+        $data = [
             'title'      => 'Membership Renewal Form',
             'membership' => $membership,
             'packages'   => $packages,
@@ -59,5 +59,7 @@ class Renew_membership_fetch
             'records'    => $records,
             'carMake'    => $carMake,
         ];
+
+        return view('renew_form/renew_membership')->with($data);
     }
 }

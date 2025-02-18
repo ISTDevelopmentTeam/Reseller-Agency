@@ -53,9 +53,9 @@ class Renew_pidp_fetch
         $records = $this->get_member_data($pincode, $record_no);
         $carMake = json_decode($this->get_carmake(), TRUE);
 
-        // dd($destinations);
+        // dd($records);
 
-        return [
+        $data = [
             'title'        => 'Membership Renewal Form',
             'membership'   => $membership,
             'members'      => $members,
@@ -67,6 +67,8 @@ class Renew_pidp_fetch
             'lictype'      => ['PROFESSIONAL', 'NON PROFESSIONAL'],
             'carMake'      => $carMake,
         ];
+
+        return view('renew_form/renew_pidp')->with($data);
 
     }
 

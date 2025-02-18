@@ -18,7 +18,8 @@ class TokenModel extends Model
         'expires_at',
         'used',
         'form_completed',
-        'form_type' 
+        'form_type',
+        'agent_id'
     ];
 
     // Optional: Indicate which fields are dates (to automatically convert to Carbon instances)

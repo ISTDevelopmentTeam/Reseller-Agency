@@ -1,0 +1,1 @@
+2025-02-18 10:43:59: imagepng(C:\xampp\htdocs\Reseller-Agency\public\qrcodes/8zikqlCIgqtbX5L8ym6VKVAInak2f6nxNODP4d9E.png): Failed to open stream: No such file or directory

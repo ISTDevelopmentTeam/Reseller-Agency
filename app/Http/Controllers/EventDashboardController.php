@@ -27,8 +27,19 @@ class EventDashboardController extends Controller
         $results = PlanType::with('membershipType')->get();
         $planTypes = PlanType::all(); // Get all plan types to populate dropdown
 
+        $membershipTypes = MembershipType::where('membership_status', 'ACTIVE')
+            ->with([
+                'planTypes' => function ($query) {
+                    $query->where('plan_status', 'ACTIVE')
+                        ->orderBy('plan_amount');
+                }
+            ])
+            ->orderBy('membership_id')
+            ->get();
+
         return view('reseller_form/event_dashboard', [
             'results' => $results,
+            'membershipTypes' => $membershipTypes,
             'planTypes' => $planTypes
         ]);
     }
@@ -40,21 +51,17 @@ class EventDashboardController extends Controller
                 ->lockForUpdate()
                 ->first();
 
-            // Check if token exists, is expired, or already accessed a form
             if (
                 !$temporaryToken ||
                 $temporaryToken->expires_at < now() ||
-                $temporaryToken->form_completed ||
-                !empty($temporaryToken->form_type) ||
-                $temporaryToken->used  // Add this to check if dashboard was already accessed
+                $temporaryToken->form_completed  // Only check if form is completed
             ) {
                 return redirect()->route('webpage_expiration_page')
-                    ->with('error', 'This link has expired or has already been used');
+                    ->with('error', 'This link has expired or form has already been submitted');
             }
 
-            // Mark token as used for dashboard access
-            $temporaryToken->used = true;
-            $temporaryToken->save();
+            // Store in session that this user has access
+            session(['form_token_' . $token => true]);
 
             $membershipTypes = MembershipType::where('membership_status', 'ACTIVE')
                 ->with([

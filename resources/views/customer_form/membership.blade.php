@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Dashboard</title>
+    <title>New Membership</title>
     <link rel="icon" href="{{ asset('images/favicon.ico')}}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -350,10 +350,10 @@
                                         </div>
                                         <div class="col-md-3 mb-4">
                                             <label for="availMagazine" class="form-label">Avail Online AQ Magazine</label>
-                                            <select class="form-select" name="personal_info[availMagazine]"
+                                            <select class="form-select" name="personal_info[is_aq]"
                                                 id="availMagazine" required>
-                                                <option value="YES">YES</option>
-                                                <option value="NO">NO</option>
+                                                <option value="1">YES</option>
+                                                <option value="0">NO</option>
                                             </select>
                                         </div>
                                     </div>
@@ -943,7 +943,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-    @include('vehicle_autocomp')
+    {{-- @include('vehicle_autocomp') --}}
     @include('dynamic_vehicle')
     @include('countrycode')
     <script>
