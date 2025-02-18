@@ -41,20 +41,21 @@ class PidpController extends Controller
     {
         return DB::transaction(function () use ($request, $membershipId, $planId, $token) {
             $temporaryToken = TokenModel::where('token', $token)
-                ->where('used', true)
-                ->where('form_completed', false)
-                ->whereNull('form_type')
+                ->where('form_completed', false)  // Only check if form is not completed
                 ->lockForUpdate()
                 ->first();
-
+    
             if (!$temporaryToken || $temporaryToken->expires_at < now()) {
                 return redirect()->route('webpage_expiration_page')
-                    ->with('error', 'This link has already been used or already been submitted');
+                    ->with('error', 'This link has expired or is invalid');
             }
-
-            // Mark this token as being used for membership form
+    
+            // Update form type
             $temporaryToken->form_type = 'pidp';
             $temporaryToken->save();
+    
+            // Store in session that this user has access
+            session(['form_token_' . $token => true]);
     
             $data = $this->customerPidp->handle($request, $membershipId, $planId, $token);
     

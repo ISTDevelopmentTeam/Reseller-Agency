@@ -94,10 +94,22 @@ $('.fullname2').on('input', function(event) {
         const requiredElements = resellerForm.querySelectorAll('[required]');
         for (const element of requiredElements) {
             if (!element.value.trim()) {
-                return {
-                    valid: false,
-                    message: 'Please fill in all required fields'
-                };
+                // For radio buttons, check if any in the group is selected
+                if (element.type === 'radio') {
+                    const radioGroup = resellerForm.querySelectorAll(`input[name="${element.name}"]`);
+                    const isAnyChecked = Array.from(radioGroup).some(radio => radio.checked);
+                    if (!isAnyChecked) {
+                        return {
+                            valid: false,
+                            message: 'Please select either Yes or No for updating personal information'
+                        };
+                    }
+                } else {
+                    return {
+                        valid: false,
+                        message: 'Please fill in all required fields'
+                    };
+                }
             }
 
             // Special check for file inputs
@@ -190,8 +202,6 @@ $('.fullname2').on('input', function(event) {
     });
 });
   
-  
-  
   document.addEventListener('DOMContentLoaded', function () {
     // manageFieldDisabling();
     // updateNavigationButtons();
@@ -204,7 +214,6 @@ $('.fullname2').on('input', function(event) {
   
   
   // ----------------------------------------------------------PERSONAL INFORMATION  FUNCTION----------------------------------------------------------//
-  
   // File upload handling
   function FileUploads() {
     const fileInputs = document.querySelectorAll('input[type="file"]');
@@ -466,159 +475,127 @@ $('.fullname2').on('input', function(event) {
   }
 
 // ---------------------------------------------------Motorcycle Insured FUNCTION-------------------------------------------------------- //
-function requiredInsured2(isRequired) {
-    var insuredBirthDate2   = document.getElementById("insuredBirthDate2");
-    var insuredBenefiaries2 = document.getElementById("insuredBenefiaries2");
-    var insuredName2        = document.getElementById("insuredName2");
-    var relationship2       = document.getElementById("relationship2");
+let beneficiaryCount = 1;
+let removedBeneficiaries = new Set();
+
+function showNextBeneficiary() {
+  if (beneficiaryCount >= 3) return;
   
-    insuredBenefiaries2.required = isRequired;
-    insuredName2.required        = isRequired;
-    relationship2.required       = isRequired;
-    insuredBirthDate2.required   = isRequired;
-  }
-  
-  function show7() {
-    let add_insured1 = document.getElementById("add_insured1");
-    let table        = add_insured1.querySelector(".insured2");
-    let add1         = document.getElementById("add1");
-    let add2         = document.getElementById("add2");
-    let hide1        = document.getElementById("hide1");
-  
-    if (table.style.display === "none" || table.style.display === "") {
-      table.style.display = "table";
-      add1.style.display  = "none";
-      add2.style.display  = "block";
-      hide1.style.display = "block";
-      requiredInsured2(true);
-    }
-  }
-  
-  function hidex() {
-    let add_insured1 = document.getElementById("add_insured1");
-    let table        = add_insured1.querySelector(".insured2");
-    let add1         = document.getElementById("add1");
-    let add2         = document.getElementById("add2");
-    let hide1        = document.getElementById("hide1");
-  
-    if (table.style.display === "table") {
-      table.style.display = "none";
-      add1.style.display  = "block";
-      add2.style.display  = "none";
-      hide1.style.display = "none";
-  
-      var insuredBenefiaries2 = document.getElementById("insuredBenefiaries2");
-      var insuredName2        = document.getElementById("insuredName2");
-      var relationship2       = document.getElementById("relationship2");
-      var insuredBirthDate2   = document.getElementById("insuredBirthDate2");
-      var validationMessage2  = document.getElementById("validationMessage2");
-      var fullname1           = document.getElementById("fullname1");
-  
-      insuredBenefiaries2.selectedIndex = 0;
-      insuredName2.value                = "";
-      relationship2.value               = "";
-      insuredBirthDate2.value           = "";
-      validationMessage2.textContent    = "";
-      fullname1.textContent             = "";
-      requiredInsured2(false);
-    }
-  }
-  //insured3--------------------------------------------------------------------
-  function requiredInsured3(isRequired) {
-    var insuredBenefiaries3 = document.getElementById("insuredBenefiaries3");
-    var insuredName3        = document.getElementById("insuredName3");
-    var relationship3       = document.getElementById("relationship3");
-    var insuredBirthDate3   = document.getElementById("insuredBirthDate3");
-  
-    insuredBenefiaries3.required = isRequired;
-    insuredName3.required        = isRequired;
-    relationship3.required       = isRequired;
-    insuredBirthDate3.required   = isRequired;
-  }
-  
-  function show8() {
-    let add_insured2 = document.getElementById("add_insured2");
-    let table        = add_insured2.querySelector(".insured3");
-    let add2         = document.getElementById("add2");
-    let hide2        = document.getElementById("hide2");
-  
-    if (table.style.display === "none" || table.style.display === "") {
-      table.style.display = "table";
-      add2.style.display  = "none";
-      hide2.style.display = "block";
-      requiredInsured3(true);
-    }
-  }
-  
-  function hidey() {
-    let add_insured2 = document.getElementById("add_insured2");
-    let table        = add_insured2.querySelector(".insured3");
-    let add2         = document.getElementById("add2");
-    let hide2        = document.getElementById("hide2");
-  
-    if (table.style.display === "table") {
-      table.style.display = "none";
-      add2.style.display  = "block";
-      hide2.style.display = "none";
-  
-      var insuredBenefiaries3 = document.getElementById("insuredBenefiaries3");
-      var insuredName3        = document.getElementById("insuredName3");
-      var relationship3       = document.getElementById("relationship3");
-      var insuredBirthDate3   = document.getElementById("insuredBirthDate3");
-      var validationMessage3  = document.getElementById("validationMessage3");
-      var fullname2           = document.getElementById("fullname2");
-  
-      insuredBenefiaries3.selectedIndex = 0;
-      insuredName3.value             = "";
-      relationship3.value            = "";
-      insuredBirthDate3.value        = "";
-      validationMessage3.textContent = "";
-      fullname2.textContent          = "";
-      requiredInsured3(false);
-    }
+  beneficiaryCount++;
+  let nextNum = removedBeneficiaries.size > 0 
+    ? Math.min(...removedBeneficiaries) 
+    : beneficiaryCount;
+    
+  const nextSection = document.querySelector(`.insured${nextNum}`);
+  if (nextSection) {
+    nextSection.style.display = "block";
+    nextSection.classList.add("animated-moveDown");
+    nextSection.classList.remove("animated-moveUpExit");
+    document.getElementById(`hide${nextNum-1}`).style.display = "block";
+    setFieldsRequired(nextNum, true);
+    removedBeneficiaries.delete(nextNum);
   }
 
+  document.getElementById("addBeneficiaryBtn").style.display = 
+    beneficiaryCount >= 3 ? "none" : "block";
+}
+
+function removeBeneficiary(num) {
+  if (beneficiaryCount <= 1) return;
+
+  const section = document.querySelector(`.insured${num}`);
+  if (section) {
+    section.classList.remove("animated-moveDown");
+    section.classList.add("animated-moveUpExit");
+    setTimeout(() => {
+      section.style.display = "none";
+    }, 250);
+    clearFields(num);
+    setFieldsRequired(num, false);
+    beneficiaryCount--;
+    removedBeneficiaries.add(num);
+  }
+
+  document.getElementById("addBeneficiaryBtn").style.display = "block";
+}
+
+function setFieldsRequired(num, required) {
+  const fields = [
+    `insuredBenefiaries${num}`,
+    `insuredName${num}`,
+    `relationship${num}`,
+    `insuredBirthDate${num}`
+  ];
+  
+  fields.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.required = required;
+  });
+}
+
+function clearFields(num) {
+  const fields = {
+    [`insuredBenefiaries${num}`]: 0,
+    [`insuredName${num}`]: "",
+    [`relationship${num}`]: "",
+    [`insuredBirthDate${num}`]: "",
+    [`validationMessage${num}`]: "",
+    [`fullname${num-1}`]: ""
+  };
+
+  Object.entries(fields).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if (!element) return;
+    
+    if (element.tagName === 'SELECT') {
+      element.selectedIndex = value;
+    } else {
+      element.value = value;
+    }
+    if (id.startsWith('validationMessage') || id.startsWith('fullname')) {
+      element.textContent = value;
+    }
+  });
+}
 // FUNCTION & VALIDATION FOR BIRTHDATE(BENEFICIARIES)
 document.addEventListener('DOMContentLoaded', function() {
-class DatePickerManager {
+  class DatePickerManager {
     constructor(elementId, options = {}) {
       this.element = document.getElementById(elementId);
       this.lastValue = "";
       this.datePicker = null;
-      this.validationMessageId = options.validationMessageId || `#validationMessage${elementId.slice(-1)}`;
       this.ageId = options.ageId || `#age${elementId.slice(-1)}`;
-      this.init(options);
+      this.init();
     }
-  
-    init(customOptions = {}) {
-      const defaultOptions = {
+
+    init() {
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() - 18);
+
+      this.datePicker = flatpickr(`#${this.element.id}`, {
         dateFormat: "m/d/Y",
         allowInput: true,
-        disableMobile: true,
-        maxDate: "today",
-        onChange: (selectedDates, dateStr) => {
+        maxDate: maxDate,
+        formatDate: (date) => {
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          return `${month}/${day}/${date.getFullYear()}`;
+        },
+        onChange: (selectedDates, dateStr, instance) => {
           if (selectedDates.length > 0) {
-            this.element.value = dateStr;
-            this.lastValue = dateStr;
-            this.validateAge(selectedDates[0]);
+            const formattedDate = instance.formatDate(selectedDates[0], "m/d/Y");
+            this.element.value = formattedDate;
+            this.lastValue = formattedDate;
+            this.calculateAge(selectedDates[0]);
           }
         }
-      };
-  
-      // Merge default options with custom options
-      const options = { ...defaultOptions, ...customOptions };
-      
-      // Initialize Flatpickr
-      this.datePicker = flatpickr(`#${this.element.id}`, options);
-      
-      // Add input event listener for manual typing
+      });
+
       this.element.addEventListener('input', this.handleInput.bind(this));
-      
-      // Add keydown listener for better backspace handling
       this.element.addEventListener('keydown', this.handleKeydown.bind(this));
     }
-  
-    validateAge(selectedDate) {
+
+    calculateAge(selectedDate) {
       const today = new Date();
       let age = today.getFullYear() - selectedDate.getFullYear();
       const m = today.getMonth() - selectedDate.getMonth();
@@ -626,108 +603,49 @@ class DatePickerManager {
       if (m < 0 || (m === 0 && today.getDate() < selectedDate.getDate())) {
         age--;
       }
-  
-      // Update age input
+
       const ageElement = document.querySelector(this.ageId);
       if (ageElement) {
         ageElement.value = age;
       }
-  
-      // Update validation message
-      const validationElement = document.querySelector(this.validationMessageId);
-      if (validationElement) {
-        validationElement.textContent = age < 18 ? "You must be at least 18 years old." : "";
-      }
-  
-      this.checkAllValidations();
     }
-  
-    checkAllValidations() {
-      let hasValidationErrors = false;
-  
-      // Check Insured1 (always visible)
-      if (document.querySelector("#validationMessage").textContent !== "") {
-        hasValidationErrors = true;
-      }
-  
-      // Check Insured2 if visible
-      const insured2 = document.querySelector(".insured2");
-      if (insured2 && insured2.style.display !== "none") {
-        if (document.querySelector("#validationMessage2").textContent !== "") {
-          hasValidationErrors = true;
-        }
-      }
-  
-      // Check Insured3 if visible
-      const insured3 = document.querySelector(".insured3");
-      if (insured3 && insured3.style.display !== "none") {
-        if (document.querySelector("#validationMessage3").textContent !== "") {
-          hasValidationErrors = true;
-        }
-      }
-  
-      // Update button states
-      const buttons = document.querySelectorAll("#nextBtn, #prevBtn");
-      buttons.forEach(button => {
-        button.disabled = hasValidationErrors;
-      });
-    }
-  
-    formatWithLeadingZero(num) {
-      return num < 10 ? `0${num}` : num.toString();
-    }
-  
+
     handleInput(e) {
       let v = e.target.value;
-  
-      // Handle backspace/delete - allow normal deletion
+
       if (v.length < this.lastValue.length) {
         this.lastValue = v;
         if (v.length === 0) {
           this.datePicker.clear();
-          this.validateAge(new Date());
         }
         return;
       }
-  
-      // Only proceed with formatting if we're adding characters
+
       if (v.length > this.lastValue.length) {
-        // Handle MM/ format
         if (v.match(/^\d{2}$/) !== null) {
           let month = parseInt(v);
-          if (v.startsWith('0') && month >= 1 && month <= 9) {
-            v = v + '/';
-          } else {
-            month = Math.min(Math.max(month, 1), 12);
-            v = this.formatWithLeadingZero(month) + '/';
-          }
-        } 
-        // Handle MM/DD/ format
-        else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-          let parts = v.split('/');
-          let month = parseInt(parts[0]);
-          let day = parseInt(parts[1]);
-          
-          month = Math.min(Math.max(month, 1), 12);
-          day = Math.min(Math.max(day, 1), 31);
-          v = this.formatWithLeadingZero(month) + '/' + this.formatWithLeadingZero(day) + '/';
+          v = v.padStart(2, '0');
+          v = (month > 12 ? '12' : v) + '/';
         }
-        // Handle complete date format MM/DD/YYYY
+        else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+          let [month, day] = v.split('/').map(num => parseInt(num));
+          v = month.toString().padStart(2, '0') + '/' + 
+              (day > 31 ? '31' : day.toString().padStart(2, '0')) + '/';
+        }
         else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
-          let parts = v.split('/');
-          let month = parseInt(parts[0]);
-          let day = parseInt(parts[1]);
-          let year = parseInt(parts[2]);
-          
-          month = Math.min(Math.max(month, 1), 12);
-          day = Math.min(Math.max(day, 1), 31);
-          
-          let dateStr = `${this.formatWithLeadingZero(month)}/${this.formatWithLeadingZero(day)}/${year}`;
+          let [month, day, year] = v.split('/').map(num => parseInt(num));
+          let dateStr = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
           let date = new Date(dateStr);
           
-          if (!isNaN(date.getTime())) {
+          const maxDate = new Date();
+          maxDate.setFullYear(maxDate.getFullYear() - 18);
+
+          if (!isNaN(date.getTime()) && date <= maxDate) {
             this.datePicker.setDate(date, false);
-            this.validateAge(date);
+            this.calculateAge(date);
+          } else {
+            e.target.value = this.lastValue;
+            return;
           }
         }
         
@@ -735,43 +653,19 @@ class DatePickerManager {
         this.lastValue = v;
       }
     }
-  
+
     handleKeydown(e) {
-      if (e.key === 'Backspace' || e.key === 'Delete') {
-        if (e.target.value.length === 0) {
-          this.datePicker.clear();
-          this.validateAge(new Date());
-        }
+      if ((e.key === 'Backspace' || e.key === 'Delete') && e.target.value.length === 0) {
+        this.datePicker.clear();
       }
     }
   }
-  
-  // Initialize the date pickers
+
   const dateInputs = {
-    insuredBirthDate1: new DatePickerManager('insuredBirthDate1', {
-      validationMessageId: '#validationMessage',
-      ageId: '#age'
-    }),
-    insuredBirthDate2: new DatePickerManager('insuredBirthDate2', {
-      validationMessageId: '#validationMessage2',
-      ageId: '#age2'
-    }),
-    insuredBirthDate3: new DatePickerManager('insuredBirthDate3', {
-      validationMessageId: '#validationMessage3',
-      ageId: '#age3'
-    })
+    insuredBirthDate1: new DatePickerManager('insuredBirthDate1', { ageId: '#age' }),
+    insuredBirthDate2: new DatePickerManager('insuredBirthDate2', { ageId: '#age2' }),
+    insuredBirthDate3: new DatePickerManager('insuredBirthDate3', { ageId: '#age3' })
   };
-  
-  // Modify show/hide functions to trigger validation checks
-  ['show7', 'hidex', 'show8', 'hidey'].forEach(functionName => {
-    if (typeof window[functionName] === 'function') {
-      const original = window[functionName];
-      window[functionName] = function() {
-        original();
-        Object.values(dateInputs).forEach(manager => manager.checkAllValidations());
-      };
-    }
-  });
 });
   
   // ---------------------------------------------------VEHICLE DETAILS FUNCTION-------------------------------------------------------- //

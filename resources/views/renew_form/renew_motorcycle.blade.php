@@ -84,7 +84,7 @@
                     <h2 class="header-title mb-0 typewriter">New Membership Form</h2>
                     <p class="header-subtitle text-muted">Please provide your details below to complete the process</p>
                 </div>
-                <form id="resellerForm" action="{{ route('new_membership.store') }}" method="POST"
+                <form id="resellerForm" action="{{ route('renew_motorcycle.store', ['id' => $records['result_info'][0]['members_pincode'], 'vehicle' => $records['result_record']['vehicleinfohead_id']]) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     <!-- Card 1: Personal Information -->
@@ -114,12 +114,17 @@
                             </div>
                             <div class="col-md-4 mb-4">
                                 <label for="planType" class="form-label">Plan Type:</label>
-                                <select value="{{ old('personal_info.plan_type') }}" name="personal_info[plan_type]" class="form-control form-control-sm" id="planType" required>
+                                <select name="personal_info[plan_type]" class="form-control form-control-sm" id="planType" required>
                                     <option value="" selected disabled>Select Plan Type</option>
                                     @foreach ($packages as $pidp)
-                                        <option value="{{ $pidp->plan_name }}">{{ $pidp->plan_name }} - ₱ {{ $pidp->plan_amount }}</option>
+                                        <option value="{{ $pidp->plan_name }}" 
+                                                data-plan-id="{{ $pidp->plan_id }}" 
+                                                {{ old('personal_info.plan_type') == $pidp->plan_name ? 'selected' : '' }}>
+                                            {{ $pidp->plan_name }} - ₱ {{ $pidp->plan_amount }}
+                                        </option>
                                     @endforeach
                                 </select>
+                                <input type="hidden" name="personal_info[plantype_id]" id="plantypeId" value="{{ old('personal_info.plantype_id') }}">
                                 <div class="invalid-feedback">This field is required</div>
                             </div>
                         </div>
@@ -131,22 +136,22 @@
                                 hidden>
                             <div class="col-md-3 mb-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Record No:</label>
-                                    <input value="<?= $records['result_record']['vehicleinfohead_order']?>"  type="text"
+                                    <label for="recordno" class="form-label">Record No:</label>
+                                    <input value="<?= $records['result_record']['vehicleinfohead_order']?>" type="text"
                                         class="text-input form-control form-control-sm" id="recordno" autocomplete="off"
-                                        placeholder=" Enter occupation" disabled>
+                                        disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Type of Membership:</label>
+                                    <label for="membership_type" class="form-label">Type of Membership:</label>
                                     <input value="<?= $records['result_record']['sponsor_name']?>" name="membership_type" type="text"
                                         class="text-input form-control form-control-sm" id="membership_type" autocomplete="off" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Plan Type:</label>
+                                    <label for="plan_type" class="form-label">Plan Type:</label>
                                     <input value="<?= $records['result_record']["fee_name"]?>" name="plan_type" type="text" class="text-input
                                         form-control form-control-sm" id="plan_type" autocomplete="off" placeholder=" Enter occupation"
                                         disabled>
@@ -155,7 +160,7 @@
                         
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Initiator:</label>
+                                    <label for="initiator" class="form-label">Initiator:</label>
                                     <input value="<?= $records['result_record']["membershipinitiator_name"] ?>" type="text"
                                         class="text-input form-control form-control-sm" id="initiator" autocomplete="off" disabled>
                                 </div>
@@ -165,7 +170,7 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Category:</label>
+                                    <label for="category" class="form-label">Category:</label>
                                     <input value="<?= $records['result_record']["category_name"]
                                             ?>"  type="text" class="text-input form-control form-control-sm" id="category"
                                         autocomplete="off" disabled>
@@ -174,14 +179,14 @@
                         
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Status:</label>
+                                    <label for="status" class="form-label">Status:</label>
                                     <input value="<?= $records['result_record']['vehicleinfohead_status'] ?>" name="status" type="text"
                                         class="text-input form-control form-control-sm" id="status" autocomplete="off" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Activation Date:</label>
+                                    <label for="activation_date" class="form-label">Activation Date:</label>
                                     <input value="<?= $records['result_record']['vehicleinfohead_activedate'] ?>" name="activation_date"
                                         type="text" class="text-input form-control form-control-sm" id="activation_date" autocomplete="off"
                                         disabled>
@@ -189,7 +194,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Expiration Date:</label>
+                                    <label for="expiration_date" class="form-label">Expiration Date:</label>
                                     <input value="<?= $records['result_record']['vehicleinfohead_expiredate'] ?>" name="expiration_date"
                                         type="text" class="text-input form-control form-control-sm" id="expiration_date" autocomplete="off"
                                         disabled>
@@ -199,7 +204,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Adv. Renewal Activation:</label>
+                                    <label for="advance_renewal_activation" class="form-label">Adv. Renewal Activation:</label>
                                     <input value="<?= $records['result_record']['adv_activedate']?>" name="advance_renewal_activation"
                                         type="text" class="text-input form-control form-control-sm" id="advance_renewal_activation"
                                         autocomplete="off" disabled>
@@ -207,7 +212,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="occupation" class="form-label">Adv. Renewal Expiration:</label>
+                                    <label for="advance_renewal_expiration" class="form-label">Adv. Renewal Expiration:</label>
                                     <input value="<?= $records['result_record']['adv_expiredate'] ?>" name="advance_renewal_expiration"
                                         type="text" class="text-input form-control form-control-sm" id="advance_renewal_expiration"
                                         autocomplete="off" disabled>
@@ -232,71 +237,38 @@
                                 between ages
                                 1-23 years.</p>
                         </div>
-                        <div class="insured1">
-                            <div class="insured0 bordered">
+                        <!-- First Beneficiary (Always visible) -->
+                        <div class="insured insured-container">
+                            <div class="insured1 p-4 rounded-3">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="insuredBenefiaries1" class="form-label">Beneficiaries</label>
-                                            <select name="personal_info[insured1]"
-                                                class="form-control form-control-sm " id="insuredBenefiaries1"
-                                                required>
-                                                <!-- <option value="" selected disabled>Select Beneficiaries.</option> -->
-                                                <option value="beneficiaries"
-                                                    @if (old('personal_info.insured1') == 'beneficiaries') {{ 'selected' }} @endif>
-                                                    BENEFICIARIES</option>
+                                            <label for="insuredBenefiaries1" class="form-label">BENEFICIARY</label>
+                                            <select name="personal_info[insured1]" class="form-control" id="insuredBenefiaries1" required>
+                                                <option value="beneficiaries">BENEFICIARY</option>
                                             </select>
-                                            @error('personal_info.insured1')
-                                                <div class="text-danger">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="insuredName1" class="form-label">Name</label>
-                                            <input value="{{ old('personal_info.beneficiary1') }}" type="text"
-                                                class="form-control form-control-sm fullname"
-                                                placeholder="Enter Full Name" name="personal_info[beneficiary1]"
-                                                id="insuredName1" autocomplete="off" required>
+                                            <input type="text" class="form-control fullname" placeholder="Enter Full Name" name="personal_info[beneficiary1]" id="insuredName1" autocomplete="off" required>
                                             <div class="validation-message_fullname" style="color: red;"></div>
-                                            @error('personal_info.beneficiary1')
-                                                <div class="text-danger">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row mb-3">
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="relationship1" class="form-label">Relationship</label>
-                                            <input value="{{ old('personal_info.relation1') }}" type="text"
-                                                class="form-control form-control-sm" placeholder="Enter Relationship"
-                                                name="personal_info[relation1]" id="relationship1" autocomplete="off"
-                                                required>
-                                            @error('personal_info.relation1')
-                                                <div class="text-danger">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
+                                            <input type="text" class="form-control" placeholder="Enter Relationship" name="personal_info[relation1]" id="relationship1" autocomplete="off" required>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="insuredBirthDate1" class="form-label">Birth Date</label>
                                             <div class="input-group">
-                                                <input name="personal_info[bday_insured1]" type="text"
-                                                    class="Select-input form-control form-control-sm"
-                                                    id="insuredBirthDate1" autocomplete="off" maxlength="10"
-                                                    value="{{ old('personal_info.bday_insured1') }}"
-                                                    oninput="this.value = this.value.replace(/[^0-9/]/g, '')"
-                                                    pattern="[0-9/]*" placeholder="MM/DD/YYYY" inputmode="numeric"
-                                                    required>
+                                                <input name="personal_info[bday_insured1]" type="text" class="form-control" id="insuredBirthDate1" autocomplete="off" maxlength="10" placeholder="MM/DD/YYYY" required>
                                             </div>
                                             <div id="validationMessage" style="color: red;"></div>
                                             <input name="age" type="text" id="age" hidden>
@@ -304,178 +276,88 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!--insured 2------------->
-                            <div id="add_insured1">
-                                <div class="insured2 bordered mt-3" style="display: none; width: 100%;">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="insuredBenefiaries2"
-                                                    class="form-label">Beneficiaries</label>
-                                                <select name="personal_info[insured2]"
-                                                    class="form-control form-control-sm " id="insuredBenefiaries2">
-                                                    <option value="beneficiaries"
-                                                        @if (old('personal_info.insured2') == 'beneficiaries') {{ 'selected' }} @endif>
-                                                        BENEFICIARIES</option>
-                                                </select>
-                                                @error('personal_info.insured2')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="insuredName2" class="form-label">Name</label>
-                                                <input value="{{ old('personal_info.beneficiary2') }}" type="text"
-                                                    class="form-control form-control-sm fullname1"
-                                                    placeholder="Enter Full Name" name="personal_info[beneficiary2]"
-                                                    id="insuredName2" autocomplete="off">
-                                                <div class="validation-message_fullname1" id="fullname1"
-                                                    style="color: red;"></div>
-                                                @error('personal_info.beneficiary2')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
+                            <!-- Second Beneficiary (Initially Hidden) -->
+                            <div class="insured2 mt-4 p-4 rounded-3" style="display: none;">
+                                <div class="insured-num ps-2 pe-1 pt-1 pb-1"></div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredBenefiaries2" class="form-label">Entity Type</label>
+                                            <select name="personal_info[insured2]" class="form-control" id="insuredBenefiaries2">
+                                                <option value="beneficiaries">BENEFICIARY</option>
+                                            </select>
                                         </div>
                                     </div>
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="relationship2" class="form-label">Relationship</label>
-                                                <input value="{{ old('personal_info.relationship2') }}"
-                                                    type="text" class="form-control form-control-sm"
-                                                    placeholder="Enter Relationship" name="personal_info[relation2]"
-                                                    id="relationship2" autocomplete="off">
-                                                @error('personal_info.relationship2')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredName2" class="form-label">Name</label>
+                                            <input type="text" class="form-control fullname1" placeholder="Enter Full Name" name="personal_info[beneficiary2]" id="insuredName2" autocomplete="off">
+                                            <div class="validation-message_fullname1" id="fullname1" style="color: red;"></div>
                                         </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="insuredBirthDate2" class="form-label">Birth Date</label>
-                                                <div class="input-group">
-                                                    <input value="{{ old('personal_info.bday_insured2') }}"
-                                                        type="text" class="form-control form-control-sm"
-                                                        placeholder="MM/DD/YYYY" name="personal_info[bday_insured2]"
-                                                        id="insuredBirthDate2" maxlength="10"
-                                                        value="{{ old('personal_info.bday_insured2') }}"
-                                                        oninput="this.value = this.value.replace(/[^0-9/]/g, '')"
-                                                        pattern="[0-9/]*" inputmode="numeric" autocomplete="off">
-                                                </div>
-                                                <div id="validationMessage2" style="color: red;"></div>
-                                                <input name="age2" type="text" id="age2" hidden>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <button type="button" onclick="hidex()" class="btn btn-danger"
-                                            id="hide1"
-                                            style="margin: auto; padding: .3rem 1.4rem; border-radius: .3rem;">Remove
-                                            this insured
-                                            information</button>
                                     </div>
                                 </div>
-                                <button type="button" onclick="show7()" class="btn btn-primary mt-3" id="add1"
-                                    style="padding: .3rem 1.4rem; border-radius: .3rem;">+ Add Another
-                                    Beneficiaries</button>
-                            </div>
-
-                            <!--insured 3--------->
-                            <div id="add_insured2">
-                                <div class="insured3 bordered mt-3" style="display: none; width: 100%;">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="insuredBenefiaries3"
-                                                    class="form-label">Beneficiaries</label>
-                                                <select name="personal_info[insured3]"
-                                                    class="form-control form-control-sm " id="insuredBenefiaries3">
-                                                    <!-- <option value="" selected disabled>Select Beneficiaries.</option> -->
-                                                    <option value="beneficiaries"
-                                                        @if (old('personal_info.insured3') == 'beneficiaries') {{ 'selected' }} @endif>
-                                                        BENEFICIARIES</option>
-                                                </select>
-                                                @error('personal_info.insured3')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="insuredName3" class="form-label">Name</label>
-                                                <input value="{{ old('personal_info.beneficiary3') }}" type="text"
-                                                    class="form-control form-control-sm fullname2"
-                                                    placeholder="Enter Full Name" name="personal_info[beneficiary3]"
-                                                    id="insuredName3" autocomplete="off">
-                                                <div class="validation-message_fullname2" id="fullname2"
-                                                    style="color: red;"></div>
-                                                @error('personal_info.beneficiary3')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="relationship2" class="form-label">Relationship</label>
+                                            <input type="text" class="form-control" placeholder="Enter Relationship" name="personal_info[relation2]" id="relationship2" autocomplete="off">
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="relationship3" class="form-label">Relationship</label>
-                                                <input value="{{ old('personal_info.relation3') }}" type="text"
-                                                    class="form-control form-control-sm"
-                                                    placeholder="Enter Relationship" name="personal_info[relation3]"
-                                                    id="relationship3" autocomplete="off">
-                                                @error('personal_info.relation3')
-                                                    <div class="text-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredBirthDate2" class="form-label">Birth Date</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="MM/DD/YYYY" name="personal_info[bday_insured2]" id="insuredBirthDate2" maxlength="10" autocomplete="off">
                                             </div>
+                                            <div id="validationMessage2" style="color: red;"></div>
+                                            <input name="age2" type="text" id="age2" hidden>
                                         </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="insuredBirthDate3" class="form-label">Birth Date</label>
-                                                <div class="input-group">
-                                                    <input value="{{ old('personal_info.bday_insured3') }}"
-                                                        type="text" class="form-control form-control-sm"
-                                                        placeholder="MM/DD/YYYY" name="personal_info[bday_insured3]"
-                                                        id="insuredBirthDate3" autocomplete="off"
-                                                        oninput="this.value = this.value.replace(/[^0-9/]/g, '')"
-                                                        pattern="[0-9/]*" inputmode="numeric" maxlength="10">
-                                                </div>
-                                                <div id="validationMessage3" style="color: red;"></div>
-                                                <input name="age3" type="text" id="age3" hidden>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div>
-                                        <button type="button" onclick="hidey()" class="btn btn-danger"
-                                            id="hide2"
-                                            style="margin: auto; padding: .3rem 1.4rem; border-radius: .3rem;">Remove
-                                            this insured
-                                            information</button>
                                     </div>
                                 </div>
-
-                                <button type="button" onclick="show8()" class="btn btn-primary mt-3" id="add2"
-                                    style="display: none; padding: .3rem 1.4rem; border-radius: .3rem;">+ Add Another
-                                    Beneficiaries</button>
+                                <button type="button" onclick="removeBeneficiary(2)" class="btn btn-danger" style="display: none;" id="hide1"><i class="fa-regular fa-trash-can"></i> Remove</button>
                             </div>
+                            <!-- Third Beneficiary (Initially Hidden) -->
+                            <div class="insured3 mt-4 p-4 rounded-3" style="display: none;">
+                                <div class="insured-num ps-2 pe-1 pt-1 pb-1"></div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredBenefiaries3" class="form-label">Entity Type</label>
+                                            <select name="personal_info[insured3]" class="form-control" id="insuredBenefiaries3">
+                                                <option value="beneficiaries">BENEFICIARY</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredName3" class="form-label">Name</label>
+                                            <input type="text" class="form-control fullname2" placeholder="Enter Full Name" name="personal_info[beneficiary3]" id="insuredName3" autocomplete="off">
+                                            <div class="validation-message_fullname2" id="fullname2" style="color: red;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="relationship3" class="form-label">Relationship</label>
+                                            <input type="text" class="form-control" placeholder="Enter Relationship" name="personal_info[relation3]" id="relationship3" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="insuredBirthDate3" class="form-label">Birth Date</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="MM/DD/YYYY" name="personal_info[bday_insured3]" id="insuredBirthDate3" maxlength="10" autocomplete="off">
+                                            </div>
+                                            <div id="validationMessage3" style="color: red;"></div>
+                                            <input name="age3" type="text" id="age3" hidden>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="removeBeneficiary(3)" class="btn btn-danger" style="display: none;" id="hide2"><i class="fa-regular fa-trash-can"></i> Remove</button>
+                            </div>
+                            <!-- Single Add Button -->
+                            <button type="button" onclick="showNextBeneficiary()" class="btn btn-primary mt-3 blue-bg" id="addBeneficiaryBtn"><i class="fa-solid fa-plus"></i> Add Another Beneficiary</button>
                         </div>
                     </div>
                     <!-- Card 3: Summary Information -->
@@ -932,13 +814,23 @@
                             <h4 class="mt-3 text-dark">Update my personal information?</h4>
                             <div class="pradio mb-5 mt-3 options-container">
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" id="uyes" name="uradio" value="1">
+                                    <input type="radio" class="custom-control-input" id="uyes" name="uradio" value="1" required>
                                     <label class="custom-control-label" for="uyes" style="font-size:16px;"
                                         id="yesLabel">YES</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" id="uno" name="uradio" value="0">
+                                    <input type="radio" class="custom-control-input" id="uno" name="uradio" value="0" required>
                                     <label class="custom-control-label" for="uno" style="font-size:16px;" id="noLabel">NO</label>
+                                </div>
+                            </div>
+                            <div class="row" style="text-align: justify;">
+                                <div class="col-12">
+                                    <div class="formCheck d-flex">
+                                        <input class="check-input" type="checkbox" id="aq" name="aq" value="1"
+                                            checked>
+                                        <p class="form-check-label p-2" for="summarycheck1">I would like to receive AQ
+                                            Magazine via email.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -968,24 +860,41 @@
     @include('address')
     @include('update_info')
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const yesRadio = document.getElementById('uyes');
-    const noRadio  = document.getElementById('uno');
-    const editIcons = document.querySelectorAll('.edit_icon');
+    document.addEventListener('DOMContentLoaded', function() {
+        const planTypeSelect = document.getElementById('planType');
+        const planTypeIdInput = document.getElementById('plantypeId');
 
-    yesRadio.addEventListener('change', function() {
-        if (yesRadio.checked) {
-            editIcons.forEach(icon => icon.removeAttribute('hidden'));
+        // Set initial value if there's a selected option (for when form reloads with old input)
+        if (planTypeSelect.selectedIndex > 0) {
+            const selectedOption = planTypeSelect.options[planTypeSelect.selectedIndex];
+            planTypeIdInput.value = selectedOption.dataset.planId;
         }
+
+        // Update hidden input when selection changes
+        planTypeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            planTypeIdInput.value = selectedOption.dataset.planId;
+        });
     });
 
-    noRadio.addEventListener('change', function() {
-        if (noRadio.checked) {
-            editIcons.forEach(icon => icon.setAttribute('hidden', ''));
-        }
+    document.addEventListener('DOMContentLoaded', function() {
+        const yesRadio = document.getElementById('uyes');
+        const noRadio  = document.getElementById('uno');
+        const editIcons = document.querySelectorAll('.edit_icon');
+
+        yesRadio.addEventListener('change', function() {
+            if (yesRadio.checked) {
+                editIcons.forEach(icon => icon.removeAttribute('hidden'));
+            }
+        });
+
+        noRadio.addEventListener('change', function() {
+            if (noRadio.checked) {
+                editIcons.forEach(icon => icon.setAttribute('hidden', ''));
+            }
+        });
     });
-});
-        </script>
+</script>
 </body>
 
 </html>

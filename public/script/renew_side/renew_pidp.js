@@ -49,6 +49,10 @@ $('.letters_only_fname').on('input', function (event) {
   // ----------------------------------------------------------Validation for TAB/STEP------------------------------------------------------------------------------//
   // Form validation and submission handling
   document.addEventListener('DOMContentLoaded', function() {
+    const updateYesRadio = document.getElementById('uyes');
+    const updateNoRadio = document.getElementById('uno');
+    const updateRadioLabel = document.querySelector('h4.mt-3.text-dark');
+
     const resellerForm          = document.getElementById('resellerForm');
     const submitBtn             = document.getElementById('submit_btn');
     const mobileInput           = document.getElementById('mobileNumber');
@@ -287,63 +291,40 @@ $('.letters_only_fname').on('input', function (event) {
         }
     }
 
-    // Function to check if the license expiration date is less than a year from the current date
-    function isLicenseExpirationLessThanAYear() {
+    // Function to check if the expiration date has passed isLicenseExpirationLessThanAYear
+    function isLicenseExpired() {
         const expirationDate = new Date(expirationInput.value);
         const currentDate = new Date();
-        const oneYearFromNow = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
-        return expirationDate < oneYearFromNow;
-    }
-
-    // Function to check if the plan type is valid for Japan
-    function isPlanTypeValidForJapan() {
-        const selectedPlanId = parseInt(planTypeSelect.value);
-        return !(yesradio.checked && (selectedPlanId === 9 || selectedPlanId === 10));
+        
+        // Reset times to midnight for accurate date comparison
+        expirationDate.setHours(0, 0, 0, 0);
+        currentDate.setHours(0, 0, 0, 0);
+        
+        return expirationDate < currentDate;
     }
 
     function isFormValid() {
-        // 1. Check vehicle ownership selection
-    const vehicleOwnershipYes = document.getElementById('vehicleOwnershipYes');
-    const vehicleOwnershipNo = document.getElementById('vehicleOwnershipNo');
-    const vehicleFields = document.getElementById('vehicleFields');
-
-    if (!vehicleOwnershipYes || !vehicleOwnershipNo) {
-        return {
-            valid: false,
-            title: 'Form Error',
-            message: 'Vehicle ownership elements not found'
-        };
-    }
-
-    if (!vehicleOwnershipYes.checked && !vehicleOwnershipNo.checked) {
-        return {
-            valid: false,
-            title: 'Vehicle Ownership',
-            message: 'Please select whether you have a vehicle or not'
-        };
-    }
-
-    // 2. Validate vehicle fields if "Yes" is selected
-    if (vehicleOwnershipYes.checked && vehicleFields) {
-        const requiredVehicleFields = vehicleFields.querySelectorAll('[required]');
-        for (const element of requiredVehicleFields) {
-            // Skip if element is not visible
+        // 3. Validate non-vehicle required fields
+        const requiredElements = document.querySelectorAll('[required]:not([id^="vehicle"])');
+        for (const element of requiredElements) {
+            // Skip if element is not visible or undefined
             if (!element || element.offsetParent === null) continue;
 
             if (element.type === 'file') {
                 if (!element.files || !element.files.length) {
+                    const label = element.previousElementSibling?.textContent || 'document';
                     return {
                         valid: false,
-                        title: 'Vehicle Documents',
-                        message: 'Please upload all required vehicle documents'
+                        title: 'Required Documents',
+                        message: `Please upload the ${label}`
                     };
                 }
             } else if (element.tagName === 'SELECT') {
                 if (!element.value) {
-                    const label = element.previousElementSibling?.textContent || 'vehicle option';
+                    const label = element.previousElementSibling?.textContent || 'option';
                     return {
                         valid: false,
-                        title: 'Vehicle Details',
+                        title: 'Required Selection',
                         message: `Please select a ${label}`
                     };
                 }
@@ -353,50 +334,12 @@ $('.letters_only_fname').on('input', function (event) {
                     const label = element.previousElementSibling?.textContent || 'field';
                     return {
                         valid: false,
-                        title: 'Vehicle Details',
+                        title: 'Required Fields',
                         message: `Please fill in the ${label}`
                     };
                 }
             }
         }
-    }
-
-    // 3. Validate non-vehicle required fields
-    const requiredElements = document.querySelectorAll('[required]:not([id^="vehicle"])');
-    for (const element of requiredElements) {
-        // Skip if element is not visible or undefined
-        if (!element || element.offsetParent === null) continue;
-
-        if (element.type === 'file') {
-            if (!element.files || !element.files.length) {
-                const label = element.previousElementSibling?.textContent || 'document';
-                return {
-                    valid: false,
-                    title: 'Required Documents',
-                    message: `Please upload the ${label}`
-                };
-            }
-        } else if (element.tagName === 'SELECT') {
-            if (!element.value) {
-                const label = element.previousElementSibling?.textContent || 'option';
-                return {
-                    valid: false,
-                    title: 'Required Selection',
-                    message: `Please select a ${label}`
-                };
-            }
-        } else if (element.value !== undefined) {
-            const value = element.value.toString();
-            if (!value || !value.trim()) {
-                const label = element.previousElementSibling?.textContent || 'field';
-                return {
-                    valid: false,
-                    title: 'Required Fields',
-                    message: `Please fill in the ${label}`
-                };
-            }
-        }
-    }
 
         // 4. Validate DL Codes/Restriction selection
         const isAnyRadioChecked = Array.from(radioInputs).some(radio => radio.checked);
@@ -482,22 +425,38 @@ $('.letters_only_fname').on('input', function (event) {
         }
 
         // 9. Validate license expiration and plan type
-        const selectedPlanId = parseInt(planTypeSelect.value);
-        if ((selectedPlanId === 9 || selectedPlanId === 10) && isLicenseExpirationLessThanAYear()) {
+        function validatePlanAndLicense() {
+            // First check if license is expired
+            if (isLicenseExpired()) {
+                return {
+                    valid: false,
+                    title: 'License Expired',
+                    message: 'Your license has expired. Please update the expiration date to proceed.'
+                };
+            }
+
             return {
-                valid: false,
-                title: 'License Expiration Issue',
-                message: 'Your current license period is less than one year. Only Annual (1-year) PIDP is available.'
+                valid: true,
+                message: ''
             };
         }
 
-        // 10. Validate plan type for Japan
-        if (!isPlanTypeValidForJapan()) {
+        // For Update Personal Information radio buttons
+        if (!updateYesRadio.checked && !updateNoRadio.checked) {
+            updateRadioLabel.style.color = 'red';
             return {
                 valid: false,
-                title: 'Plan Type Issue',
-                message: 'Japan only offers an annual plan. Please select an annual plan type.'
+                title: 'Selection Required',
+                message: 'Please select whether you want to update your personal information'
             };
+        } else {
+            updateRadioLabel.style.color = ''; // Reset color when valid
+        }
+
+        // Replace the old plan and license validation section with:
+        const planValidation = validatePlanAndLicense();
+        if (!planValidation.valid) {
+            return planValidation;
         }
 
         // If all validations pass
@@ -506,6 +465,29 @@ $('.letters_only_fname').on('input', function (event) {
             message: ''
         };
     }
+
+    [updateYesRadio, updateNoRadio].forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (updateYesRadio.checked || updateNoRadio.checked) {
+                updateRadioLabel.style.color = '';
+            }
+        });
+    });
+
+    // Add event listener to expiration date input for real-time validation
+    expirationInput.addEventListener('change', function() {
+        if (isLicenseExpired()) {
+            expirationInput.style.border = '2px solid red';
+            Swal.fire({
+                title: 'License Expired',
+                text: 'Please enter a valid future expiration date.',
+                icon: 'warning',
+                confirmButtonColor: '#d33'
+            });
+        } else {
+            expirationInput.style.border = '';
+        }
+    });
     // Handle form submission
     resellerForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -557,14 +539,17 @@ $('.letters_only_fname').on('input', function (event) {
     // Add submit button click handler for additional validation
     submitBtn.addEventListener('click', function(e) {
         const isAnyRadioChecked = Array.from(radioInputs).some(radio => radio.checked);
-        if (!isAnyRadioChecked) {
-            chooseLabel.style.color = 'red';
-        } else {
-            chooseLabel.style.color = '';
-        }
+    if (!isAnyRadioChecked) {
+        chooseLabel.style.color = 'red';
+        return; // Exit early if no radio is selected
+    } else {
+        chooseLabel.style.color = '';
+    }
 
-        const selectedOption = Array.from(radioInputs).find(radio => radio.checked);
+    const selectedOption = Array.from(radioInputs).find(radio => radio.checked);
 
+        // Only proceed if a radio button is actually selected
+    if (selectedOption) {
         if (selectedOption.value === 'dlcode') {
             const isAnyCheckboxChecked = Array.from(checkboxInputs).some(checkbox => checkbox.checked);
             if (!isAnyCheckboxChecked) {
@@ -573,7 +558,7 @@ $('.letters_only_fname').on('input', function (event) {
                 dlCodesLabel.style.color = '';
             }
 
-            validateClutchRadioButtons(); // Validate clutch radio buttons when submit button is clicked
+            validateClutchRadioButtons(); // Validate clutch radio buttons
         } else if (selectedOption.value === 'restriction') {
             const isAnyRestrictionChecked = Array.from(restrictionCheckboxes).some(checkbox => checkbox.checked);
             if (!isAnyRestrictionChecked) {
@@ -582,9 +567,10 @@ $('.letters_only_fname').on('input', function (event) {
                 restrictionLabel.style.color = '';
             }
         }
+    }
 
-        validateJapanOptions(); // Validate Japan options when submit button is clicked
-        validateAdditionalCheckboxes(); // Validate additional checkboxes when submit button is clicked
+    validateJapanOptions(); // Validate Japan options
+    validateAdditionalCheckboxes(); // Validate additional checkboxes
     });
 });
 
@@ -594,7 +580,7 @@ $('.letters_only_fname').on('input', function (event) {
     // updateNavigationButtons();
     // VehicleHandling();
     // FileUploads();
-    toggleRequiredAttributes();
+    // toggleRequiredAttributes();
   });
   // ----------------------------------------------------------Validation for TAB/STEP-----------------------------------------------------------------//
   
@@ -605,21 +591,48 @@ $('.letters_only_fname').on('input', function (event) {
     const noRadio = document.getElementById('noRadio');
     const planTypeSelect = document.getElementById('planType');
     const planMessage = document.getElementById('planMessage');
+    const input = document.getElementById("expiration");
+    let datePicker;
+    let lastValue = input.value; // Initialize lastValue with existing date
 
+    // Function to check if date difference is less than a year
+    function isLessThanYear(selectedDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diffTime = selectedDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays < 365;
+    }
+
+    // Modified filterPlanOptions to include date logic
     function filterPlanOptions() {
+        let selectedDate;
+        if (datePicker.selectedDates.length > 0) {
+            selectedDate = datePicker.selectedDates[0];
+        } else if (input.value) {
+            selectedDate = new Date(input.value);
+        }
+
         const options = planTypeSelect.getElementsByTagName('option');
+        
         for (let option of options) {
+            const planText = option.text.toLowerCase();
+            
             if (yesRadio.checked && option.getAttribute('data-plan-id') !== '8') {
                 option.style.display = 'none';
+            } else if (noRadio.checked && selectedDate) {
+                if (isLessThanYear(selectedDate)) {
+                    option.style.display = planText.includes('annual') ? '' : 'none';
+                } else {
+                    option.style.display = '';
+                }
             } else {
                 option.style.display = '';
             }
         }
-        // Reset the selected index to the default option
+        
         planTypeSelect.selectedIndex = 0;
-        // Hide the message when radio button is changed
         planMessage.style.display = 'none';
-        // Trigger the change event to update the message display
         showPlanMessage();
     }
 
@@ -632,40 +645,19 @@ $('.letters_only_fname').on('input', function (event) {
         }
     }
 
-    yesRadio.addEventListener('change', filterPlanOptions);
-    noRadio.addEventListener('change', filterPlanOptions);
-    planTypeSelect.addEventListener('change', showPlanMessage);
-
-    // Initial filter based on default selection
-    filterPlanOptions();
-    showPlanMessage();
-});
-
-
-  // EXPIRATION DATE FUNCTION
-  document.addEventListener("DOMContentLoaded", function() {
-    const input = document.getElementById("expiration");
-    let datePicker;
-    let lastValue = "";
-  
-    // Function to check if a date is in the future
-    const isFutureDate = (date) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return date >= today;
-    };
-
-    
+    // Initialize flatpickr with modified onChange
     datePicker = flatpickr("#expiration", {
         dateFormat: "m/d/Y",
         allowInput: true,
-        minDate: "today", // Disable all past dates
+        minDate: "today",
+        defaultDate: input.value, // Set the existing date as default
         onChange: function(selectedDates, dateStr, instance) {
             if (selectedDates.length > 0) {
                 if (isFutureDate(selectedDates[0])) {
                     input.value = dateStr;
                     lastValue = dateStr;
                     input.classList.remove('error');
+                    filterPlanOptions();
                 } else {
                     instance.clear();
                     input.classList.add('error');
@@ -674,12 +666,22 @@ $('.letters_only_fname').on('input', function (event) {
             }
         }
     });
-  
-    // Add input event listener for manual typing
+
+    const isFutureDate = (date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return date >= today;
+    };
+
+    // Event listeners
+    yesRadio.addEventListener('change', filterPlanOptions);
+    noRadio.addEventListener('change', filterPlanOptions);
+    planTypeSelect.addEventListener('change', showPlanMessage);
+
+    // Input event listener for manual typing
     input.addEventListener('input', function(e) {
         let v = this.value;
-  
-        // Handle backspace/delete - allow normal deletion
+        
         if (v.length < lastValue.length) {
             lastValue = v;
             if (v.length === 0) {
@@ -688,41 +690,35 @@ $('.letters_only_fname').on('input', function (event) {
             }
             return;
         }
-  
-        // Only proceed with formatting if we're adding characters
+
         if (v.length > lastValue.length) {
-            // Handle MM/ format
             if (v.match(/^\d{2}$/) !== null) {
                 let month = parseInt(v);
                 v = (month > 12 ? 12 : month) + '/';
             } 
-            // Handle MM/DD/ format
             else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
                 let parts = v.split('/');
                 let month = parseInt(parts[0]);
                 let day = parseInt(parts[1]);
                 v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
             }
-            // Handle complete date format MM/DD/YYYY
             else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
                 let parts = v.split('/');
                 let month = parseInt(parts[0]);
                 let day = parseInt(parts[1]);
                 let year = parseInt(parts[2]);
                 
-                // Create a date object
                 let dateStr = `${month}/${day}/${year}`;
                 let date = new Date(dateStr);
                 
-                // Only update if it's a valid date and in the future
                 if (!isNaN(date.getTime())) {
                     if (isFutureDate(date)) {
                         datePicker.setDate(date, true);
                         input.classList.remove('error');
+                        filterPlanOptions();
                     } else {
                         input.classList.add('error');
                         alert("Please enter a future date");
-                        // Clear the input after a short delay
                         setTimeout(() => {
                             this.value = '';
                             lastValue = '';
@@ -736,16 +732,14 @@ $('.letters_only_fname').on('input', function (event) {
             lastValue = v;
         }
     });
-  
-    // Add keydown listener for better backspace handling
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Backspace' || e.key === 'Delete') {
-            if (this.value.length === 0) {
-                datePicker.clear();
-                input.classList.remove('error');
-            }
-        }
-    });
+
+    // Initial call to filterPlanOptions to handle existing date
+    if (input.value) {
+        filterPlanOptions();
+    }
+
+    // Initial setup
+    showPlanMessage();
 });
 
 
@@ -1145,6 +1139,7 @@ var destinationInput1 = document.getElementById('destinationOut');
 var destinationInput2 = document.getElementById('destinationIn');
 var purposetravel     = document.getElementById('members_purposetravel');
 var purposetravel1    = document.getElementById('members_purposetravel1');
+var plan_type         = document.getElementById('planType');
 var check_waiver1     = document.getElementById('checkbox_waiver1');
 var check_waiver2     = document.getElementById('checkbox_waiver2');
 var checkbox1         = document.getElementById('checkbox1');
@@ -1165,6 +1160,7 @@ function updateRequiredAttribute() {
   if (yesRadio.checked) {
     destinationInput1.removeAttribute('required');
     purposetravel.removeAttribute('required');
+    plan_type.required  = true;
     yesDropdown.required = true;
     noDropdown.required  = true;
     checkbox4.required   = false;
@@ -1188,6 +1184,7 @@ function updateRequiredAttribute() {
 
 
   if (noRadio.checked) {
+    plan_type.required  = true;
     destinationInput2.removeAttribute('required');
     checkbox1.removeAttribute('required');
     checkbox2.removeAttribute('required');
@@ -1439,203 +1436,203 @@ var closeBtn         = document.getElementsByClassName("closeBtn")[0];
   // END FILE UPLOAD
   
   // Start Title Gender-----------------
-  document.getElementById('title').addEventListener('change', function() {
-      const title = this.value;
-      const genderSelect = document.getElementById('gender');
+//   document.getElementById('title').addEventListener('change', function() {
+//       const title = this.value;
+//       const genderSelect = document.getElementById('gender');
   
-      switch (title) {
-          case 'MR':
-              genderSelect.value = 'MALE';
-              break;
-          case 'MS':
-          case 'MRS':
-              genderSelect.value = 'FEMALE';
-              break;
-          case 'ATTY':
-          case 'DR':
-          case 'ENGR':
-              genderSelect.value = '';
-              break;
-          default:
-              genderSelect.value = '';
-      }
-  });
+//       switch (title) {
+//           case 'MR':
+//               genderSelect.value = 'MALE';
+//               break;
+//           case 'MS':
+//           case 'MRS':
+//               genderSelect.value = 'FEMALE';
+//               break;
+//           case 'ATTY':
+//           case 'DR':
+//           case 'ENGR':
+//               genderSelect.value = '';
+//               break;
+//           default:
+//               genderSelect.value = '';
+//       }
+//   });
   
   // Start Citizenship Dropdown-------------------
-  document.addEventListener('DOMContentLoaded', function () {
-    var citizenshipDropdown = document.getElementById('citizenship');
-    var addInfoSection = document.getElementById('add_info');
+//   document.addEventListener('DOMContentLoaded', function () {
+//     var citizenshipDropdown = document.getElementById('citizenship');
+//     var addInfoSection = document.getElementById('add_info');
   
-    citizenshipDropdown.addEventListener('change', function () {
-      if (citizenshipDropdown.value === 'foreigner') {
-        addInfoSection.style.display = 'block';
-        setRequiredForeigner(true);
+//     citizenshipDropdown.addEventListener('change', function () {
+//       if (citizenshipDropdown.value === 'foreigner') {
+//         addInfoSection.style.display = 'block';
+//         setRequiredForeigner(true);
   
-      } else {
-        addInfoSection.style.display = 'none';
-        setRequiredForeigner(false);
-        nationality.value = "";
-      }
-    });
-  });
+//       } else {
+//         addInfoSection.style.display = 'none';
+//         setRequiredForeigner(false);
+//         nationality.value = "";
+//       }
+//     });
+//   });
   
-  function setRequiredForeigner(isRequired) {
-    var nationality = document.getElementById("nationality");
-    nationality.required = isRequired;
-  }
-  // END Citizenship Dropdown
+//   function setRequiredForeigner(isRequired) {
+//     var nationality = document.getElementById("nationality");
+//     nationality.required = isRequired;
+//   }
+//   // END Citizenship Dropdown
   
   
-  // FLAT Picker FOR BIRTHDATE
-  document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("birthdate");
-    let datePicker;
-    let lastValue = "";
+//   // FLAT Picker FOR BIRTHDATE
+//   document.addEventListener("DOMContentLoaded", function () {
+//     const input = document.getElementById("birthdate");
+//     let datePicker;
+//     let lastValue = "";
   
-    // Calculate the maximum allowed date (18 years ago from today)
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() - 18);
+//     // Calculate the maximum allowed date (18 years ago from today)
+//     const maxDate = new Date();
+//     maxDate.setFullYear(maxDate.getFullYear() - 18);
   
-    // Initialize Flatpickr
-    datePicker = flatpickr("#birthdate", {
-      dateFormat: "m/d/Y",
-      allowInput: true,
-      maxDate: maxDate, // Set the maximum allowed date
-      onChange: function (selectedDates, dateStr, instance) {
-        if (selectedDates.length > 0) {
-          input.value = dateStr;
-          lastValue = dateStr;
-        }
-      }
-    });
+//     // Initialize Flatpickr
+//     datePicker = flatpickr("#birthdate", {
+//       dateFormat: "m/d/Y",
+//       allowInput: true,
+//       maxDate: maxDate, // Set the maximum allowed date
+//       onChange: function (selectedDates, dateStr, instance) {
+//         if (selectedDates.length > 0) {
+//           input.value = dateStr;
+//           lastValue = dateStr;
+//         }
+//       }
+//     });
   
-    // Add input event listener for manual typing
-    input.addEventListener('input', function (e) {
-      let v = this.value;
+//     // Add input event listener for manual typing
+//     input.addEventListener('input', function (e) {
+//       let v = this.value;
   
-      // Handle backspace/delete - allow normal deletion
-      if (v.length < lastValue.length) {
-        lastValue = v;
-        if (v.length === 0) {
-          datePicker.clear();
-        }
-        return;
-      }
+//       // Handle backspace/delete - allow normal deletion
+//       if (v.length < lastValue.length) {
+//         lastValue = v;
+//         if (v.length === 0) {
+//           datePicker.clear();
+//         }
+//         return;
+//       }
   
-      // Only proceed with formatting if we're adding characters
-      if (v.length > lastValue.length) {
-        // Handle MM/ format
-        if (v.match(/^\d{2}$/) !== null) {
-          let month = parseInt(v);
-          v = (month > 12 ? 12 : month) + '/';
-        }
-        // Handle MM/DD/ format
-        else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-          let parts = v.split('/');
-          let month = parseInt(parts[0]);
-          let day = parseInt(parts[1]);
-          v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
-        }
-        // Handle complete date format MM/DD/YYYY
-        else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
-          let parts = v.split('/');
-          let month = parseInt(parts[0]);
-          let day = parseInt(parts[1]);
-          let year = parseInt(parts[2]);
+//       // Only proceed with formatting if we're adding characters
+//       if (v.length > lastValue.length) {
+//         // Handle MM/ format
+//         if (v.match(/^\d{2}$/) !== null) {
+//           let month = parseInt(v);
+//           v = (month > 12 ? 12 : month) + '/';
+//         }
+//         // Handle MM/DD/ format
+//         else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+//           let parts = v.split('/');
+//           let month = parseInt(parts[0]);
+//           let day = parseInt(parts[1]);
+//           v = (month > 12 ? 12 : month) + '/' + (day > 31 ? 31 : day) + '/';
+//         }
+//         // Handle complete date format MM/DD/YYYY
+//         else if (v.match(/^\d{2}\/\d{2}\/\d{4}$/) !== null) {
+//           let parts = v.split('/');
+//           let month = parseInt(parts[0]);
+//           let day = parseInt(parts[1]);
+//           let year = parseInt(parts[2]);
   
-          // Create a date object and update the calendar
-          let dateStr = `${month}/${day}/${year}`;
-          let date = new Date(dateStr);
+//           // Create a date object and update the calendar
+//           let dateStr = `${month}/${day}/${year}`;
+//           let date = new Date(dateStr);
   
-          // Only update if it's a valid date and at least 18 years ago
-          if (!isNaN(date.getTime()) && date <= maxDate) {
-            datePicker.setDate(date, true);
-          } else {
-            // If the date is not valid or not at least 18 years ago, clear the input
-            this.value = lastValue;
-            return;
-          }
-        }
+//           // Only update if it's a valid date and at least 18 years ago
+//           if (!isNaN(date.getTime()) && date <= maxDate) {
+//             datePicker.setDate(date, true);
+//           } else {
+//             // If the date is not valid or not at least 18 years ago, clear the input
+//             this.value = lastValue;
+//             return;
+//           }
+//         }
   
-        this.value = v;
-        lastValue = v;
-      }
-    });
+//         this.value = v;
+//         lastValue = v;
+//       }
+//     });
   
-    // Add keydown listener for better backspace handling
-    input.addEventListener('keydown', function (e) {
-      if (e.key === 'Backspace' || e.key === 'Delete') {
-        if (this.value.length === 0) {
-          datePicker.clear();
-        }
-      }
-    });
-  });
+//     // Add keydown listener for better backspace handling
+//     input.addEventListener('keydown', function (e) {
+//       if (e.key === 'Backspace' || e.key === 'Delete') {
+//         if (this.value.length === 0) {
+//           datePicker.clear();
+//         }
+//       }
+//     });
+//   });
   // END OF FLAT PICKER
   
   // ---------------------------------------------------END FUNCTION FOR PERSONAL INFORMATION------------------------------------------------ //
   
   
   // ---------------------------------------------------CONTACT INFORMATION FUNCTION-------------------------------------------------------- //
-  document.addEventListener('DOMContentLoaded', function () {
-    var mailingAddressDropdown = document.getElementById('mail');
-    var officeAddressSection   = document.getElementById('officeAddress');
-    var street1                = document.getElementById('street1');
-    var town1                  = document.getElementById('town1');
-    var city1                  = document.getElementById('city1');
-    var province1              = document.getElementById('province1');
-    var zcode1                 = document.getElementById('zcode1');
-    var comname                = document.getElementById('comname');
+//   document.addEventListener('DOMContentLoaded', function () {
+//     var mailingAddressDropdown = document.getElementById('mail');
+//     var officeAddressSection   = document.getElementById('officeAddress');
+//     var street1                = document.getElementById('street1');
+//     var town1                  = document.getElementById('town1');
+//     var city1                  = document.getElementById('city1');
+//     var province1              = document.getElementById('province1');
+//     var zcode1                 = document.getElementById('zcode1');
+//     var comname                = document.getElementById('comname');
   
-      // Function to set or remove the required attribute for the specified fields
-    function updateRequiredFields(required) {
-      street1.required   = required;
-      town1.required     = required;
-      city1.required     = required;
-      province1.required = required;
-      zcode1.required    = required;
-      comname.required   = required;
-    }
+//       // Function to set or remove the required attribute for the specified fields
+//     function updateRequiredFields(required) {
+//       street1.required   = required;
+//       town1.required     = required;
+//       city1.required     = required;
+//       province1.required = required;
+//       zcode1.required    = required;
+//       comname.required   = required;
+//     }
   
-    mailingAddressDropdown.addEventListener('change', function () {
-      if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
-        officeAddressSection.style.display = 'block';
-        updateRequiredFields(true);
-      } else {
-        officeAddressSection.style.display = 'none';
-        street1.value                      = "";
-        town1.value                        = "";
-        city1.value                        = "";
-        province1.value                    = "";
-        zcode1.value                       = "";
-        comname.value                      = "";
-        updateRequiredFields(false);
-      }
-    });
-  });
+//     mailingAddressDropdown.addEventListener('change', function () {
+//       if (mailingAddressDropdown.value === 'OFFICE ADDRESS') {
+//         officeAddressSection.style.display = 'block';
+//         updateRequiredFields(true);
+//       } else {
+//         officeAddressSection.style.display = 'none';
+//         street1.value                      = "";
+//         town1.value                        = "";
+//         city1.value                        = "";
+//         province1.value                    = "";
+//         zcode1.value                       = "";
+//         comname.value                      = "";
+//         updateRequiredFields(false);
+//       }
+//     });
+//   });
   
-  function toggleRequiredAttributes() {
-    const phoneInput = document.getElementById('mobileNumber');
-    const emailInput = document.getElementById('emailAddress');
+//   function toggleRequiredAttributes() {
+//     const phoneInput = document.getElementById('mobileNumber');
+//     const emailInput = document.getElementById('emailAddress');
   
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
-    const isEmailValid = emailRegex.test(emailInput.value.trim());
+//     const isEmailValid = emailRegex.test(emailInput.value.trim());
   
-    phoneInput.addEventListener('input', function() {
-      if (this.value.trim() !== '') {
-        emailInput.removeAttribute('required');
-      } else {
-        emailInput.setAttribute('required', 'required');
-      }
-    });
+//     phoneInput.addEventListener('input', function() {
+//       if (this.value.trim() !== '') {
+//         emailInput.removeAttribute('required');
+//       } else {
+//         emailInput.setAttribute('required', 'required');
+//       }
+//     });
   
-    if (isEmailValid) {
-      phoneInput.removeAttribute('required');
-    } else {
-      phoneInput.setAttribute('required', 'required');
-    }
-  }
+//     if (isEmailValid) {
+//       phoneInput.removeAttribute('required');
+//     } else {
+//       phoneInput.setAttribute('required', 'required');
+//     }
+//   }
   
   function maskTelNo(id) {
     $("#" + id).mask("9-999-9999");
@@ -1682,21 +1679,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 // Initialize the form state on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const vehicleOwnershipNo = document.getElementById('vehicleOwnershipNo');
-    const vehicleOwnershipYes = document.getElementById('vehicleOwnershipYes');
+// document.addEventListener('DOMContentLoaded', function() {
+//     const vehicleOwnershipNo = document.getElementById('vehicleOwnershipNo');
+//     const vehicleOwnershipYes = document.getElementById('vehicleOwnershipYes');
     
-    // Check if there's any existing value
-    const withVehicleValue = document.getElementById('with_vehicle').value;
+//     // Check if there's any existing value
+//     const withVehicleValue = document.getElementById('with_vehicle').value;
     
-    if (withVehicleValue === 'yes') {
-        vehicleOwnershipYes.checked = true;
-        toggleVehicleDetails(vehicleOwnershipYes);
-    } else {
-        vehicleOwnershipNo.checked = true;
-        toggleVehicleDetails(vehicleOwnershipNo);
-    }
-});
+//     if (withVehicleValue === 'yes') {
+//         vehicleOwnershipYes.checked = true;
+//         toggleVehicleDetails(vehicleOwnershipYes);
+//     } else {
+//         vehicleOwnershipNo.checked = true;
+//         toggleVehicleDetails(vehicleOwnershipNo);
+//     }
+// });
 
 
    // vehicleFileUpload function to work with dynamic IDs

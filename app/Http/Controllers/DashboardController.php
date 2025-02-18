@@ -42,8 +42,8 @@ class DashboardController extends Controller
         $startOfWeek = now()->startOfWeek()->format('Y-m-d');
 
         $todayNewResellers = Membership::whereDate('application_date', $today)
-            ->where('typesofapplication', 'NEW')
-            ->count();
+        ->whereIn('typesofapplication', ['NEW', 'RENEW'])
+        ->count();
 
         $monthlyNewResellers = Membership::whereDate('application_date', '>=', $startOfMonth)
             ->where('typesofapplication', 'NEW')

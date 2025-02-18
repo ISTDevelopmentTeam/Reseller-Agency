@@ -109,285 +109,71 @@
     <p style="margin: 0;">
         Free emergency roadside and towing services can be availed of only after 7 days from the date of activation of membership.
     </p>
-    <button class="btn btn-primary customer-fillout-btn"
-        style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);"
-        onclick="window.open('{{ route('customer_qr') }}', '_blank')">
-        <i class="fas fa-qrcode me-2"></i>&nbsp;Customer/Client Form QR  
-    </button>
+    <a href="{{ route('customer_qr') }}" 
+   class="btn btn-primary customer-fillout-btn"
+   style="position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);">
+    <i class="fas fa-qrcode me-2"></i>&nbsp;Customer/Client Form QR  
+</a>
 </div>
         <br>
-        <div class="row col-md-12 justify-content-center">
-            <div class="card p-0 mb-5">
-                <div class="card-header header-bg-custom"> PIDP - PHILIPPINE INTERNATIONAL DRIVING PERMIT </div>
-                
-                <div class="card-body">
-                    <div class="row">
-                        
-                        <div class="col-md-4">
-                            <div class="yellow-bottom">
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 8)
+        @foreach($membershipTypes as $membershipType)
+            <div class="row col-md-12 justify-content-center">
+                <div class="card p-0 mb-5">
+                    <div class="card-header header-bg-custom">
+                        {{ $membershipType->membership_name }}
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {{-- Debug information --}}
+                            @php
+                                \Log::info('Plans for ' . $membershipType->membership_name, ['plans' => $membershipType->planTypes->toArray()]);
+                            @endphp
+                            
+                            @foreach($membershipType->planTypes as $plan)
+                                <div class="col-md-{{ $membershipType->planTypes->count() > 2 ? '4' : '6' }}">
+                                    <div class="yellow-bottom">
                                         <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
                                         <button class="btn btn-custom">
-                                            <a href="{{ route('new_pidp.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
+                                            @if($membershipType->membership_code === 'MP')
+                                                <a href="{{ route('new_motorcycle.index', [
+                                                'planId' => $plan->plan_id
+                                                ]) }}">
+                                                    APPLY NOW
+                                                </a>
+                                            @elseif($membershipType->membership_code === 'P')
+                                                <a href="{{ route('new_pidp.index', [
+                                                    'membershipId' => $membershipType->membership_id,
+                                                    'planId'       => $plan->plan_id
+                                                    // 'token'        => $token
+                                                ]) }}">
+                                                    APPLY NOW
+                                                </a>
+                                            @else
+                                                <a href="{{ route('new_membership.index', [
+                                                    'membershipId' => $membershipType->membership_id,
+                                                    'planId'       => $plan->plan_id
+                                                ]) }}">
+                                                    APPLY NOW
+                                                </a>
+                                            @endif
                                         </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 2 vehicles. FREE 24/7 Emergency Roadside Assistance of 4 interventions
-                                    or 100-km tow distance, whichever comes first. FREE P300,000 Personal Accident
-                                    Insurance.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>TWO YEARS (PIDP) - 8100</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 9)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_pidp.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 2 vehicles. FREE 24/7 Emergency Roadside Assistance of 8 interventions
-                                    or 200-km tow distance, whichever comes first. FREE P300,000 Personal Accident
-                                    Insurance.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>THREE YEARS (PIDP) - 9200</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 10)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_pidp.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 2 vehicles. FREE 24/7 Emergency Roadside Assistance of 12
-                                    interventions or 300-km tow distance, whichever comes first. FREE P300,000 Personal
-                                    Accident Insurance.</p>
-                            </div>
+                                        <br>
+                                        <br>
+                                        <p>{{ $plan->remarks ?: 
+                                            "Register up to " . $membershipType->vehicle_num . " vehicles. FREE 24/7 Emergency Roadside Assistance of " .
+                                            ($membershipType->membership_code === 'MP' ? "2 non-towing interventions" : 
+                                            ($plan->plan_name === 'ANNUAL FEE (REGULAR)' ? "4 interventions or 100-km tow distance" :
+                                            ($plan->plan_name === 'THREE YEAR FEE (REGULAR)' ? "12 interventions or 300-km tow distance" :
+                                            "interventions based on plan"))) . ", whichever comes first. " . 
+                                            ($membershipType->membership_code === 'MP' ? "" : "FREE P300,000 Personal Accident Insurance.") }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row col-md-12 justify-content-center">
-            <div class="card p-0 mb-5">
-                <div class="card-header header-bg-custom"> REGULAR INDIVIDUAL</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>ANNUAL FEE (REGULAR) - 2500</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 1)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 2 vehicles. FREE 24/7 Emergency Roadside Assistance of 4 interventions
-                                    or 100-km tow distance, whichever comes first. FREE P300,000 Personal Accident
-                                    Insurance.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="yellow-bottom">
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 2)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 2 vehicles. FREE 24/7 Emergency Roadside Assistance of 12 interventions or 300-km tow distance, whichever comes first. FREE P300,000 Personal Accident Insurance</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row col-md-12 justify-content-center">
-            <div class="card p-0 mb-5">
-                <div class="card-header header-bg-custom"> ASSOCIATE INDIVIDUAL</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>ANNUAL FEE (ASSOCIATE) - 2000</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 3)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 1 vehicle. FREE 24/7 Emergency Roadside Assistance of 3 interventions
-                                    or 60-km tow distance, whichever comes first. FREE P200,000 Personal Accident
-                                    Insurance.</p>
-                                    
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>THREE YEAR FEE (ASSOCIATE) - 4500</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 4)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 1 vehicle. FREE 24/7 Emergency Roadside Assistance of 9 interventions
-                                    or 180-km tow distance, whichever comes first. FREE P200,000 Personal Accident
-                                    Insurance</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row col-md-12 justify-content-center">
-            <div class="card p-0 mb-5">
-                <div class="card-header header-bg-custom">MEMBERSHIP LITE</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>ANNUAL FEE (MEMBERSHIP LITE) - 900</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 7)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register 1 vehicle only. FREE 24/7 Emergency Roadside Assistance of 2 non-towing
-                                    interventions per year (flat tire change, battery boosting, fuel provision and minor
-                                    mechanical repairs). FREE P200,000 Personal Accident Insurance.</p>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row col-md-12 justify-content-center">
-            <div class="card p-0 mb-5">
-                <div class="card-header header-bg-custom">ELITE</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>ANNUAL FEE (ELITE) - 5000</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 5)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 5 vehicles. FREE 24/7 Emergency Roadside Assistance of 8 interventions
-                                    or 200-km tow distance, whichever comes first. FREE P300,000 Personal Accident
-                                    Insurance.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>THREE YEAR FEE (ELITE) - 10000</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 6)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <button class="btn btn-custom">
-                                            <a href="{{ route('new_membership.index', ['membershipId' => $plan->membershipType->membership_id, 'planId' => $plan->plan_id]) }}">
-                                                APPLY NOW
-                                            </a>
-                                        </button>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register up to 5 vehicles. FREE 24/7 Emergency Roadside Assistance of 24
-                                    interventions or 600-km tow distance, whichever comes first. FREE P300,000 Personal
-                                    Accident Insurance.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row col-md-12 justify-content-center">
-            <div class="card p-0 mb-5">
-                <div class="card-header header-bg-custom">MOTORCYCLE MEMBERSHIP PLUS</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="yellow-bottom">
-                                <!-- <p><strong>ANNUAL FEE(MOTORCYCLE PACKAGE 1) - 600</strong></p> -->
-                                @foreach ($results as $plan)
-                                    @if ($plan->plan_id == 11)
-                                        <p><strong>{{ $plan->plan_name }} - {{ $plan->plan_amount }}</strong></p>
-                                        <a href="{{ route('new_motorcycle.index', ['planId' => $plan->plan_id]) }}"
-                                            class="btn btn-custom">
-                                            APPLY NOW
-                                        </a>
-                                    @endif
-                                @endforeach
-                                <br>
-                                <br>
-                                <p>Register 1 motorcycle (200cc and below). FREE AAP-Caltex SavePlus Discount Card upon
-                                    registration (valid in Luzon, Visayas, and Davao region only).</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
     <!-- Footer -->
     <!-- <footer class="sticky-footer bg-white">
