@@ -12,6 +12,45 @@
     animation-timing-function: ease-out;
 }
 
+.animated-replaceTextRtoL, .animated-hideCircle {
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-replaceTextRtoL::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100%;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+    border-left: 1px solid #000;
+    background-color: #fff;
+    animation-name: replaceTextRtoL;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+.animated-transitionDtoU::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 0;
+    width: 100%;;
+    background: linear-gradient(to bottom, #fff 75%, transparent);
+    border-top: 1px solid var(--dark-blue);
+    animation-name: transitionDtoU;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+}
+
 @keyframes moveUpExit {
     from {
         opacity: 1;
@@ -30,5 +69,41 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes replaceTextRtoL {
+    0% {
+        left: 100%;
+    }
+
+    50% {
+        left: -1%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes transitionDtoU {
+    0% {
+        height: 0;
+        bottom: 0;
+    }
+
+    50% {
+        height: 100%;
+        bottom: 0;
+    }
+
+    80% {
+        height: 100%;
+        bottom: 90%;
+    }
+
+    100% {
+        height: 0%;
+        bottom: 100%;
     }
 }
