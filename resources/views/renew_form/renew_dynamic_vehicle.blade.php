@@ -136,14 +136,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Car Models</label>
-                        <select class="form-control select2" id="model${newVehicleNumber}" name="vehicle_model[]">
+                        <select class="form-control select2" id="model${newVehicleNumber}" name="vehicle_model[]" required>
                             <option value="" selected>Car Model</option>
                         </select>
                     </div>
                     <!-- Second Row -->
                     <div class="col-md-3">
                         <label class="form-label">Vehicle Type</label>
-                        <select class="form-control select2" id="vehicle_type${newVehicleNumber}" name="vehicle_type[]">
+                        <select class="form-control select2" id="vehicle_type${newVehicleNumber}" name="vehicle_type[]" required>
                             <option value="" selected>Vehicle Type</option>
                         </select>
                     </div>
@@ -157,23 +157,23 @@ document.addEventListener('DOMContentLoaded', function () {
                             placeholder="Enter year"
                             onkeypress="return /[0-9]/i.test(event.key)"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                            pattern="[0-9]{4}">
+                            pattern="[0-9]{4}" required>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Sub model</label>
                         <input type="text" id="submodel${newVehicleNumber}" name="submodel[]" class="form-control"
-                            placeholder="Enter sub model">
+                            placeholder="Enter sub model" required>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Color</label>
                         <input type="text" id="color${newVehicleNumber}" name="vehicle_color[]" class="form-control"
-                            placeholder="Enter color">
+                            placeholder="Enter color" required>
                     </div>
 
                     <!-- Third Row -->
                     <div class="col-md-3">
                         <label class="form-label">Fuel Type</label>
-                        <select class="form-select" name="vehicle_fuel[]">
+                        <select class="form-select" name="vehicle_fuel[]" required>
                             <option disabled selected value="">Fuel Type</option>
                             <option value="GAS">GAS</option>
                             <option value="DIESEL">DIESEL</option>
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Transmission Type</label>
-                        <select class="form-select" name="vehicle_transmission[]">
+                        <select class="form-select" name="vehicle_transmission[]" required>
                             <option disabled selected value="">Select Transmission Type</option>
                             <option value="AUTOMATIC">AUTOMATIC</option>
                             <option value="MANUAL">MANUAL</option>

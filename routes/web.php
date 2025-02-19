@@ -17,6 +17,7 @@ use App\Http\Controllers\RenewResellerController;
 use App\Http\Controllers\ReportResellerController;
 use App\Http\Controllers\AuditTrailController;
 use App\Http\Controllers\QRCustomerController;
+use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\SubscriptionPlan_CMS_Controller;
 use App\Http\Controllers\CMSEditPageController;
@@ -31,6 +32,7 @@ Route::get('/', function () {
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Route::get('generate_client_access', [QRCustomerController::class, 'index'])->name('generate_client_access');
 // NEW
 Route::get('/event_dashboard', [EventDashboardController::class, 'event_dashboard'])->name('event_dashboard');
 
@@ -40,7 +42,7 @@ Route::post('/new_membership', [MembershipController::class, 'store'])->name('ne
 // MEMBERSHIP (customer side)
 Route::get('/membership/{membershipId?}/{planId?}/{token}', [MembershipController::class, 'fetch'])->name('membership.fetch');
 Route::post('/membership/{token}', [MembershipController::class, 'storing'])->name('membership.storing');
-Route::get('/thankyou', [MembershipController::class, 'thank'])->name('thankyou');
+Route::get('/thankyou_membership', [MembershipController::class, 'thank'])->name('thankyou_membership');
 
 
 // PIDP (reseller side)
@@ -63,9 +65,15 @@ Route::get('/thankyou', [MotorcycleController::class, 'thank'])->name('thankyou'
 // RENEW
 Route::get('/renew_reseller', [RenewResellerController::class, 'index'])->name('renew_reseller');
 Route::post('/search_member', [RenewResellerController::class, 'search_member'])->name('search_member');
+
 Route::get('/renew_membership/{id}/{vehicle}', [RenewResellerController::class, 'membership'])->name('renew_membership');
+Route::post('/renew_membership/{id}/{vehicle}', [RenewResellerController::class, 'membership_store'])->name('renew_membership.store');
+
 Route::get('/renew_pidp/{id}/{vehicle}', [RenewResellerController::class, 'pidp'])->name('renew_pidp');
+Route::post('/renew_pidp/{id}/{vehicle}', [RenewResellerController::class, 'pidp_store'])->name('renew_pidp.store');
+
 Route::get('/renew_motorcycle/{id}/{vehicle}', [RenewResellerController::class, 'motorcycle'])->name('renew_motorcycle');
+Route::post('/renew_motorcycle/{id}/{vehicle}', [RenewResellerController::class, 'motorcycle_store'])->name('renew_motorcycle.store');
 
 // CUSTOMER
 Route::get('/customer_qr', [QRCustomerController::class, 'index'])->name('customer_qr');
@@ -88,6 +96,8 @@ Route::get('/report_reseller', [ReportResellerController::class, 'index'])->name
 Route::get('/audit_trail', [AuditTrailController::class, 'index'])->name('audit_trail');
 
 
+// TRACKING
+Route::get('/tracking', [TrackingController::class, 'index'])->name('audit_trail');
 
 
 //URL Token Validation Routes

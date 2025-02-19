@@ -66,33 +66,50 @@ phoneInputs.forEach(input => {
 
     // Input formatting
     input.addEventListener('input', () => {
-        const currentValue = input.value.replace(/\D/g, '');
-        const formattedNumber = iti.getNumber(intlTelInputUtils.numberFormat.INTERNATIONAL);
-
-        if (currentValue.startsWith(iti.getSelectedCountryData().dialCode.replace(/\D/g, ''))) {
+    const currentValue = input.value.replace(/\D/g, '');
+    const formattedNumber = iti.getNumber(intlTelInputUtils.numberFormat.INTERNATIONAL);
+    const countryData = iti.getSelectedCountryData();
+    
+    if (countryData && countryData.dialCode) {
+        const cleanDialCode = countryData.dialCode.replace(/\D/g, '');
+        if (currentValue.startsWith(cleanDialCode)) {
             input.value = formattedNumber;
         } else {
             input.value = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL);
         }
-    });
+    } else {
+        input.value = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL);
+    }
+});
 
     // Validation on blur
-    input.addEventListener('blur', () => {
-        reset();
-        if (input.value.trim()) {
-            if (iti.isValidNumber()) {
+    // Validation on blur
+input.addEventListener('blur', () => {
+    reset();
+    if (input.value.trim()) {
+        if (iti.isValidNumber()) {
+            // Check if validContainer exists before using it
+            if (validContainer) {
                 validContainer.classList.remove("hide");
                 validContainer.textContent = "✓ Valid";
-                const countryData = iti.getSelectedCountryData();
+            }
+            
+            // Check if codeInput exists before using it
+            const countryData = iti.getSelectedCountryData();
+            if (codeInput && countryData) {
                 codeInput.value = countryData.dialCode;
-            } else {
-                input.classList.add("error");
-                const errorCode = iti.getValidationError();
+            }
+        } else {
+            input.classList.add("error");
+            const errorCode = iti.getValidationError();
+            // Check if errorContainer exists before using it
+            if (errorContainer) {
                 errorContainer.innerHTML = errorMap[errorCode];
                 errorContainer.classList.remove("hide");
             }
         }
-    });
+    }
+});
 
     // Reset on input changes
     input.addEventListener('change', reset);

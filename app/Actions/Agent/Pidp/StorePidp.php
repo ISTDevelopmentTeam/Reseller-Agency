@@ -198,8 +198,7 @@ class StorePidp
             }
         }
           // dd($request_array);
-        $page = Membership::create($request_array);
-
+        $page    = Membership::create($request_array);
         $details = [];
 
         $with_vehicle = $request->input('with_vehicle')  === 'yes' ? 'yes' : 'no';
@@ -237,7 +236,6 @@ class StorePidp
 
                 ];
             }
-
                 // dd($details);
                 $page->vehicles()->createMany($details);
         }

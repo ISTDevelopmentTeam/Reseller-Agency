@@ -48,33 +48,34 @@ class MotorcycleController extends Controller
     }
 
     public function fetch(Request $request, $planId, $token)
-    {
-        return DB::transaction(function () use ($request, $planId, $token) {
-            $temporaryToken = TokenModel::where('token', $token)
-                ->where('used', true)
-                ->where('form_completed', false)
-                ->whereNull('form_type')
-                ->lockForUpdate()
-                ->first();
+{
+    return DB::transaction(function () use ($request, $planId, $token) {
+        $temporaryToken = TokenModel::where('token', $token)
+            ->where('form_completed', false)  // Only check if form is not completed
+            ->lockForUpdate()
+            ->first();
 
-            if (!$temporaryToken || $temporaryToken->expires_at < now()) {
-                return redirect()->route('webpage_expiration_page')
-                    ->with('error', 'This link has already been used or already been submitted');
-            }
+        if (!$temporaryToken || $temporaryToken->expires_at < now()) {
+            return redirect()->route('webpage_expiration_page')
+                ->with('error', 'This link has expired or is invalid');
+        }
 
-            // Mark this token as being used for motorcycle form
-            $temporaryToken->form_type = 'motorcycle';
-            $temporaryToken->save();
+        // Update form type
+        $temporaryToken->form_type = 'motorcycle';
+        $temporaryToken->save();
 
-            $data = $this->customerMotorcycle->handle($request, $planId, $token);
+        // Store in session that this user has access
+        session(['form_token_' . $token => true]);
 
-            return response()
-                ->view('customer_form/motorcycle', $data)
-                ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
-                ->header('Pragma', 'no-cache')
-                ->header('Expires', '0');
-        });
-    }
+        $data = $this->customerMotorcycle->handle($request, $planId, $token);
+
+        return response()
+            ->view('customer_form/motorcycle', $data)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    });
+}
 
     public function storing(MotorcycleRequest $request, $token)
     {

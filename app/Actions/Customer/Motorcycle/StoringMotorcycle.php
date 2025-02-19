@@ -29,33 +29,25 @@ class StoringMotorcycle
         return DB::transaction(function () use ($request, $token) {
             // Lock the token record for update and check validity
             $temporaryToken = TokenModel::where('token', $token)
-                ->where('used', true)
-                ->where('form_completed', false)
+                ->where('form_completed', false)  // Only check if form is not completed
+                ->where('form_type', 'motorcycle')  // Must be motorcycle form
                 ->lockForUpdate()
                 ->first();
-
+    
             if (!$temporaryToken || $temporaryToken->expires_at < now()) {
                 return false;
             }
 
-            // Additional token validation
-            if (!$request->session()->token() === $request->input('_token')) {
-                abort(403, 'CSRF token mismatch');
-            }
-
-            $user            = Auth::user();
-            // dd($authorized_name);
-
             $request_array = $request->personal_info;
 
             $request_array["typesofapplication"]  = 'NEW';
-            $request_array["platform"]            = 'Reseller Platform';
-            $request_array["category"]            = 'Reseller';
+            $request_array["platform"]            = 'Agency Platform';
+            $request_array["category"]            = 'Agency';
             $request_array["status"]              = 'PENDING';
             $request_array["application_date"]    = date("Y-m-d");
             $request_array["membership_type"]     = 'MOTORCYCLE MEMBERSHIP PLUS';
             $request_array['option']              = 'Personal';
-            $request_array['agent']               = $user->id;
+            $request_array['agent']               = $temporaryToken->agent_id;
 
             if ($request->hasFile('idpicture')) {
                 $idImageFile = $request->file('idpicture');
@@ -151,12 +143,12 @@ class StoringMotorcycle
 
             $page->vehicles()->createMany($details);
 
-            // Mark token as completed after successful creation
-            $temporaryToken->form_completed = true;
-            $temporaryToken->save();
-
-            return true;
+         // Mark token as completed
+         $temporaryToken->form_completed = true;
+         $temporaryToken->save();
+ 
+         // Remove the session token
+         session()->forget('form_token_' . $token);
         });
     }
-
 }
