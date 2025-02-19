@@ -97,7 +97,8 @@ Route::get('/audit_trail', [AuditTrailController::class, 'index'])->name('audit_
 
 
 // TRACKING
-Route::get('/tracking', [TrackingController::class, 'index'])->name('audit_trail');
+Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking');
+Route::post('/tracking/track', [TrackingController::class, 'track'])->name('tracking.track');
 
 
 //URL Token Validation Routes
