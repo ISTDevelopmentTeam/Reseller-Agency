@@ -11,6 +11,7 @@
         const defaultOptions = {
           dateFormat: "m/d/Y",
           allowInput: true,
+          // appendTo: document.getElementById("formContainer"),
           disableMobile: true,
           onChange: (selectedDates, dateStr) => {
             if (selectedDates.length > 0) {

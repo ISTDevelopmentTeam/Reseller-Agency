@@ -1,0 +1,800 @@
+:root {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    --dark-blue: rgb(0, 45, 106);
+    --yellow: #FFDD00;
+    --orange: #ffc107;
+    --light-blue: #aae0fd;
+    --blue: rgb(0,91,150);
+    --dirty-white: #f8f9fa;
+    --light-gray: #9b9b9b;
+    --dark-gray: #787878;
+
+    --icon-size: 36px;
+}
+
+.blue-bg {
+    background-color: var(--blue);
+}
+
+.dark-blue-bg {
+    background-color: var(--dark-blue);
+}
+
+.light-gray {
+    color: var(--light-gray);
+}
+
+.dark-gray {
+    color: var(--dark-gray);
+}
+
+.bg-g-300 {
+    background-color: var(--bs-gray-300);
+}
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.centered-text > * {
+    place-content: center;
+}
+
+.light-border-subtle {
+    border: 1px solid var(--bs-light-border-subtle);
+}
+
+.show {
+    display: block !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+.rotate180 {
+    transform: rotate(180deg);
+}
+
+.cursor-pointer, .cursor-pointer * {
+    cursor: pointer !important;
+}
+
+.hover-g-300:hover {
+    background-color: var(--bs-gray-300);
+}
+
+.w-90 {
+    width: 90% !important;
+}
+
+.col-1pt5 {
+    flex: 0 0 auto;
+    width: 12.5%;
+}
+
+.col-10pt5 {
+    flex: 0 0 auto;
+    width: 87.5%;
+}
+
+.z-101 {
+    z-index: 101;
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+    height: min-content;
+    place-content: center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat; 
+    background-position: 50% 50%;
+    backdrop-filter: blur(3px);
+    padding-bottom: 50px;
+}
+
+body > * {
+    position: relative;
+    z-index: 2;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* background-color: rgba(255, 193, 7, 0.4); */
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+}
+
+.main-container {
+    height: 90vh;
+    /* border-radius: 8px; */
+}
+
+.form-title-container {
+    position: relative;
+    z-index: 3;
+    margin-bottom: 1.75rem !important;
+}
+
+.sm-logo-container {
+    height: 50px;
+    aspect-ratio: 1;
+    place-content: center;
+}
+
+.progress-bar {
+    background-color: rgb(255, 210, 149);
+}
+
+.progress-car-container {
+    position: absolute;
+    top: -7px;
+    left: 49%;
+    transform: translateX(-50%);
+    height: fit-content;
+    width: 93%;
+}
+
+.progress-car-indicator {
+    width: 52px;
+    transition: width 0.6s ease;
+}
+
+.progress-car {
+    position: relative;
+    display: flex;
+    align-items: end;
+    /* top: -6px;
+    left: 8px; */
+    margin-left: auto;
+    height: fit-content;
+    width: 52px;
+    transform: scaleX(-1);
+}
+
+.progress-car img {
+    max-height: 100%;
+}
+
+.progress-car .p-car {
+    width: 100%;
+}
+
+.progress-car .p-smoke {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+}
+
+.breadcrumb {
+    z-index: 3;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 90%;
+    justify-content: space-between;
+    margin: auto;
+}
+
+.breadcrumb-item {
+    display: grid;
+    place-items: center;
+    gap: 6px;
+    text-wrap: nowrap;
+}
+
+.breadcrumb-item:not(.active) > h6 {
+    color: #fff !important;
+}
+
+.breadcrumb-item.active > h6 {
+    color: var(--yellow) !important;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-item:not(.active) > .breadcrumb-icon {
+    background-color: #F9FBFA;
+}
+
+.breadcrumb-item.active > .breadcrumb-icon {
+    background-color: var(--yellow) !important;
+    transition: background-color 0.3s ease;
+}
+
+.breadcrumb-icon {
+    display: inline-grid;
+    border: 1px solid;
+    border-radius: 50%;
+    height: var(--icon-size);
+    aspect-ratio: 1;
+    place-items: center;
+}
+
+.xl-road-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    opacity: 0.1;
+}
+
+#formContainer {
+    /* height: 75%;  */
+    overflow-y: auto; 
+    scrollbar-width: thin; 
+    background-color: #fff;
+}
+
+.card-body {
+    display: flex;
+    min-height: 100%;
+}
+
+#resellerForm {
+    position: relative;
+    z-index: 2;
+    min-height: 100%;
+    width: 100%;
+}
+
+#resellerForm input, #resellerForm select {
+    border: 1px solid var(--light-blue);
+    background-color: #f8f9fa;
+    font-weight: 300;
+}
+
+#valid_id_container {
+    position: relative;
+    z-index: 1;
+}
+
+#id_dropdown_btn {
+    display: grid;
+    place-content: center;
+    height: 15px;
+}
+
+#id_dropdown_btn > i {
+    transition: transform 0.1s linear;
+}
+
+#id_dropdown_btn:hover {
+    background-color: #d9dee4 !important;
+}
+
+.form-step.active {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    justify-content: space-between;
+}
+
+.step-title-container {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
+    margin: 0 -30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.radiobox-container > div > .custom-control label {
+    display: contents !important;
+}
+
+#dlcode-label.custom-radio, #restriction-label.custom-radio {
+    border: 1px solid var(--bs-gray-400);
+    transition: border-color 0.1s linear, background-color 0.1s linear;
+}
+
+#dlcode-label.custom-control:has(input[type="radio"]:checked), #restriction-label.custom-control:has(input[type="radio"]:checked) {
+    border-color: var(--bs-primary);
+}
+
+.restriction-checkboxes {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto auto;
+    grid-auto-flow: column;
+}
+
+.id_container {
+    display: none;
+    height: 225px;
+    width: 100%;
+    background-color: #e2e3e5;
+    padding-top: 10px;
+    justify-content: center;
+    transform: translateY(-15px);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.note {
+    /* background-color: #f7c35b; */
+    position: relative;
+    background: linear-gradient(to right, #f7c562, #eccd90);
+}
+
+.note-ribbon {
+    position: absolute;
+    top: 0.8rem;
+    left: -18px;
+    height: 40px;
+    width: 70px;
+}
+
+.note-front {
+    position: relative;
+    z-index: 2;
+    height: 82%;
+    width: 70%;
+    color: var(--dark-blue);
+    background: linear-gradient(to right, rgb(216, 140, 80), rgb(187, 165, 42));
+    clip-path: polygon(0% 0%, 0% 100%, 75% 100%, 100% 50%, 75% 0%);
+}
+
+.note-front > i {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translateY(-50%);
+}
+
+.note-mid {
+    position: relative;
+    z-index: 2;
+    height: 18%;
+    width: 15%;
+    background: linear-gradient(to left, rgb(164, 159, 79), rgb(137, 114, 3));
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
+}
+
+.note-back {
+    position: absolute;
+    z-index: 1;
+    top: 20%;
+    left: -15%;
+    height: 80%;
+    width: 30%;
+    background: linear-gradient(to right, rgb(255, 206, 34), rgb(216, 140, 80));
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 30% 50%, 0% 0%);
+}
+
+.note-content {
+    display: flex;
+}
+
+.with-number .iti {
+    width: 100%;
+}
+
+.japan-container {
+    /* height: 55vh; */
+    /* border: 1px solid #111; */
+}
+
+.japanRadio-container {
+    width: fit-content;
+}
+
+.japanRadio, #nojapan {
+    height: fit-content;
+}
+
+#japanoption {
+    border: 2px solid var(--bs-gray-500);
+}
+
+.other-country-container, #travelDestination {
+    border: 2px solid rgb(70, 103,146);
+}
+
+.japanRadioBtn input[type="radio"], .japanRadioBtn2nd input[type="radio"], .japanRadioBtn3rd input[type="radio"]  {
+    display: none;
+    height: 0;
+    width: 0;
+}
+
+.japanRadioBtn {
+    position: relative;
+    width: 72px;
+    border-radius: 4px;
+    border: 1px solid var(--dark-blue);
+    transition: all 0.1s linear;
+}
+
+.japanRadioBtn2nd {
+    position: relative;
+    width: 72px;
+    height: fit-content;
+    border-radius: 4px;
+    border: 1px solid rgb(70, 103,146);
+    transition: all 0.1s ease;
+}
+
+.japanRadioBtn3rd {
+    position: relative;
+    width: 72px;
+    height: fit-content;
+    border-radius: 4px;
+    border: 1px solid rgb(78, 121, 176);
+    transition: all 0.1s ease;
+}
+
+.japanRadioBtn:has(input[type="radio"]:checked) {
+    color: var(--dirty-white);
+    background-color: var(--dark-blue);
+    font-weight: 500;
+}
+
+.japanRadioBtn2nd:has(input[type="radio"]:checked) {
+    color: var(--dirty-white);
+    background-color: rgb(70, 103,146);
+    font-weight: 500;
+}
+
+.japanRadioBtn3rd:has(input[type="radio"]:checked) {
+    color: #fff;
+    background-color: rgb(78, 121, 176);
+    font-weight: 500;
+}
+
+/* .japanRadioBtn:has(input[type="radio"]:checked)::after {
+    content: '';
+    position: absolute;
+    height: 1.125rem;
+    width: 3px !important;
+    background-color: var(--dark-blue);
+    bottom: -17.5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.japanRadioBtn2nd:has(input[type="radio"]:checked)::after {
+    content: '';
+    position: absolute;
+    height: 1.125rem;
+    width: 2px !important;
+    background-color: rgb(70, 103,146);
+    bottom: -17px;
+    left: 50%;
+    transform: translateX(-50%);
+} */
+
+.japanRadioBtn:has(input[type="radio"]:not(:checked)):hover, .japanRadioBtn2nd:has(input[type="radio"]:not(:checked)):hover, .japanRadioBtn3rd:has(input[type="radio"]:not(:checked)):hover {
+    background-color: var(--bs-gray-300);
+}
+
+.japan-substeps {
+    border: 3px solid var(--dark-blue);
+    border-radius: 4px;
+}
+
+.japan-substeps2nd {
+    border: 2px solid rgb(70, 103,146);
+    border-radius: 4px;
+}
+
+/* .ui-widget.ui-widget-content {
+    max-height: -webkit-fill-available;
+    max-height: -moz-available;
+    max-height: stretch;
+    overflow-y:  auto;
+    scrollbar-width: thin;
+} */
+
+/* #step4.active .btn-next {
+    display: none;
+} */
+
+.title-overlay {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: calc(100% + 4rem);
+    width: calc(100% + 6rem);
+    background-color: #fff;
+    z-index: 100;
+    padding-bottom: 4rem;
+}
+
+.fit-to-top {
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: unset;
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+    transform: unset !important;
+    height: fit-content !important;
+    min-width: 100% !important;
+    width: unset !important;
+    border-bottom: 1px solid #c7c8c9 !important;
+    padding-bottom: 1rem !important;
+    z-index: 100;
+    background-color: #fff;
+}
+
+.fit-to-top > .vehicleOwnershipContainer {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 !important;
+}
+
+.fit-to-top #own_vehicle_phil {
+    margin: 0 !important;
+    text-align: left;
+}
+
+.fit-to-top #own_vehicle_phil > h4 {
+    font-size: 1.25rem !important;
+}
+
+.fit-to-top .ownership-radio {
+    width: 72px;
+}
+
+#vehicleOwnershipTitle input[type="radio"] {
+    display: none;
+    height: 0;
+    width: 0;
+}
+
+.vehicleOwnershipContainer {
+    width: fit-content;
+}
+
+#vehicleFields {
+    display: grid;
+}
+
+.vehicle-title {
+    color: var(--dirty-white);
+    width: 100%;
+}
+
+.vehicle-title > h6 {
+    width: fit-content;
+    margin: auto;
+}
+
+.psd-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.with-select2 .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 0;
+}
+
+#addVehicle {
+    width: max-content;
+    background-color: #0071aa;
+}
+
+.cbox-yes {
+    border-color: var(--bs-success-border-subtle);
+    background-color: var(--bs-success-bg-subtle);
+    transition: all 0.3s ease;
+}
+
+.cbox-yes input:checked ~ .checkmark {
+    background-color: var(--bs-success);
+}
+
+.cbox-no {
+    border-color: var(--bs-danger-border-subtle);
+    background-color: var(--bs-danger-bg-subtle);
+    transition: all 0.3s ease;
+}
+
+.cbox-no input:checked ~ .checkmark {
+    background-color: var(--bs-danger);
+}
+
+.or-container, .cr-container {
+    display: none;
+    height: 225px;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding-top: 10px;
+    justify-content: center;
+    transform: translateY(-15px);
+}
+
+.btn-prev, .btn-next, .ownership-radio {
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+}
+
+.btn-prev, .ownership-radio {
+    border: 1px solid var(--dark-blue);
+}
+
+.btn-next {
+    background-color: var(--yellow);
+    color: var(--dark-blue);
+}
+
+.btn-prev:hover, .ownership-radio:hover {
+    border: 1px solid var(--dark-blue);
+    background-color: #e9ebec;
+}
+
+.btn-next:hover {
+    background-color: var(--orange);
+}
+
+.ownership-radio {
+    display: block;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 50%;
+    max-width: 125px;
+}
+
+.ownership-radio-checked {
+    background-color: var(--dark-blue);
+    color: var(--dirty-white);
+    border: 1px solid transparent;
+}
+
+.ownership-radio-checked:hover {
+    background-color: #00204d;
+    color: var(--dirty-white);
+}
+
+.ownership-radio-checked:active {
+    background-color: #000f25;
+    color: var(--dirty-white);
+}
+
+.title-btn-skip {
+    display: grid;
+    place-items: center;
+    width: fit-content;
+    text-wrap: nowrap;
+    border-left: 1px solid var(--bs-gray-200);
+    background: linear-gradient(to right, var(--bs-gray-300) 80%, transparent);
+    border-radius: 0 0 6px 0;
+    cursor: pointer;
+    transition: all 0.1s linear;
+}
+
+.title-btn-skip:hover {
+    border-left: 1px solid var(--bs-gray-500);
+    background: linear-gradient(to right, var(--bs-gray-400) 80%, transparent);
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 50px;
+    text-align: center;
+    place-content: center;
+    background-color: rgba(248, 249, 250, 0.8);
+    backdrop-filter: blur(2px);
+    border-top: 1px solid #FFDD00;
+  }
+  
+.footer-text {
+  color: #002D6A;
+  font-size: 14px;
+  margin: auto;
+}
+
+@media (min-width: 768px) {
+    .col-md-2pt4 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+
+    .col-md-3pt6 {
+        flex: 0 0 auto;
+        width: 30%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-xl-2pt4 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+
+    .col-xl-3pt6 {
+        flex: 0 0 auto;
+        width: 30%;
+    }
+}
+
+@media (max-width: 575px) {
+    .c-sticker-container {
+        width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 1rem;
+    }
+
+    .is-diplomat-container {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .fit-to-top .vehicleOwnershipContainer {
+        gap: 1rem;
+    }
+
+    .fit-to-top .ownRadio-container {
+        flex-direction: column;
+        gap: 0.5rem !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .form-step > div > .row {
+        margin-bottom: 2rem !important;
+    }
+
+    .step-title-container, .fit-to-top {
+        position: static !important;
+    }
+
+    .c-sticker-container {
+        width: 50%;
+        order: 1;
+    }
+
+    .platenum-container {
+        width: 100%;
+        order: 3;
+        margin-top: 1rem;
+    }
+
+    .is-diplomat-container {
+        width: 50%;
+        order: 2;
+    }
+
+    .with-select2 .select2.select2-container.select2-container--default {
+        width: 100% !important;
+    }
+
+    .mb-mobile {
+        margin-bottom: 1rem !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .progress {
+        width: 95% !important;
+    }
+
+    .progress-car-container {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 1199px) {
+    .main-container {
+        height: calc(100vh - 50px);
+        border-radius: 0 !important;
+    }
+}

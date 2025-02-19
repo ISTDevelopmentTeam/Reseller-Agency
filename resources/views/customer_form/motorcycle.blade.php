@@ -19,7 +19,7 @@
 </head>
 
 <body style="background-image: url({{ asset('images/bg-6-moto.webp') }});">
-    <div class="container-xl p-0 d-flex flex-column main-container shadow rounded-4 overflow-hidden ">
+    <div class="container-xl p-0 d-flex flex-column main-container shadow rounded-4 overflow-hidden">
         <div class="container-fluid p-4 progress-container" style="background-image: url({{ asset('images/wave-1.svg') }});">
             <div class="d-flex gap-2 align-items-center form-title-container">
                 <!-- Logo -->

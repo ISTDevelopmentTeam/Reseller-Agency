@@ -346,9 +346,16 @@
  }
  
  .progress {
-    height: 2px;
-    margin-bottom: 20px;
- }
+   position: absolute;
+   top: calc(var(--icon-size) - ((var(--icon-size) / 2) + 4px));
+   left: 49%;
+   height: 8px;
+   width: 88%;
+   transform: translateX(-50%);
+   transform-origin: left top;
+   border: 1px solid var(--bs-dark-border-subtle);
+   background-color: #fff;
+}
  
  .scrollable-card {
     max-height: 70vh;
@@ -360,21 +367,42 @@
  }
  
  .progress-container {
-    position: sticky;
+    position: sticky !important;
     top: 0;
-    background-color: white;
-    z-index: 1000;
-    padding-top: 1rem;
+    background-color: #F9FBFA;
+    background-repeat: repeat-x;
+    background-size: cover;
+    /* z-index: 1000; */
  }
  
  .vehicle-item {
-    background-color: #d0e1f1;
-    transition: all 0.3s ease;
- }
- 
- .vehicle-item:hover {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
- }
+   position: relative;
+  background-color: #d0e1f1;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.vehicle-item::before {
+   content: '';
+   position: absolute;
+   width: 110%;
+   height: 84px;
+   aspect-ratio: 1;
+   top: -35px;
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: 2;
+   border-radius: 50%;
+   background-color: #0071aa;
+   box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+}
+
+.vehicle-item * {
+   position: relative;
+   z-index: 3;
+}
  
  .btn-danger {
     background-color: #dc3545;
@@ -392,13 +420,25 @@
     right: 15px;
  }
  
- #orcr,
- #valid_id {
-    max-width: 200px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
- }
+ #orcr, #valid_id_container, .or-container, .cr-container {
+   border: 1px solid #ddd;
+   border-radius: 4px;
+}
+
+#orcr {
+   max-width: 200px;
+   margin-top: 10px;
+}
+
+#valid_id_container {
+   background-color: #f8f9fa;
+   height: 200px;
+   place-content: center;
+}
+
+#valid_id, #or, #cr {
+   max-height: 100%;
+}
  
  .text-danger {
     color: red;
@@ -406,7 +446,8 @@
  }
  
  .select2-container {
-    width: 100% !important;
+   width: unset !important;
+   max-width: 100% !important;
  }
  
  .select2-container .select2-selection--single {
@@ -521,12 +562,6 @@
  }
  
  /* DL AND RESTRICTION DESIGN */
- .restriction-checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
- }
- 
  .restriction-checkboxes .custom-control {
     margin: 0;
  }
@@ -534,21 +569,12 @@
  .clutchRadioOptionsGroup {
     display: flex;
     align-items: center;
-    border-radius: 0.5rem;
-    margin-top: 10px;
-    padding: 10px;
-    box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
  }
  
  .clutchRadioOptionsGroup h6 {
     margin-right: 15px;
     margin-bottom: 0;
     font-weight: 700;
- }
- 
- .custom-card {
-    margin-right: 4%;
-    margin-left: 3%;
  }
  
  .custom-card input[type="checkbox"]:checked~.clutchRadioOptionsGroup {
@@ -564,23 +590,6 @@
  }
  
  /* END DL AND RESTRICTION */
- .footer {
-    position: absolute;
-    bottom: 0;
-    width: 80%;
-    height: 50px;
-    /* Height of the footer */
-    text-align: center;
-    padding: 20px 0;
-    background-color: #f8f9fa;
- }
- 
- .footer-text {
-    color: #6c757d;
-    font-size: 14px;
- }
- 
- 
  .radio-buttons-row {
     display: flex;
     gap: 10px;
@@ -634,24 +643,11 @@
     border: 1px solid #ced4da;
  }
  
- /* Label styling */
- .form-label {
-    font-size: 0.875rem;
-    margin-bottom: 0.5rem;
-    color: #495057;
- }
- 
  /* Card title styling */
  .card-title {
     color: #000;
     font-size: 1.25rem;
     font-weight: 600;
- }
- 
- /* Row gap */
- .row {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 1rem;
  }
  
  /* THIS FOR JAPAN PART DESIGN */
@@ -672,7 +668,7 @@
  }
  
  .japanLabel {
-    font-weight: 500;
+    /* font-weight: 500; */
     color: #333;
     margin-bottom: 1rem;
  }
@@ -689,18 +685,18 @@
     /* } */
  
     /* Add this to align the columns */
-    .row {
+    /* .row {
        align-items: flex-start;
-    }
+    } */
  }
  
  #collapsibleYesJapan {
     margin-top: 1.5rem;
  }
- 
+/*  
  #nojapan {
     margin-top: 1.5rem;
- }
+ } */
  
  #travel_card {
     margin-top: 1.5rem;
@@ -710,7 +706,7 @@
  .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
@@ -789,53 +785,53 @@
  
  .options-container {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     margin-top: 5px;
  }
  
  .radio-checkbox {
-    display: flex;
-    align-items: center;
-    position: relative;
-    padding-left: 30px;
-    cursor: pointer;
-    user-select: none;
- }
+   display: flex;
+   align-items: center;
+   gap: 9px;
+   cursor: pointer;
+   user-select: none;
+   border: 1px solid var(--bs-primary-border-subtle);
+   border-radius: 6px;
+}
+
+.radio-checkbox input {
+   position: absolute;
+   opacity: 0;
+   cursor: pointer;
+   height: 0;
+   width: 0;
+}
  
- .radio-checkbox input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
- }
+.checkmark {
+   height: 20px;
+   width: 20px;
+   background-color: #fff;
+   border: 2px solid #ccc;
+   border-radius: 50%;
+   transition: all 0.1s ease;
+}
+
+ .radio-checkbox input:checked ~ .checkmark:after {
+   display: block;
+}
  
- .checkmark {
-    position: absolute;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 50%;
- }
- 
- .radio-checkbox input:checked ~ .checkmark {
-    border-color: #2196F3;
- }
- 
- .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #2196F3;
- }
+.checkmark:after {
+   content: "";
+   position: absolute;
+   display: none;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 7px;
+   height: 7px;
+   border-radius: 50%;
+   background: var(--dirty-white);
+}
  
  .radio-checkbox input:checked ~ .checkmark:after {
     display: block;

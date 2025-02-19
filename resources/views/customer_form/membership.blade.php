@@ -505,7 +505,7 @@
                                     <!-- Initial Vehicle Form -->
                                     <div class="vehicle-item border rounded p-3 animated-moveDown">
                                         <div class="vehicle-title mb-4">
-                                            <h6>Vehicle <span class="vehicle-number">1</span></h6>
+                                            <h6 class="mb-3">Vehicle <span class="vehicle-number">1</span></h6>
                                         </div>
                                         <div class="row g-4 mt-0">
                                             <!-- First Row -->

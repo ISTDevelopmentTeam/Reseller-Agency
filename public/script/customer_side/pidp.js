@@ -317,6 +317,9 @@ function validateStep(stepNumber) {
     // Check if either Yes or No is selected
     if (!vehicleOwnershipYes.checked && !vehicleOwnershipNo.checked) {
       ownVehicleLabel.style.color = 'red';
+      setTimeout(() => {
+        ownVehicleLabel.style.color = 'unset';
+      }, 1250);
       return false;
     } else {
       ownVehicleLabel.style.color = ''; // Reset color if valid
@@ -431,7 +434,7 @@ function updateNavigationButtons() {
   }
 
   const navArea           = document.createElement('div');
-        navArea.className = 'nav-area d-flex justify-content-between mt-4 w-100';
+        navArea.className = 'nav-area d-flex justify-content-between mt-5 w-100 z-101';
   currentStep.appendChild(navArea);
 
   const leftNav            = document.createElement('div');
@@ -444,16 +447,18 @@ function updateNavigationButtons() {
   if (!isFirstStep) {
     const prevButton             = document.createElement('button');
           prevButton.type        = 'button';
-          prevButton.className   = 'btn btn-secondary rounded';
-          prevButton.textContent = 'Previous';
+          prevButton.className   = 'btn btn-prev';
+          // prevButton.textContent = 'Previous';
+          prevButton.innerHTML   = `<i class="bi bi-caret-left-fill"></i> Previous`;
           prevButton.onclick     = previousStep;
     leftNav.appendChild(prevButton);
   }
 
   const nextButton             = document.createElement('button');
         nextButton.type        = 'button';                          // Changed to always be 'button' type
-        nextButton.className   = 'btn btn-primary rounded';
-        nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+        nextButton.className   = 'btn btn-next';
+        // nextButton.textContent = isLastStep ? 'Submit' : 'Next';
+        nextButton.innerHTML   = `${isLastStep ? 'Submit' : 'Next'} <i class="bi bi-caret-right-fill"></i>`;
         nextButton.onclick     = isLastStep ?
     () => {
       if (validateStep(currentStepNumber)) {
@@ -487,6 +492,73 @@ function nextStep(currentStepNumber) {
       const progress             = document.querySelector('.progress-bar');
             progress.style.width = `${currentStepNumber * 25}%`;
 
+      const progressCarIndicator = document.querySelector('.progress-car-indicator');
+      const carSmoke = document.querySelector('.progress-car .p-smoke');
+
+      carSmoke.classList.remove("hide");
+      setTimeout(() => {
+        carSmoke.classList.add("hide");
+      }, 600);
+
+      if (window.innerWidth <= 991) {
+        progressCarIndicator.style.width = `calc(${currentStepNumber * 25}% + ${6 - currentStepNumber}%)`;
+
+        switch(currentStepNumber) {
+          case 2:
+              progressCarIndicator.style.minWidth = `calc(25% + 38px)`;
+              break;
+          case 3:
+              progressCarIndicator.style.minWidth = `calc(50% + 30px)`;
+              break;
+          case 4:
+              progressCarIndicator.style.minWidth = `calc(75% + 22px)`;
+              break;
+          case 5:
+              progressCarIndicator.style.minWidth = `calc(100% + 12px)`;
+              break;
+          default:
+              progressCarIndicator.style.minWidth = `52px`;
+              break;
+        }
+      }
+      else if (window.innerWidth < 1400) {
+        progressCarIndicator.style.minWidth = `unset`;
+        switch(currentStepNumber) {
+          case 1:
+            progressCarIndicator.style.width = `calc(25% + 32px)`;
+            break;
+          case 2:
+            progressCarIndicator.style.width = `calc(50% + 32px)`;
+            break;
+          case 3:
+            progressCarIndicator.style.width = `calc(75% + 10px)`;
+            break;
+          case 4:
+            progressCarIndicator.style.width = `99%`;
+            break;
+        }
+      }
+      else if (window.innerWidth >= 1400) {
+        progressCarIndicator.style.minWidth = `unset`;
+        switch(currentStepNumber) {
+          case 1:
+            progressCarIndicator.style.width = `calc(25% + 32px)`;
+            break;
+          case 2:
+            progressCarIndicator.style.width = `calc(50% + 32px)`;
+            break;
+          case 3:
+            progressCarIndicator.style.width = `calc(75% + 14px)`;
+            break;
+          case 4:
+            progressCarIndicator.style.width = `100%`;
+            break;
+          default:
+            progressCarIndicator.style.width = `52px`;
+            break;
+        }
+      }
+
       updateBreadcrumb(currentStepNumber + 1);
       updateNavigationButtons();
 
@@ -508,6 +580,87 @@ function previousStep() {
 
     const progress = document.querySelector('.progress-bar');
     progress.style.width = `${(stepNumber - 2) * 25}%`;
+
+    const progressCarIndicator = document.querySelector('.progress-car-indicator');
+    const progressCar = document.querySelector('.progress-car');
+    const carSmoke = document.querySelector('.progress-car .p-smoke');
+
+    progressCar.style.transform = "scaleX(1)";
+    carSmoke.classList.remove("hide");
+    setTimeout(() => {
+      progressCar.style.transform = "scaleX(-1)";
+      carSmoke.classList.add("hide");
+    }, 600);
+
+    if (window.innerWidth <= 991) {
+      progressCarIndicator.style.width = `calc(${(stepNumber - 2) * 25}% + ${8 - stepNumber}%)`;
+
+      switch(currentStepNumber) {
+        case 2:
+            progressCarIndicator.style.minWidth = `calc(25% + 38px)`;
+            break;
+        case 3:
+            progressCarIndicator.style.minWidth = `calc(50% + 30px)`;
+            break;
+        case 4:
+            progressCarIndicator.style.minWidth = `calc(75% + 22px)`;
+            break;
+        case 5:
+            progressCarIndicator.style.minWidth = `calc(100% + 12px)`;
+            break;
+        default:
+            progressCarIndicator.style.minWidth = `52px`;
+            break;
+      }
+    }
+    else if (window.innerWidth < 1400) {
+      progressCarIndicator.style.minWidth = `unset`;
+      switch(stepNumber) {
+        case 2:
+          progressCarIndicator.style.width = `52px`;
+          break;
+        case 3:
+          progressCarIndicator.style.width = `calc(25% + 32px)`;
+          break;
+        case 4:
+          progressCarIndicator.style.width = `calc(50% + 32px)`;
+          break;
+        case 5:
+          progressCarIndicator.style.width = `calc(75% + 10px)`;
+          break;
+        // case 5:
+        //   progressCarIndicator.style.width = `99%`;
+        //   break;
+        default:
+          progressCarIndicator.style.width = `52px`;
+          break;
+      }
+    }
+    else if (window.innerWidth >= 1400) {
+      progressCarIndicator.style.minWidth = `unset`;
+      switch(stepNumber) {
+        case 2:
+          progressCarIndicator.style.width = `52px`;
+          break;
+        case 3:
+          progressCarIndicator.style.width = `calc(25% + 32px)`;
+          break;
+        case 4:
+          progressCarIndicator.style.width = `calc(50% + 32px)`;
+          break;
+        case 5:
+          progressCarIndicator.style.width = `calc(75% + 14px)`;
+          break;
+        // case 5:
+        //   progressCarIndicator.style.width = `100%`;
+        //   break;
+        default:
+          progressCarIndicator.style.width = `52px`;
+          break;
+      }
+    }
+
+    console.log(stepNumber)
 
     updateBreadcrumb(stepNumber - 1);
     updateNavigationButtons();
@@ -561,12 +714,12 @@ $('#noRadio').change(function () {
 });
 $('#yesDropdown').change(function () {
   if (this.checked) {
-    $('#bordered1').css('border', 'none');
+    $('#bordered1').css('border', '1px solid #ddd');
   }
 });
 $('#noDropdown').change(function () {
   if (this.checked) {
-    $('#bordered1').css('border', 'none');
+    $('#bordered1').css('border', '1px solid #ddd');
   }
 });
 
@@ -795,7 +948,7 @@ function handleCheckboxChange(checkboxId, radioGroupId) {
   var radioGroup = document.getElementById(radioGroupId);
 
   if (checkbox.checked) {
-    radioGroup.style.display = 'block';
+    radioGroup.style.display = 'grid';
   } else {
     radioGroup.style.display = 'none';
   }
@@ -1029,19 +1182,23 @@ $(document).ready(function () {
 $(document).ready(function () {
 
   $('#yesRadio').on('click', function () {
-    $('#collapsibleYesJapan').show();
+    $('#collapsibleYesJapan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+    $('#japanNoPlan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+    $('.japan-substeps').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+
     $('#Nojapan').hide();
+    $('#nojapan').hide();
     $('#dropDownYes').hide();
     $('#dropDownNo').hide();
-    $('#travelDestination').hide();
-    $('#travelDestination1').hide();
-    $('#japanNoPlan').show();
     $('#auto_japan').hide();
     $('#purpose_ofw').hide();
-
-    $('#destinationOut').val('');
+    $('.japan-substeps2nd').hide();
     $('#option_ofw').hide();
     $('#optional_date').hide();
+    $('#travelDestination').hide();
+    $('#travelDestination1').hide();
+
+    $('#destinationOut').val('');
     $('#dremarks1').text('');
     $('#members_purposetravel').val('');
     $('#departure_date').val('');
@@ -1059,14 +1216,18 @@ $(document).ready(function () {
   });
 
   $('#noRadio').on('click', function () {
-    $('#collapsibleYesJapan').hide();
-    $('#dropDownNo').hide();
     $('#travelDestination').show();
-    $('#japanNoPlan').show();
-    $('#auto_japan').hide();
+    $('#nojapan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+    $('.japan-substeps').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+    $('#japanNoPlan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+
     $('#option_ofw').hide();
     $('#optional_date').hide();
+    $('#collapsibleYesJapan').hide();
+    $('#dropDownNo').hide();
+    $('#auto_japan').hide();
     $('#dropDownYes').hide();
+    $('.japan-substeps2nd').hide();
 
     // Reset the radioButtons
     $('#yesDropdown').prop('checked', false);
@@ -1087,18 +1248,20 @@ $(document).ready(function () {
   });
 
   $('#yesDropdown').on('click', function () {
-    $('#collapsibleYesJapan').show();
-    $('#dropDownNo').hide();
-    $('#auto_japan').hide();
-
-    $('#travelDestination').hide();
+    $('#collapsibleYesJapan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+    $('.japan-substeps2nd').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
     $('#travelDestination1').show();
-    $('#dropDownYes1').show();
+    $('#dropDownYes1').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+    $('#purpose_ofw').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');
+
     $('#option_ofw').hide();
     $('#optional_date').hide();
-    $('#purpose_ofw').show();
     $('#option_ofw1').hide();
     $('#optional_date1').hide();
+    $('#dropDownNo').hide();
+    $('#auto_japan').hide();
+    $('#travelDestination').hide();
+
     $('#members_purposetravel1').val('');
     $('#departure_date1').val('');
     $('#return_date1').val('');
@@ -1114,21 +1277,23 @@ $(document).ready(function () {
   });
 
   $('#noDropdown').on('click', function () {
-    $('#collapsibleYesJapan').show();
-    $('#dropDownYes').hide();
-    $('#dropDownYes1').hide();
-    $('#dropDownNo').show();
-    $('#auto_japan').show();
-    $('#travelDestination').hide();
-    $('#travelDestination1').hide();
+    $('#collapsibleYesJapan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');;
+    $('#dropDownNo').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');;
+    $('#auto_japan').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');;
+    $('#purpose_ofw').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');;
+    $('.japan-substeps2nd').show().removeClass('animated-moveUpExit').addClass('animated-moveDown');;
+
     $('#option_ofw').hide();
     $('#optional_date').hide();
-    $('#purpose_ofw').show();
+    $('#option_ofw1').hide();
+    $('#optional_date1').hide();
+    $('#dropDownYes').hide();
+    $('#dropDownYes1').hide();
+    $('#travelDestination').hide();
+    $('#travelDestination1').hide();
 
     $('#destinationIn').val('');
     $('#dremarks').text('');
-    $('#option_ofw1').hide();
-    $('#optional_date1').hide();
     $('#members_purposetravel1').val('');
     $('#departure_date1').val('');
     $('#return_date1').val('');
@@ -1350,11 +1515,29 @@ function handleGeneralFileUpload(input, imageId, feedbackId) {
     return;
   }
 
+  let withContainer = false;
+  if (input.id === "idLicense") {
+    withContainer = true;
+  }
+
+  let idDropdown;
+  let idContainer;
+  let idDropdownBtnCaret;
+
   const feedback = document.getElementById(feedbackId);
   const imagePreview = document.getElementById(imageId);
 
   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
   const maxSizeInBytes = 8 * 1024 * 1024; // 8MB
+
+  // Ensure the dropdown only works on valid ID container
+  if (imageId === "valid_id") {
+    idDropdown = document.querySelector("#valid_id_dropdown");
+    idContainer = document.querySelector("#valid_id_container");
+    idDropdownBtnCaret = document.querySelector("#id_dropdown_btn > i");
+
+    idDropdown.classList.remove("animated-moveDown");
+  }
 
   // Reset previous feedback and preview
   feedback.textContent = '';
@@ -1365,6 +1548,9 @@ function handleGeneralFileUpload(input, imageId, feedbackId) {
   if (!allowedTypes.includes(file.type)) {
     feedback.textContent = 'Invalid file type. Please select a JPG, JPEG, PNG, or GIF file.';
     input.value = '';
+    if (idDropdown) {
+      idDropdown.classList.add("hide");
+    }
     return;
   }
 
@@ -1372,6 +1558,9 @@ function handleGeneralFileUpload(input, imageId, feedbackId) {
   if (file.size > maxSizeInBytes) {
     feedback.textContent = 'File size exceeds 8MB limit.';
     input.value = '';
+    if (idDropdown) {
+      idDropdown.classList.add("hide"); 
+    }
     return;
   }
 
@@ -1379,7 +1568,23 @@ function handleGeneralFileUpload(input, imageId, feedbackId) {
   const reader = new FileReader();
   reader.onload = function (e) {
     imagePreview.src = e.target.result;
-    imagePreview.style.display = 'block';
+    imagePreview.classList.add("show");
+
+    if (withContainer) {
+      imagePreview.parentElement.style.display = "flex";
+      imagePreview.parentElement.classList.add("animated-moveDown");
+      imagePreview.parentElement.classList.remove("animated-moveUpExit");
+    }
+
+    if (idDropdown) {
+      idDropdown.classList.remove("hide");
+      idDropdown.classList.add("animated-moveDown");
+      idDropdownBtnCaret.classList.add("rotate180");
+
+      idContainer.classList.add("animated-moveDown");
+      idContainer.classList.remove("animated-moveupExit");
+      idContainer.classList.remove("hide");
+    }
   };
   reader.readAsDataURL(file);
 }
@@ -1585,12 +1790,15 @@ function toggleVehicleDetails(element) {
 
   const vehicleFields    = document.getElementById('vehicleFields');
   const withVehicleInput = document.getElementById('with_vehicle');
+  const vehicleStepTitle = document.getElementById('vehicleOwnershipTitle');
+  const addVehicle       = document.getElementById('addVehicle');
+  const titleDesc        = document.querySelector('#own_vehicle_phil');
   
   // Get all required fields
   const requiredFields = vehicleFields.querySelectorAll('input[type="text"], input[type="file"], select');
   
   if (element.value === 'yes') {
-      vehicleFields.style.display = 'block';
+      vehicleFields.style.display = 'grid';
       // Update hidden input
       withVehicleInput.value = 'yes';
       
@@ -1608,6 +1816,27 @@ function toggleVehicleDetails(element) {
               field.setAttribute('required', '');
           }
       });
+
+      element.parentElement.classList.add('ownership-radio-checked');
+      document.querySelector("#vehicleOwnershipNo").parentElement.classList.remove('ownership-radio-checked');
+
+      // vehicleStepTitle.classList.add(`animated-transitionDtoU`);
+      // setTimeout(() => {
+      //   vehicleStepTitle.classList.add('fit-to-top');
+      // }, 1200);
+
+      vehicleStepTitle.classList.add('fit-to-top', 'animated-moveDown');
+      vehicleStepTitle.classList.remove('title-overlay');
+
+      setTimeout(() => {
+        vehicleStepTitle.classList.remove('animated-moveDown');
+      }, 450);
+
+      titleDesc.querySelector(`h4 .stepNum`).classList.remove(`hide`);
+      titleDesc.querySelector(`h4 .stepDesc`).innerText = `Specify details about your vehicle(s), including the make, model year, and license plate number.`;
+
+      //Show add vehicle button
+      addVehicle.style.display = 'block';
       
   } else {
       // Hide the vehicle fields
@@ -1645,6 +1874,51 @@ function toggleVehicleDetails(element) {
       errorMessages.forEach(error => {
           error.style.display = 'none';
       });
+
+      element.parentElement.classList.add('ownership-radio-checked');
+      document.querySelector("#vehicleOwnershipYes").parentElement.classList.remove('ownership-radio-checked');
+
+      //Hide add vehicle button
+      addVehicle.style.display = 'none';
+
+      vehicleStepTitle.classList.remove('fit-to-top');
+      vehicleStepTitle.classList.add('title-overlay');
+
+      titleDesc.classList.add(`animated-replaceTextRtoL`);
+      setTimeout(() => {
+        titleDesc.classList.remove(`animated-replaceTextRtoL`);
+      }, 1000);
+
+      setTimeout(() => {
+        titleDesc.querySelector(`h4 .stepNum`).classList.add(`hide`);
+        titleDesc.querySelector(`h4 .stepDesc`).innerText = `Looks like you don't own any vehicle in the Philippines, you can proceed to the next step.`;
+      }, 500);
+  }
+}
+
+// FUNCTION FOR DIPLOMAT 
+function update_diplomat(checkedId, uncheckedId) {
+  const checkedCheckbox            = document.getElementById(checkedId);
+  const uncheckedCheckbox          = document.getElementById(uncheckedId);
+        uncheckedCheckbox.disabled = false;
+        uncheckedCheckbox.checked  = false;
+        checkedCheckbox.disabled   = true;
+
+  if (checkedCheckbox.id == 'is_diplomat_1' || checkedCheckbox.id == 'is_diplomat_1') {
+    var_actofnature       = document.getElementById("is_diplomat_1");
+    var_actofnature.value = checkedCheckbox.value
+  } else {
+    var_actofnature       = document.getElementById("is_diplomat_" + checkedCheckbox.id.slice(-1));
+    var_actofnature.value = checkedCheckbox.value
+  }
+
+  if (checkedCheckbox.value == 1) {
+    checkedCheckbox.parentElement.classList.add("cbox-yes");
+    uncheckedCheckbox.parentElement.classList.remove("cbox-no");
+  }
+  else {
+    checkedCheckbox.parentElement.classList.add("cbox-no");
+    uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
   }
 }
 
@@ -1663,7 +1937,8 @@ function handleVehicleFileUpload(input, imageId, feedbackId) {
 
   // Reset previous feedback and preview
   feedback.textContent = '';
-  imagePreview.style.display = 'none';
+  imagePreview.parentElement.style.display = 'none';
+  imagePreview.parentElement.classList.remove('animated-moveDown');
   imagePreview.src = '';
 
   // Validate file type
@@ -1684,7 +1959,8 @@ function handleVehicleFileUpload(input, imageId, feedbackId) {
   const reader = new FileReader();
   reader.onload = function (e) {
     imagePreview.src = e.target.result;
-    imagePreview.style.display = 'block';
+    imagePreview.parentElement.style.display = 'flex';
+    imagePreview.parentElement.classList.add('animated-moveDown');
   };
   reader.readAsDataURL(file);
 }
@@ -1711,6 +1987,8 @@ function updateLabeldyna(checkedId, uncheckedId) {
     platenumInput.placeholder       = "Enter conduction sticker";
     platenumInput.dataset.inputType = 'conduction';
     $(platenumInput).mask('AAAAAA');
+    checkedCheckbox.parentElement.classList.add("cbox-yes");
+    uncheckedCheckbox.parentElement.classList.remove("cbox-no");
   } else {
     platenumLabel.textContent       = "Plate No";
     platenumInput.placeholder       = "Enter plate no";
@@ -1729,6 +2007,8 @@ function updateLabeldyna(checkedId, uncheckedId) {
         }
       }
     });
+    checkedCheckbox.parentElement.classList.add("cbox-no");
+    uncheckedCheckbox.parentElement.classList.remove("cbox-yes");
   }
   platenumInput.value = "";
   var_csticker.value  = checkedCheckbox.value;
@@ -1871,7 +2151,13 @@ function gatherInputValues() {
   document.getElementById("echolicenseexpiration").innerHTML = "<strong>License Expiration Date: </strong>" + expirationDate;
   document.getElementById("echocardtype").innerHTML          = "<strong>Card Type: </strong>" + cardType;
   document.getElementById("echolicensetype").innerHTML       = "<strong>License Type: </strong>" + licenseType;
-  document.getElementById('echodl').innerHTML                = "<strong>DL Code: </strong>" + dlcode;
-  document.getElementById('echorestriction').innerHTML       = "<strong>Restriction: </strong>" + restriction;
+
+  //Only show the license code type chosen by the user
+  if (dlcode) {
+    document.getElementById('echodl-or-restriction').innerHTML = "<strong>DL Code: </strong>" + dlcode;
+  }
+  else if (restriction) {
+    document.getElementById('echodl-or-restriction').innerHTML = "<strong>Restriction: </strong>" + restriction;
+  }
 }
 // -------------------------------------- END INFORMATION SUMMARY FUNCTION-------------------------------------------- //
