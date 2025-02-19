@@ -150,7 +150,7 @@
     <header class="bg-aap-blue h-16 flex-shrink-0 border-b-4 border-aap-yellow">
         <div class="container mx-auto px-4 h-full">
             <div class="flex justify-between items-center h-full">
-                <img src="{{ asset('image/aap_logo_white.png') }}" alt="AAP Logo" class="h-8">
+                <img src="{{ asset('images/aap_logo_white.png') }}" alt="AAP Logo" class="h-8">
                 <nav class="hidden md:flex space-x-6">
                     <a href="#" class="text-white hover:text-aap-yellow transition-colors">Home</a>
                     <a href="#" class="text-white hover:text-aap-yellow transition-colors">Help</a>
@@ -179,7 +179,8 @@
 
                     <!-- Form Section -->
                     <div class="p-6">
-                        <form class="space-y-6" onsubmit="event.preventDefault();">
+                        <form class="space-y-6" action="{{ route('tracking.track') }}" method="POST">
+                            @csrf
                             <!-- Application ID Input -->
                             <div>
                                 <label for="applicationId" class="block text-sm font-medium text-aap-blue mb-2">
@@ -190,12 +191,23 @@
                                     id="applicationId"
                                     name="applicationId"
                                     placeholder="Enter your Application ID (e.g., APP-2024-0123)"
-                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-aap-yellow focus:border-aap-blue"
+                                    class="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-aap-yellow focus:border-aap-blue @error('applicationId') border-red-500 @enderror"
                                     required
                                     autocomplete="off"
+                                    value="{{ old('applicationId') }}"
                                 >
+                                @error('applicationId')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
                             </div>
-
+                        
+                            <!-- Error Message Display -->
+                            @if(session('error'))
+                                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
+                                    <p class="font-medium">{{ session('error') }}</p>
+                                </div>
+                            @endif
+                        
                             <!-- Track Button -->
                             <button
                                 type="submit"
